@@ -16,3 +16,5 @@ It might be best to 'draw straws' to determine the order of the facilitator posi
 I'm not entirely sure what this is asking but I'm assuming that it means they are really good at facilitating the team. If that's the case I'd still like to be able to take the reins from time to time just to get feedback from that person. If the third person doesn't want to take that role that would be fine with me, as long as everyone feels that it's fair.
 Personally, I would be fine with that (as long as it's working), though I would ask the others if they wanted to give it a shot.
 Email (or GitHub mentions) for general stuff will work, but for immediate responses, text/phone call is best. Generally, I'm almost always available after 4pm and weekends. I work during the midday and have classes at the start and end of the day. I can usually respond to short, high importance emails or texts while I'm at work.
+
+INFJ
