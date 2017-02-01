@@ -1,3 +1,4 @@
+INTJ
 Grant Johnson
 1/25/17
 1.What are your expectations about what your team will accomplish this semester?
