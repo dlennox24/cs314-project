@@ -1,3 +1,4 @@
+ISTP
 1.What are your expectations about what your team will accomplish this semester?
 
 well-balanced teamwork, good coding, good communication, increased knowledge and teamwork skills.
