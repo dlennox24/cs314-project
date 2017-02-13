@@ -1,6 +1,3 @@
-package TripCo;
-
-
 import Model.Model;
 import Presenter.Presenter;
 import View.View;
