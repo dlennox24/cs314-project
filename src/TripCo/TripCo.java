@@ -1,9 +1,9 @@
 package TripCo;
 
-import TripCo.*;
-import TripCo.Model.Model;
-import TripCo.Presenter.Presenter;
-import TripCo.View.View;
+
+import Model.Model;
+import Presenter.Presenter;
+import View.View;
 
 public class TripCo {
 

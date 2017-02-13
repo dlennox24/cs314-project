@@ -1,4 +1,4 @@
-package TripCo.View;
+package View;
 
 public interface View {
 

@@ -1,4 +1,4 @@
-package TripCo.Presenter;
+package Presenter;
 
 public class Presenter {
 

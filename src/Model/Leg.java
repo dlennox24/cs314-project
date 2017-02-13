@@ -1,4 +1,4 @@
-package TripCo.Model;
+package Model;
 
 public class Leg {
 	Location locA = null;

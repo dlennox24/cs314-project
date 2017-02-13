@@ -1,4 +1,4 @@
-package TripCo.Model;
+package Model;
 
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
