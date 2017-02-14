@@ -196,7 +196,7 @@ public class Model {
 	
 	public static void main(String[] args) {
 		
-		Model m = new Model("/home/ap/Documents/DTR-27/TRIPCO/src/TripCo/model/input.csv", "Decimal");
+		Model m = new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv", "Decimal");
 		
 		for(int i = 0; i < m.Locations.size(); i++){
 			System.out.println("Location [" + i + "] : " + m.Locations.get(i));
