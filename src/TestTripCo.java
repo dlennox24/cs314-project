@@ -1,21 +1,11 @@
 
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
+import Model.Model;
+
 
 public class TestTripCo {
+	
 
-	@Before
-	public void initialize() {
-	}
 
-	@Test
-	public void testConditional() {
-		assertEquals(true, conditional));
-	}
-
-	@Test
-	public void testFunction() {
-		assertEquals(false, functionResult());
-	}
 }

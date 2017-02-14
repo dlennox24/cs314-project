@@ -1,21 +1,20 @@
+package Model;
 
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
 
 public class TestModel {
+	
+  
+    @Test
+    public void testModel()
+    {
+    	
+    	Model m = new Model("/s/bach/l/under/pello/school/DTR-27/src/Model/input.csv", "Decimal");
+        assertEquals("OK", m.getStatus());
 
-	@Before
-	public void initialize() {
-	}
+    }
+  
 
-	@Test
-	public void testConditional() {
-		assertEquals(true, conditional));
-	}
 
-	@Test
-	public void testFunction() {
-		assertEquals(false, functionResult());
-	}
 }
