@@ -8,22 +8,17 @@ import java.util.Scanner;
 public class Model {
 
     private String status;
-    public ArrayList<Location> Locations;
-    public ArrayList<Leg> Legs;
+    private ArrayList<Location> Locations;
+    private ArrayList<Leg> Legs;
 
 
     // Constructor
     public Model(String filename) {
-    	this.Locations = readCSV(filename, filename);
+    	this.Locations = readCSV(filename);
         this.Legs = generateLegs(this.Locations);
         this.status = "OK";
     }
 
-	public Model(String filename, String cordSystem) {
-	    	this.Locations = readCSV(filename, cordSystem);
-	        this.Legs = generateLegs(this.Locations);
-	        this.status = "OK";
-	}
 
 	private ArrayList<Leg> generateLegs(ArrayList<Location> locations) {
 		ArrayList<Leg> ret = new ArrayList();
@@ -78,7 +73,7 @@ public class Model {
 		return ret;
 	}
     
-    private ArrayList<Location> readCSV(String filename, String cordSystem) {
+    private ArrayList<Location> readCSV(String filename) {
     	
     	String headerLine = null;
 		ArrayList<String> csvLines = new ArrayList();
@@ -98,11 +93,11 @@ public class Model {
 			e.printStackTrace();
 		}
 		
-    	return generateLocationArray(headerLine, csvLines, cordSystem);
+    	return generateLocationArray(headerLine, csvLines);
     	
 	}
 
-	private ArrayList<Location> generateLocationArray(String headerline, ArrayList<String> csvLines, String cordSystem) {
+	private ArrayList<Location> generateLocationArray(String headerline, ArrayList<String> csvLines) {
     	ArrayList<Location> returnLocationArray = new ArrayList();
     	
     	String[] headerLineArray = headerline.split(",");
@@ -120,8 +115,8 @@ public class Model {
     		
     	}
     	
-    	if(cordSystem.toUpperCase().equals("DECIMAL")){
-        	for(int i = 0; i < csvLines.size(); i++){
+    	
+        for(int i = 0; i < csvLines.size(); i++){
         		
     			String line = csvLines.get(i);
     			String[] lineArray = line.split(",");
@@ -130,73 +125,28 @@ public class Model {
     			String name = lineArray[nameIndex];
     			double longitude = Double.parseDouble(lineArray[longIndex]); 
     			double latitude = Double.parseDouble(lineArray[latIndex]); 
+    			
 
     			Location l = new Location(id, name, longitude, latitude);
     			System.out.println("adding location: [ " + l + " ]");
     			returnLocationArray.add(l);
     		
-        	}
-    	}else if(cordSystem.toUpperCase().equals("DMS")){
-        	for(int i = 0; i < csvLines.size(); i++){
-        		
-    			String line = csvLines.get(i);
-    			String[] lineArray = line.split(",");
-    
-    			String id = lineArray[idIndex];
-    			String name = lineArray[nameIndex];
-    			String longitude = lineArray[longIndex];
-    			String latitude = lineArray[latIndex];
-
-//    			String l = "";
-//    			for (int j = 0 ; i<longitude.length(); j ++){
-//    				
-//    				l = l + longitude.charAt(j);
-//    				
-//    			}
-    			longitude = longitude.replaceAll("[^A-Za-z0-9]", " ");
-    			System.out.println("longitude = ->" + longitude+ "<-");
-    			Scanner s1 = new Scanner(longitude);
-    			int degLong = s1.nextInt();
-    			int minLong = s1.nextInt();
-    			int secLong = s1.nextInt();
-    			String dirLong = s1.next();
-    			System.out.println(degLong +" "+ minLong+" " + secLong + " " + dirLong);
-    			
-    			
-    			
-    			latitude = latitude.replaceAll("[^A-Za-z0-9]", " ");
-    			System.out.println("latitude = ->" + latitude + "<-");
-    			Scanner s2 = new Scanner(latitude);
-    			int degLat = s2.nextInt();
-    			int minLat = s2.nextInt();
-    			int secLat = s2.nextInt();
-    			String dirLat = s2.next();
-    			System.out.println(degLat +" "+ minLat+" " + secLat + " " + dirLat);
-    			
-    			
-    			double longDegrees = 0;  
-    			double latDegrees = 0;   			
-    			
-
-    			
-    			Location l = new Location(id, name, longDegrees, latDegrees);
-    			System.out.println("adding location: [ " + l + " ]");
-    			returnLocationArray.add(l);
-    		
-        	}  		
-    		
-    	}
+        }
 
 
 		return returnLocationArray;
 	}
 
 	public String getStatus() {return status;}
-	
+
+	public Location getLocation(int i) {return this.Locations.get(i);}
+	public Leg getLeg(int i) {return this.Legs.get(i);}
+
 	
 	public static void main(String[] args) {
 		
-		Model m = new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv", "Decimal");
+		
+		Model m = new Model("/s/bach/l/under/pello/school/DTR-27/src/Model/input.csv");
 		
 		for(int i = 0; i < m.Locations.size(); i++){
 			System.out.println("Location [" + i + "] : " + m.Locations.get(i));
