@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import Model.Leg;
 import Model.Model;
 import Presenter.Presenter;
+import Presenter.Trip;
 import View.View;
 
 public class TripCo {
@@ -13,13 +14,13 @@ public class TripCo {
 
 
 		
-		String option = null;
+		ArrayList<String> option = new ArrayList<String>();
 		String filename = null;
 		
 		for (int i = 0; i < args.length; i++){
 			String temp = args[i];
 			if(temp.contains("-")){
-				option = temp;
+				option.add(temp);
 			}else{
 				filename=temp;
 			}
@@ -27,12 +28,9 @@ public class TripCo {
 		}
 		System.out.println(option);
 		System.out.println(filename);
-		Presenter P = new Presenter(new Model(filename, "Decimal"));
-		ArrayList<Leg> legs = new ArrayList<Leg>();
-		legs = P.getLegs();
-		for(int i = 0; i < legs.size(); i++){
-			System.out.println("Leg [" + i + "] : " + legs.get(i));
-		}
+		Presenter P = new Presenter(new Model(filename),new View("header",100,option));
+		P.getTrip(P);
+		
 
 		
 
