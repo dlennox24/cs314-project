@@ -15,5 +15,11 @@ public class TestPresenter {
 	public void getStart() {
 		assertEquals("OK", new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv", "Decimal").getStatus());
 	}
+	@Test
+	public void getLeg() {
+		
+	
+	}
+	
 	
 }

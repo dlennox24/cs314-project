@@ -9,11 +9,11 @@ public class TestTripCo {
 
 	@Test
 	public void notNull() {
-		assertNotNull(new Presenter(new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv", "Decimal")));
+		assertNotNull(new Presenter(new Model("input.csv", "Decimal")));
 	}
 	@Test
 	public void getStart() {
-		assertEquals("OK", new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv", "Decimal").getStatus());
+		assertEquals("OK", new Model("input.csv", "Decimal").getStatus());
 	}
 	
 }
