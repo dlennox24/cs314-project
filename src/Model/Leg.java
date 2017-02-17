@@ -3,7 +3,7 @@ package Model;
 public class Leg {
 	Location locA = null;
 	Location locB = null;
-	double distance;
+	int distance;
 	
 	public Leg(Location A, Location B){
 		this.locA = A;
@@ -16,7 +16,7 @@ public class Leg {
 		return this.locA.getName() + " to " + this.locB.getName() + " : " + this.distance;			
 	}
 	
-	private double greatCircleDistance(Location locA, Location locB) {
+	private int greatCircleDistance(Location locA, Location locB) {
 			double x1 = Math.toRadians(locA.getLong());
 	        double y1 = Math.toRadians(locA.getLat());
 	        double x2 = Math.toRadians(locB.getLong());
@@ -56,7 +56,7 @@ public class Leg {
 	        //System.out.println(distance2 + " nautical miles");
 		
 		
-		return distance2;
+		return (int) Math.round(distance2);
 	}
 
 	public static void main(String[] args) {
