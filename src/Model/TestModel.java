@@ -10,7 +10,7 @@ public class TestModel {
     public void testModel()
     {
     	
-    	Model m = new Model("/s/bach/l/under/pello/school/DTR-27/src/Model/input.csv", "Decimal");
+    	Model m = new Model("/s/bach/l/under/pello/school/DTR-27/src/Model/input.csv");
         assertEquals("OK", m.getStatus());
 
     }
