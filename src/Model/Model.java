@@ -35,14 +35,6 @@ public class Model {
 		
 		Leg l = new Leg(locations.get(locations.size()-1),locations.get(0));
 		ret.add(l);
-		
-//		for(int i = 0; i < locations.size(); i++){
-//			for(int j = i+1; j < locations.size(); j++){
-//				Leg l = new Leg(locations.get(i),locations.get(j));
-//				ret.add(l);
-//				
-//			}
-//		}
 
 		return ret;
 	}
@@ -358,10 +350,17 @@ public class Model {
 		return returnLocationArray;
 	}
 
+	
 	public String getStatus() {return status;}
+	public Location getLocation(int i) {return Locations.get(i);}
+	public Leg getLeg(int i) {return Legs.get(i);}
+	public int getLegsLength() {return Legs.size();}
+	public int getLocationsLength() {return Locations.size();}
+	public ArrayList<Leg> getLegs() {return Legs;}
+	public ArrayList<Location> getLocations() {return Locations;}
 
-	public Location getLocation(int i) {return this.Locations.get(i);}
-	public Leg getLeg(int i) {return this.Legs.get(i);}
+
+
 
 	
 	public static void main(String[] args) {
@@ -370,10 +369,10 @@ public class Model {
 		Model m = new Model("/home/ap/Documents/DTR-27/src/Model/inputDMS.csv");
 		
 		for(int i = 0; i < m.Locations.size(); i++){
-			System.out.println("Location [" + i + "] : " + m.Locations.get(i));
+			System.out.println("Location [" + i + "] : " + m.getLocation(i));
 		}
 		for(int i = 0; i < m.Legs.size(); i++){
-			System.out.println("Leg [" + i + "] : " + m.Legs.get(i));
+			System.out.println("Leg [" + i + "] : " + m.getLeg(i));
 		}
 		
 	
