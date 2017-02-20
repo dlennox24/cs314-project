@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class TestModel {
 	
-	Model m = new Model("/home/ap/Documents/DTR-27/src/Model/inputDMS.csv");
+	Model m = new Model("src/input.csv");
 
   
     @Test
