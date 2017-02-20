@@ -41,14 +41,14 @@ public class Model {
 
 		//NEAREST NEIGHBOR
 		for(int i = 0; i < this.Locations.size(); i++){
-			System.out.print("|");
+			//System.out.print("|");
 
 			for(int j = 0; j < this.Locations.size(); j++){
-				System.out.print(distances[i][j] + "  ");
+				//System.out.print(distances[i][j] + "  ");
 				
 
 			}
-			System.out.println("|");
+			//System.out.println("|");
 
 		}
 		
@@ -216,17 +216,17 @@ public class Model {
     	latCordString= latCordString.replaceAll("\\s+","");    			
 		System.out.println(latCordString);
 		
-		if (latCordString.indexOf("E") >= 0 ){
+		if (latCordString.indexOf("N") >= 0 ){
 			
-			System.out.println("E");
-			latCordString = latCordString.replaceAll("E", "");
+			System.out.println("N");
+			latCordString = latCordString.replaceAll("N", "");
 			NSscalar = 1;
 			
 			
 		}else {
 			
-			System.out.println("W");
-			latCordString = latCordString.replaceAll("W", " ");
+			System.out.println("S");
+			latCordString = latCordString.replaceAll("S", " ");
 			System.out.println(latCordString);
 			NSscalar = -1;
 		
@@ -241,8 +241,13 @@ public class Model {
 		double latDeg = Double.parseDouble(latCordArray[0]);
 		double latMin = Double.parseDouble(latCordArray[1]);
 		double latSec = Double.parseDouble(latCordArray[2]);
+		System.out.println("deg= " + latDeg);
+		System.out.println("min= " + latMin);
+		System.out.println("sec= " + latSec);
+
 		
 		latitude = (NSscalar) * (latDeg) + (latMin/60) + (latSec/3600);
+		System.out.println("lat = " + latitude);
 
     	return latitude;
     	
@@ -447,7 +452,7 @@ public class Model {
 	public static void main(String[] args) {
 		
 		
-		Model m = new Model("src/Model/inputDM.csv");
+		Model m = new Model("src/Model/brews.csv");
 		
 		for(int i = 0; i < m.Locations.size(); i++){
 			System.out.println("Location [" + i + "] : " + m.getLocation(i));
