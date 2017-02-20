@@ -71,7 +71,7 @@ public class TestModel {
     @Test 
     public void testGetLeg2()
     {
-    	assertTrue(0 <= m.getLeg(0).distance);
+    	assertTrue(0 <= m.getLeg(0).getDistance());
     }
     @Test
     public void testGetLocation1()

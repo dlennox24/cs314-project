@@ -1,14 +1,26 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Leg {
-	Location locA = null;
-	Location locB = null;
-	int distance;
+	private Location locA = null;
+	private Location locB = null;
+	private int distance;
 	
 	public Leg(Location A, Location B){
 		this.locA = A;
 		this.locB = B;
 		this.distance = greatCircleDistance( A, B);
+		
+	}
+	public ArrayList<Location> getLocations(){
+		ArrayList<Location> ret = new ArrayList();
+		ret.add(this.locA);
+		ret.add(this.locB);
+		return ret;
+	}
+	public int getDistance(){
+		return this.distance;
 		
 	}
 	

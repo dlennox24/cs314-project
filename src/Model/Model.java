@@ -23,18 +23,99 @@ public class Model {
 	private ArrayList<Leg> generateLegs(ArrayList<Location> locations) {
 		ArrayList<Leg> ret = new ArrayList();
 
-		for(int i = 0; i < locations.size()-1;){
+		int [][] distances = new int [ this.Locations.size()][ this.Locations.size()];
+		for(int i = 0; i < this.Locations.size(); i++){
+			for(int j = 0; j < this.Locations.size(); j++){
 
-			Location a = locations.get(i);
-			i++;
-			Location b = locations.get(i);
+			Location a = this.Locations.get(i);
+			Location b = this.Locations.get(j);
 			Leg l = new Leg(a,b);
-			ret.add(l);
-			
+			System.out.print(l.getDistance() + " ");
+			distances[i][j] = l.getDistance();
+					
+			}
+
+			System.out.println();
+		}	
+		System.out.println();
+
+		//NEAREST NEIGHBOR
+		for(int i = 0; i < this.Locations.size(); i++){
+			System.out.print("|");
+
+			for(int j = 0; j < this.Locations.size(); j++){
+				System.out.print(distances[i][j] + "  ");
+				
+
+			}
+			System.out.println("|");
+
 		}
 		
-		Leg l = new Leg(locations.get(locations.size()-1),locations.get(0));
+		
+		
+		ArrayList<Integer> NN = new ArrayList();
+		int LOW = 99999;
+		for(int i = 0; i < this.Locations.size(); i++){
+			ArrayList<Integer> visited = new ArrayList();
+			int total = 0;
+			int currentIndex = i;
+			visited.add(currentIndex);
+			while(visited.size() < this.Locations.size()){
+			int least = 99999;
+			int leastIndex = -1;
+				for(int j = 0; j < this.Locations.size(); j++){
+					
+					//System.out.println("least = " + least +"\tdistances["+currentIndex+"]["+j+"] = " + distances[currentIndex][j]);
+					if ((distances[currentIndex][j] != 0) && (distances[currentIndex][j] < least) && !visited.contains(j)){
+						least = distances[currentIndex][j];
+						leastIndex = j;
+						//System.out.print(least + " ");
+						//System.out.println(leastIndex);
+						
+					}
+
+					
+				}	
+			visited.add(leastIndex);
+			//System.out.println("added " + leastIndex);
+			currentIndex = leastIndex;
+			total = total + least;
+
+			}
+			System.out.print(visited + "\t");
+			System.out.println(total);
+			if(total < LOW ){
+				LOW = total;
+				NN = visited;
+			}
+
+		}
+		
+		System.out.println();
+		System.out.print(NN + "\t");
+		System.out.println(LOW);
+		
+		long t = 0;
+		for(int i = 0; i < NN.size()-1;){
+			Location a = this.Locations.get(NN.get(i));
+			i++;
+			Location b = this.Locations.get(NN.get(i));
+			Leg l = new Leg(a,b);
+			System.out.print(l.getDistance() + " ");
+			t = t + l.getDistance();
+			ret.add(l);
+		
+		}
+		Location a = this.Locations.get(NN.get(NN.size()-1));
+		Location b = this.Locations.get(NN.get(0));
+		Leg l = new Leg(a,b);
 		ret.add(l);
+
+
+		
+		System.out.println();
+		System.out.println(t);
 
 		return ret;
 	}
@@ -366,7 +447,7 @@ public class Model {
 	public static void main(String[] args) {
 		
 		
-		Model m = new Model("/home/ap/Documents/DTR-27/src/Model/inputDM.csv");
+		Model m = new Model("src/Model/inputDM.csv");
 		
 		for(int i = 0; i < m.Locations.size(); i++){
 			System.out.println("Location [" + i + "] : " + m.getLocation(i));
@@ -374,93 +455,7 @@ public class Model {
 		for(int i = 0; i < m.Legs.size(); i++){
 			System.out.println("Leg [" + i + "] : " + m.getLeg(i));
 		}
-		
-		int [][] distances = new int [ m.Locations.size()][ m.Locations.size()];
-		for(int i = 0; i < m.Locations.size(); i++){
-			for(int j = 0; j < m.Locations.size(); j++){
 
-			Location a = m.Locations.get(i);
-			Location b = m.Locations.get(j);
-			Leg l = new Leg(a,b);
-			System.out.print(l.distance + " ");
-			distances[i][j] = l.distance;
-					
-			}
-			System.out.println();
-		}	
-		System.out.println();
-
-		//NEAREST NEIGHBOR
-		for(int i = 0; i < m.Locations.size(); i++){
-			System.out.print("|");
-
-			for(int j = 0; j < m.Locations.size(); j++){
-				System.out.print(distances[i][j] + "  ");
-				
-
-			}
-			System.out.println("|");
-
-		}
-		
-		
-		
-		ArrayList<Integer> NN = new ArrayList();
-		int LOW = 99999;
-		for(int i = 0; i < m.Locations.size(); i++){
-			ArrayList<Integer> visited = new ArrayList();
-			int total = 0;
-			int currentIndex = i;
-			visited.add(currentIndex);
-			while(visited.size() < m.Locations.size()){
-			int least = 99999;
-			int leastIndex = -1;
-				for(int j = 0; j < m.Locations.size(); j++){
-					
-					//System.out.println("least = " + least +"\tdistances["+currentIndex+"]["+j+"] = " + distances[currentIndex][j]);
-					if ((distances[currentIndex][j] != 0) && (distances[currentIndex][j] < least) && !visited.contains(j)){
-						least = distances[currentIndex][j];
-						leastIndex = j;
-						//System.out.print(least + " ");
-						//System.out.println(leastIndex);
-						
-					}
-
-					
-				}	
-			visited.add(leastIndex);
-			//System.out.println("added " + leastIndex);
-			currentIndex = leastIndex;
-			total = total + least;
-
-			}
-			System.out.print(visited + "\t");
-			System.out.println(total);
-			if(total < LOW ){
-				LOW = total;
-				NN = visited;
-			}
-
-		}
-		
-		System.out.println();
-		System.out.print(NN + "\t");
-		System.out.println(LOW);
-		
-		long t = 0;
-		for(int i = 0; i < NN.size()-1;){
-			Location a = m.Locations.get(NN.get(i));
-			i++;
-			Location b = m.Locations.get(NN.get(i));
-			Leg l = new Leg(a,b);
-			System.out.print(l.distance + " ");
-			t = t + l.distance;
-		
-		}
-		System.out.println();
-		System.out.println(t);
-		
-		//
 		
 			
 	}
