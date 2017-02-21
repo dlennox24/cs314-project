@@ -18,7 +18,7 @@ class Stroke {
 			int y2,
 			String color
 			){
-		this.id = id;
+		this.id = id.trim();
 		this.strokeWidth = strokeWidth;
 		this.x1 = x1;
 		this.y1 = y1;
