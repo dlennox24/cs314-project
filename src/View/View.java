@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class View {
 	private String status;
 	private String flags;
-	private String title;
-	private int totalDist;
 	private String outputFilename;
 	private double h = 674.29;
 	private double w = 1180;
@@ -23,8 +21,6 @@ public class View {
 	private ArrayList<Label> distances = new ArrayList<Label>();
 
 	public View(String title, int totalDist, String flags, String filename) {
-		this.title = title;
-		this.totalDist = totalDist;
 		this.flags = flags;
 		this.outputFilename = filename;
 
@@ -49,9 +45,9 @@ public class View {
 		int[] coord2 = coord2Pixel(x2,y2);
 		this.legsData.add(new Leg(name1,name2,dist));
 		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
-		this.locations.add(new Label(name1,name1,0,0,"left",16));
-		this.locations.add(new Label(name2,name2,0,0,"left",16));
-		this.locations.add(new Label(name2,name2,0,0,"left",16));
+		this.locations.add(new Label("label"+name1,name1,coord1[0],coord1[1],"left",16));
+		this.locations.add(new Label("label"+name2,name2,coord2[0],coord2[1],"left",16));
+		this.distances.add(new Label("label"+dist,""+dist,(coord1[0]+coord2[0])/2,(coord1[1]+coord2[1])/2,"middle",16));
 	}
 
 	public void finTrip() throws IOException{
@@ -79,6 +75,38 @@ public class View {
 		}
 		fWriterSvg.write("\t</g>\n");
 		// /titles
+
+		// Adding locaiton labels for map
+		fWriterSvg.write("\t<g>\n\t\t<title>Locations</title>\n");
+		for(int i=0;i<this.locations.size();i++){
+			// System.out.println("size:"+this.locations.size());
+			// System.out.println(i);
+			fWriterSvg.write("\t\t<text"
+					+" id=\""+this.locations.get(i).id+"\""
+					+" x=\""+this.locations.get(i).x+"\""
+					+" y=\""+this.locations.get(i).y+"\""
+					+" text-anchor=\""+this.locations.get(i).textAnchor+"\""
+					+" font-size=\""+this.locations.get(i).fontSize+"\""
+					+" font-family=\""+this.locations.get(i).fontFamily+"\">"
+					+this.locations.get(i).displayedText+"</text>\n");
+		}
+		fWriterSvg.write("\t</g>\n");
+		// /location labels
+
+		// Adding locaiton labels for map
+		fWriterSvg.write("\t<g>\n\t\t<title>Distances</title>\n");
+		for(int i=0;i<this.distances.size();i++){
+			fWriterSvg.write("\t\t<text"
+					+" id=\""+this.distances.get(i).id+"\""
+					+" x=\""+this.distances.get(i).x+"\""
+					+" y=\""+this.distances.get(i).y+"\""
+					+" text-anchor=\""+this.distances.get(i).textAnchor+"\""
+					+" font-size=\""+this.distances.get(i).fontSize+"\""
+					+" font-family=\""+this.distances.get(i).fontFamily+"\">"
+					+this.distances.get(i).displayedText+"</text>\n");
+		}
+		fWriterSvg.write("\t</g>\n");
+		// /location labels
 
 		// Adding basic map borders
 		fWriterSvg.write("\t<g>\n\t\t<title>Borders</title>\n");
@@ -118,7 +146,7 @@ public class View {
 		fWriterXml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<trip>\n");
 		for(int i=0;i<this.legsData.size();i++){
 			fWriterXml.write("\t<leg>\n"
-					+"\t\t<sequence>"+i+1+"</sequence>\n"
+					+"\t\t<sequence>"+(i+1)+"</sequence>\n"
 					+"\t\t<start>"+this.legsData.get(i).startCityName+"</start>\n"
 					+"\t\t<finish>"+this.legsData.get(i).endCityName+"</finish>\n"
 					+"\t\t<mileage>"+this.legsData.get(i).dist+"</mileage>\n"
@@ -143,7 +171,7 @@ public class View {
 
 	public static void main(String[] args) {
 		View v = new View("Custom Titles!",15454,"mi","fname");
-		v.addLeg(37.094,-102.252,40.879,-108.948,99,"start","end");
+		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start","end");
 		try {
 			v.finTrip();
 		} catch (IOException e) {
