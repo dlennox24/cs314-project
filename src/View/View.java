@@ -45,8 +45,8 @@ public class View {
 		int[] coord2 = coord2Pixel(x2,y2);
 		this.legsData.add(new Leg(name1,name2,dist));
 		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
-		this.locations.add(new Label("label"+name1,name1,coord1[0],coord1[1],"left",16));
-		this.locations.add(new Label("label"+name2,name2,coord2[0],coord2[1],"left",16));
+		this.locations.add(new Label("label"+name1.replaceAll("\\s+","").replaceAll("&+","and"),name1.replaceAll("&+","and"),coord1[0],coord1[1],"left",16));
+		this.locations.add(new Label("label"+name2.replaceAll("\\s+","").replaceAll("&+","and"),name2.replaceAll("&+","and"),coord2[0],coord2[1],"left",16));
 		this.distances.add(new Label("label"+dist,""+dist,(coord1[0]+coord2[0])/2,(coord1[1]+coord2[1])/2,"middle",16));
 	}
 
@@ -193,8 +193,9 @@ public class View {
 	}
 
 	public static void main(String[] args) {
-		View v = new View("Custom Titles!",15454,"","fname");
-		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start","end");
+		View v = new View("Custom Titles!",15454,"mn","fname");
+		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start & test","end");
+		System.out.println("start & test".replaceAll("\\s+", ""));
 		try {
 			v.finTrip();
 		} catch (IOException e) {

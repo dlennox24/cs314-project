@@ -16,7 +16,7 @@ class Label {
 	String textAnchor,
 	int fontSize
 	){
-		this.id = id.trim();
+		this.id = id.replaceAll("\\s","");
 		this.displayedText = displayedText;
 		this.x = x;
 		this.y = y;
