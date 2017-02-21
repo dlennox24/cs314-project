@@ -5,12 +5,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-class View {
+public class View {
 	private String status;
-	private ArrayList<String> flags;
+	private String flags;
 	private String title;
 	private int totalDist;
 	private String outputFilename;
+	private double h = 674.29;
+	private double w = 1180;
+	private double b = 174.855;
 
 	private ArrayList<Stroke> legs = new ArrayList<Stroke>();
 	private ArrayList<Stroke> borders = new ArrayList<Stroke>();
@@ -18,7 +21,7 @@ class View {
 	private ArrayList<Label> locations = new ArrayList<Label>();
 	private ArrayList<Label> distances = new ArrayList<Label>();
 
-	public View(String title, int totalDist, ArrayList<String> flags, String filename) {
+	public View(String title, int totalDist, String flags, String filename) {
 		this.title = title;
 		this.totalDist = totalDist;
 		this.flags = flags;
@@ -26,25 +29,35 @@ class View {
 
 		String borderColor = "#333";
 		int borderWidth = 3;
-		this.borders.add(new Stroke("north",borderWidth,50,50,1230,50,borderColor));
-		this.borders.add(new Stroke("east",borderWidth,1230,50,1230,975,borderColor));
-		this.borders.add(new Stroke("south",borderWidth,1230,975,50,975,borderColor));
-		this.borders.add(new Stroke("west",borderWidth,50,975,50,50,borderColor));
+		int width = (int) ((int) this.h+this.b);
+		this.borders.add(new Stroke("north",borderWidth,50,(int)this.b,1230,(int)this.b,borderColor));
+		this.borders.add(new Stroke("east",borderWidth,1230,(int)this.b,1230,width,borderColor));
+		this.borders.add(new Stroke("south",borderWidth,1230,width,50,width,borderColor));
+		this.borders.add(new Stroke("west",borderWidth,50,width,50,(int)this.b,borderColor));
 
-		this.titles.add(new Label("state",title,640,40,"middle",20));
-		this.titles.add(new Label("distance",totalDist+" miles",640,1000,"middle",20));
+		this.titles.add(new Label("state",title,640,(int)this.b-((int)this.b/2),"middle",20));
+		this.titles.add(new Label("distance",totalDist+" miles",640,(int)this.b+(int)this.h+40,"middle",20));
 
 		this.status = "OK";
 	}
 
 	// Has labels
-	public void addLeg(String x1, String y1, String x2, String y2, int dist, String name1, String name2){
+	public void addLeg(double x1, double y1, double x2, double y2, int dist, String name1, String name2){
 		// add leg data to the correct arraylists
+		int[] coord1 = coord2Pixel(x1,y1);
+		int[] coord2 = coord2Pixel(x2,y2);
+		this.legs.add(new Stroke(name1,2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
+		this.locations.add(new Label(name1,name1,0,0,"left",16));
+		this.locations.add(new Label(name2,name2,0,0,"left",16));
+		this.locations.add(new Label(name2,name2,0,0,"left",16));
 	}
 
 	// Doesn't have labels
-	public void addLeg(String x1, String y1, String x2, String y2, int dist){
+	public void addLeg(double x1, double y1, double x2, double y2, int dist){
 		// add leg data to the correct arraylists
+		int[] coord1 = coord2Pixel(x1,y1);
+		int[] coord2 = coord2Pixel(x2,y2);
+		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#999"));
 	}
 
 	public void finTrip() throws IOException{
@@ -88,6 +101,21 @@ class View {
 		fWriterSvg.write("\t</g>\n");
 		// /borders
 
+		// Adding legs
+		fWriterSvg.write("\t<g>\n\t\t<title>Legs</title>\n");
+		for(int i=0;i<this.legs.size();i++){
+			fWriterSvg.write("\t\t<line"
+					+" id=\""+this.legs.get(i).id+"\""
+					+" x1=\""+this.legs.get(i).x1+"\""
+					+" y1=\""+this.legs.get(i).y1+"\""
+					+" x2=\""+this.legs.get(i).x2+"\""
+					+" y2=\""+this.legs.get(i).y2+"\""
+					+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
+					+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+		}
+		fWriterSvg.write("\t</g>\n");
+		// /legs
+
 		// Close SVG syntax; file should be complete
 		fWriterSvg.write("</svg>");
 
@@ -98,12 +126,11 @@ class View {
 		fWriterXml.close();
 	}
 
-	private void addLine(){
-		// add line to a specific arraylist
-	}
+	private int[] coord2Pixel(double lat, double lon){
+		double sx = 50+((lon+109)/7)*this.w;
+		double sy = this.b + ((41-lat)/4)*this.h;
 
-	public void addLabel(){
-		// add label to a specific arraylist
+		return new int[]{(int)sx,(int)sy};
 	}
 
 	public String getStatus(){
@@ -111,12 +138,14 @@ class View {
 	}
 
 	public static void main(String[] args) {
-		View v = new View("Custom Titles!",15454,new ArrayList<String>(),"fname");
+		View v = new View("Custom Titles!",15454,"mi","fname");
+		v.addLeg(37.094,-102.252,40.879,-108.948,99);
 		try {
 			v.finTrip();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("DONE");
 	}
 }
