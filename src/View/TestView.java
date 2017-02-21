@@ -7,25 +7,9 @@ import org.junit.Test;
 
 public class TestView {
 
-  //	@Test
-//	public void testPresenter() {
-//		View view = new View();
-//		assertEquals("OK",view.getStatus());
-//	}
-	// @Test
-	// public void testPresenter() {
-	// 	//View view = new View();
-	// 	//assertEquals("OK",view.getStatus());
-	// }
-
-//	@Test
-//	public void testConditional() {
-////		assertEquals(true, true);
-//	}
-
-//	@Test
-//	public void testFunction() {
-//
-//		assertEquals(false, display("test"));
-//	}
+	@Test
+	public void testView() {
+		View v = new View("Custom Titles!",15454,"mn","fname");
+		assertEquals("OK",v.getStatus());
+	}
 }
