@@ -19,11 +19,18 @@ public class TestPresenter {
 	public void getModel() {
 		Model model = new Model("input.csv");
 		ArrayList<String> a = null;
-		View view = new View("header",100, a);
-		Presenter Presenter = new Presenter(model,view);
+		View view = new View("Colorado",100,"anotherString", "FinalString");
+		Presenter Presenter = new Presenter(model,view,"aaa");
 		assertEquals(model, Presenter.getModel());
 	
 	}
+	public void getView() {
+		Model model = new Model("input.csv");
+		ArrayList<String> a = null;
+		View view = new View("Colorado",100,"anotherString", "FinalString");
+		Presenter Presenter = new Presenter(model,view,"aaa");
+		assertEquals(view, Presenter.getView());
 	
+	}
 	
 }

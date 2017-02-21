@@ -1,5 +1,6 @@
 package Presenter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Model.Leg;
@@ -11,7 +12,7 @@ public class Presenter {
 	private View view;
 	private static Model model;
 	
-	public Presenter(Model model,View view) {
+	public Presenter(Model model,View view, String options) {
 		
 	this.view
 	= view;
@@ -24,9 +25,20 @@ public class Presenter {
 	public Model getModel(){
 		return model;
 	}
-	public Trip getTrip(Presenter Presenter){
+	public View getView(){
+		return view;
+	}
+	public void finalView(){
+		try {
+			view.finTrip();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public Trip getTrip(Presenter Presenter, String options){
 		Trip trip = new Trip(Presenter);
-		trip.createTrip();
+		trip.createTrip(options);
 		return trip;
 	}
 	
