@@ -115,18 +115,20 @@ public class View {
 		// /location id
 
 		// Adding distance labels for map
-		fWriterSvg.write("\t<g>\n\t\t<title>Distances</title>\n");
-		for(int i=0;i<this.distances.size();i++){
-			fWriterSvg.write("\t\t<text"
-					+" id=\""+this.distances.get(i).id+"\""
-					+" x=\""+this.distances.get(i).x+"\""
-					+" y=\""+this.distances.get(i).y+"\""
-					+" text-anchor=\""+this.distances.get(i).textAnchor+"\""
-					+" font-size=\""+this.distances.get(i).fontSize+"\""
-					+" font-family=\""+this.distances.get(i).fontFamily+"\">"
-					+this.distances.get(i).displayedText+"</text>\n");
+		if(this.flags.contains("m")){
+			fWriterSvg.write("\t<g>\n\t\t<title>Distances</title>\n");
+			for(int i=0;i<this.distances.size();i++){
+				fWriterSvg.write("\t\t<text"
+						+" id=\""+this.distances.get(i).id+"\""
+						+" x=\""+this.distances.get(i).x+"\""
+						+" y=\""+this.distances.get(i).y+"\""
+						+" text-anchor=\""+this.distances.get(i).textAnchor+"\""
+						+" font-size=\""+this.distances.get(i).fontSize+"\""
+						+" font-family=\""+this.distances.get(i).fontFamily+"\">"
+						+this.distances.get(i).displayedText+"</text>\n");
+			}
+			fWriterSvg.write("\t</g>\n");
 		}
-		fWriterSvg.write("\t</g>\n");
 		// /distance labels
 
 		// Adding basic map borders
