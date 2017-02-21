@@ -246,12 +246,91 @@ public class Model {
 		System.out.println("sec= " + latSec);
 
 		
-		latitude = (NSscalar) * (latDeg) + (latMin/60) + (latSec/3600);
+		latitude = (NSscalar) * ((latDeg) + (latMin/60) + (latSec/3600));
 		System.out.println("lat = " + latitude);
 
     	return latitude;
     	
     }
+    
+	private double processDMlong(String longCordString) {
+		double longitude;
+    	int EWscalar = 0;
+    	
+    	longCordString= longCordString.replaceAll("\\s+","");    			
+		System.out.println(longCordString);
+		
+		if (longCordString.indexOf("E") >= 0 ){
+			
+			System.out.println("E");
+			longCordString = longCordString.replaceAll("E", "");
+			EWscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("W");
+			longCordString = longCordString.replaceAll("W", " ");
+			System.out.println(longCordString);
+			EWscalar = -1;
+		
+		}
+		
+		longCordString = longCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(longCordString);
+		longCordString = longCordString.replaceAll("\\s+"," ");
+		System.out.println(longCordString);
+		
+		String[] longCordArray = longCordString.split(" ");
+		double longDeg = Double.parseDouble(longCordArray[0]);
+		double longMin = Double.parseDouble(longCordArray[1]);
+
+		longitude = (EWscalar) * (longDeg) + (longMin/60);
+
+    	return longitude;
+	}
+	private double processDMlat(String latCordString) {
+	
+		double latitude;
+    	int NSscalar = 0;
+    	
+    	latCordString= latCordString.replaceAll("\\s+","");    			
+		System.out.println(latCordString);
+		
+		if (latCordString.indexOf("N") >= 0 ){
+			
+			System.out.println("N");
+			latCordString = latCordString.replaceAll("N", "");
+			NSscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("S");
+			latCordString = latCordString.replaceAll("S", " ");
+			System.out.println(latCordString);
+			NSscalar = -1;
+		
+		}
+		
+		latCordString = latCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(latCordString);
+		latCordString = latCordString.replaceAll("\\s+"," ");
+		System.out.println(latCordString);
+		
+		String[] latCordArray = latCordString.split(" ");
+		double latDeg = Double.parseDouble(latCordArray[0]);
+		double latMin = Double.parseDouble(latCordArray[1]);
+		System.out.println("deg= " + latDeg);
+		System.out.println("min= " + latMin);
+
+		
+		latitude = (NSscalar) * ((latDeg) + (latMin/60) );
+		System.out.println("lat = " + latitude);
+
+    	return latitude;
+		
+	}
 
     private double processDlong(String longCordString){
     	int EWscalar = 0;
@@ -348,9 +427,9 @@ public class Model {
 		System.out.println(cord);
 
 		
-		if (cord.indexOf("\'") >= 0 ){
+		if (cord.indexOf("\"") >= 0 ){
 			
-			System.out.println("backquote");
+			System.out.println("doublequote");
 			
 			for(int i = 0; i < csvLines.size(); i++){
 
@@ -377,6 +456,35 @@ public class Model {
 			}
 			
 			
+			
+			
+			
+		}else if (cord.indexOf("\'") >= 0 ){
+			
+			System.out.println("singlequote");
+			
+			
+			for(int i = 0; i < csvLines.size(); i++){
+    			String line = csvLines.get(i);
+    			String[] lineArray = line.split(",");
+    			
+    			String id = lineArray[idIndex];
+    			String name = lineArray[nameIndex];
+    			
+    			//LONG
+    			String longCordString = lineArray[longIndex];
+    			double longitude = processDMlong(longCordString);	
+				//
+				
+				//LAT
+				String latCordString = lineArray[latIndex];
+    			double latitude = processDMlat(latCordString);
+				//
+    			Location l = new Location(id, name, longitude, latitude);
+    			System.out.println("adding location: [ " + l + " ]");
+    			returnLocationArray.add(l);
+    		
+			}
 			
 			
 			
@@ -437,6 +545,8 @@ public class Model {
 	}
 
 	
+
+
 	public String getStatus() {return status;}
 	public Location getLocation(int i) {return Locations.get(i);}
 	public Leg getLeg(int i) {return Legs.get(i);}
@@ -464,6 +574,7 @@ public class Model {
 		
 			
 	}
+
 
 
 }
