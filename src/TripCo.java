@@ -1,5 +1,9 @@
+import java.util.ArrayList;
+
+import Model.Leg;
 import Model.Model;
 import Presenter.Presenter;
+import Presenter.Trip;
 import View.View;
 
 public class TripCo {
@@ -7,16 +11,30 @@ public class TripCo {
 	
 	public static void main(String[] args) {
 
-		String fileName = args[0];
-		System.out.println(fileName);
-		Model m = new Model(fileName, "Decimal");
+
+
 		
-		for(int i = 0; i < m.Locations.size(); i++){
-			//System.out.println("Location [" + i + "] : " + m.Locations.get(i));
+		ArrayList<String> option = new ArrayList<String>();
+		String filename = null;
+		
+		for (int i = 0; i < args.length; i++){
+			String temp = args[i];
+			if(temp.contains("-")){
+				option.add(temp);
+			}else{
+				filename=temp;
+			}
+			
 		}
-		for(int i = 0; i < m.Legs.size(); i++){
-			//System.out.println("Leg [" + i + "] : " + m.Legs.get(i));
-		}
+		System.out.println(option);
+		System.out.println(filename);
+		Presenter P = new Presenter(new Model(filename),new View("header",100,option));
+		P.getTrip(P);
+		
+
+		
+
+		
 		
 		
 	}

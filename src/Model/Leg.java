@@ -1,9 +1,11 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Leg {
-	Location locA = null;
-	Location locB = null;
-	double distance;
+	private Location locA = null;
+	private Location locB = null;
+	private int distance;
 	
 	public Leg(Location A, Location B){
 		this.locA = A;
@@ -11,12 +13,22 @@ public class Leg {
 		this.distance = greatCircleDistance( A, B);
 		
 	}
+	public ArrayList<Location> getLocations(){
+		ArrayList<Location> ret = new ArrayList();
+		ret.add(this.locA);
+		ret.add(this.locB);
+		return ret;
+	}
+	public int getDistance(){
+		return this.distance;
+		
+	}
 	
 	public String toString(){
 		return this.locA.getName() + " to " + this.locB.getName() + " : " + this.distance;			
 	}
 	
-	private double greatCircleDistance(Location locA, Location locB) {
+	private int greatCircleDistance(Location locA, Location locB) {
 			double x1 = Math.toRadians(locA.getLong());
 	        double y1 = Math.toRadians(locA.getLat());
 	        double x2 = Math.toRadians(locB.getLong());
@@ -56,7 +68,7 @@ public class Leg {
 	        //System.out.println(distance2 + " nautical miles");
 		
 		
-		return distance2;
+		return (int) Math.round(distance2);
 	}
 
 	public static void main(String[] args) {

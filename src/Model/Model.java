@@ -8,46 +8,114 @@ import java.util.Scanner;
 public class Model {
 
     private String status;
-    public ArrayList<Location> Locations;
-    public ArrayList<Leg> Legs;
+    private ArrayList<Location> Locations;
+    private ArrayList<Leg> Legs;
 
 
     // Constructor
     public Model(String filename) {
-    	this.Locations = readCSV(filename, filename);
+    	this.Locations = readCSV(filename);
         this.Legs = generateLegs(this.Locations);
         this.status = "OK";
     }
 
-	public Model(String filename, String cordSystem) {
-	    	this.Locations = readCSV(filename, cordSystem);
-	        this.Legs = generateLegs(this.Locations);
-	        this.status = "OK";
-	}
 
 	private ArrayList<Leg> generateLegs(ArrayList<Location> locations) {
 		ArrayList<Leg> ret = new ArrayList();
 
-		for(int i = 0; i < locations.size()-1;){
+		int [][] distances = new int [ this.Locations.size()][ this.Locations.size()];
+		for(int i = 0; i < this.Locations.size(); i++){
+			for(int j = 0; j < this.Locations.size(); j++){
 
-			Location a = locations.get(i);
-			i++;
-			Location b = locations.get(i);
+			Location a = this.Locations.get(i);
+			Location b = this.Locations.get(j);
 			Leg l = new Leg(a,b);
-			ret.add(l);
-			
+			System.out.print(l.getDistance() + " ");
+			distances[i][j] = l.getDistance();
+					
+			}
+
+			System.out.println();
+		}	
+		System.out.println();
+
+		//NEAREST NEIGHBOR
+		for(int i = 0; i < this.Locations.size(); i++){
+			//System.out.print("|");
+
+			for(int j = 0; j < this.Locations.size(); j++){
+				//System.out.print(distances[i][j] + "  ");
+				
+
+			}
+			//System.out.println("|");
+
 		}
 		
-		Leg l = new Leg(locations.get(locations.size()-1),locations.get(0));
-		ret.add(l);
 		
-//		for(int i = 0; i < locations.size(); i++){
-//			for(int j = i+1; j < locations.size(); j++){
-//				Leg l = new Leg(locations.get(i),locations.get(j));
-//				ret.add(l);
-//				
-//			}
-//		}
+		
+		ArrayList<Integer> NN = new ArrayList();
+		int LOW = 99999;
+		for(int i = 0; i < this.Locations.size(); i++){
+			ArrayList<Integer> visited = new ArrayList();
+			int total = 0;
+			int currentIndex = i;
+			visited.add(currentIndex);
+			while(visited.size() < this.Locations.size()){
+			int least = 99999;
+			int leastIndex = -1;
+				for(int j = 0; j < this.Locations.size(); j++){
+					
+					//System.out.println("least = " + least +"\tdistances["+currentIndex+"]["+j+"] = " + distances[currentIndex][j]);
+					if ((distances[currentIndex][j] != 0) && (distances[currentIndex][j] < least) && !visited.contains(j)){
+						least = distances[currentIndex][j];
+						leastIndex = j;
+						//System.out.print(least + " ");
+						//System.out.println(leastIndex);
+						
+					}
+
+					
+				}	
+			visited.add(leastIndex);
+			//System.out.println("added " + leastIndex);
+			currentIndex = leastIndex;
+			total = total + least;
+
+			}
+			System.out.print(visited + "\t");
+			System.out.println(total);
+			if(total < LOW ){
+				LOW = total;
+				NN = visited;
+			}
+
+		}
+		
+		System.out.println();
+		System.out.print(NN + "\t");
+		System.out.println(LOW);
+		
+		long t = 0;
+		for(int i = 0; i < NN.size()-1;){
+			Location a = this.Locations.get(NN.get(i));
+			i++;
+			Location b = this.Locations.get(NN.get(i));
+			Leg l = new Leg(a,b);
+			System.out.print(l.getDistance() + " ");
+			t = t + l.getDistance();
+			ret.add(l);
+		
+		}
+		Location a = this.Locations.get(NN.get(NN.size()-1));
+		Location b = this.Locations.get(NN.get(0));
+		Leg l = new Leg(a,b);
+		ret.add(l);
+
+
+		
+		System.out.println();
+		System.out.println(t);
 
 		return ret;
 	}
@@ -70,6 +138,7 @@ public class Model {
 	
 		while(scanner2.hasNextLine()){	
 			String line = scanner2.nextLine();
+			System.out.println(line);
 			if (!line.equals("")){
 				ret.add(line); 
 			}
@@ -78,7 +147,7 @@ public class Model {
 		return ret;
 	}
     
-    private ArrayList<Location> readCSV(String filename, String cordSystem) {
+    private ArrayList<Location> readCSV(String filename) {
     	
     	String headerLine = null;
 		ArrayList<String> csvLines = new ArrayList();
@@ -98,11 +167,241 @@ public class Model {
 			e.printStackTrace();
 		}
 		
-    	return generateLocationArray(headerLine, csvLines, cordSystem);
+    	return generateLocationArray(headerLine, csvLines);
     	
 	}
+    
+    private double processDMSlong(String longCordString){
+    	double longitude;
+    	int EWscalar = 0;
+    	
+    	longCordString= longCordString.replaceAll("\\s+","");    			
+		System.out.println(longCordString);
+		
+		if (longCordString.indexOf("E") >= 0 ){
+			
+			System.out.println("E");
+			longCordString = longCordString.replaceAll("E", "");
+			EWscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("W");
+			longCordString = longCordString.replaceAll("W", " ");
+			System.out.println(longCordString);
+			EWscalar = -1;
+		
+		}
+		
+		longCordString = longCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(longCordString);
+		longCordString = longCordString.replaceAll("\\s+"," ");
+		System.out.println(longCordString);
+		
+		String[] longCordArray = longCordString.split(" ");
+		double longDeg = Double.parseDouble(longCordArray[0]);
+		double longMin = Double.parseDouble(longCordArray[1]);
+		double longSec = Double.parseDouble(longCordArray[2]);
+		
+		longitude = (EWscalar) * (longDeg) + (longMin/60) + (longSec/3600);
 
-	private ArrayList<Location> generateLocationArray(String headerline, ArrayList<String> csvLines, String cordSystem) {
+    	return longitude;
+    	
+    }
+    private double processDMSlat(String latCordString){
+    	double latitude;
+    	int NSscalar = 0;
+    	
+    	latCordString= latCordString.replaceAll("\\s+","");    			
+		System.out.println(latCordString);
+		
+		if (latCordString.indexOf("N") >= 0 ){
+			
+			System.out.println("N");
+			latCordString = latCordString.replaceAll("N", "");
+			NSscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("S");
+			latCordString = latCordString.replaceAll("S", " ");
+			System.out.println(latCordString);
+			NSscalar = -1;
+		
+		}
+		
+		latCordString = latCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(latCordString);
+		latCordString = latCordString.replaceAll("\\s+"," ");
+		System.out.println(latCordString);
+		
+		String[] latCordArray = latCordString.split(" ");
+		double latDeg = Double.parseDouble(latCordArray[0]);
+		double latMin = Double.parseDouble(latCordArray[1]);
+		double latSec = Double.parseDouble(latCordArray[2]);
+		System.out.println("deg= " + latDeg);
+		System.out.println("min= " + latMin);
+		System.out.println("sec= " + latSec);
+
+		
+		latitude = (NSscalar) * ((latDeg) + (latMin/60) + (latSec/3600));
+		System.out.println("lat = " + latitude);
+
+    	return latitude;
+    	
+    }
+    
+	private double processDMlong(String longCordString) {
+		double longitude;
+    	int EWscalar = 0;
+    	
+    	longCordString= longCordString.replaceAll("\\s+","");    			
+		System.out.println(longCordString);
+		
+		if (longCordString.indexOf("E") >= 0 ){
+			
+			System.out.println("E");
+			longCordString = longCordString.replaceAll("E", "");
+			EWscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("W");
+			longCordString = longCordString.replaceAll("W", " ");
+			System.out.println(longCordString);
+			EWscalar = -1;
+		
+		}
+		
+		longCordString = longCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(longCordString);
+		longCordString = longCordString.replaceAll("\\s+"," ");
+		System.out.println(longCordString);
+		
+		String[] longCordArray = longCordString.split(" ");
+		double longDeg = Double.parseDouble(longCordArray[0]);
+		double longMin = Double.parseDouble(longCordArray[1]);
+
+		longitude = (EWscalar) * (longDeg) + (longMin/60);
+
+    	return longitude;
+	}
+	private double processDMlat(String latCordString) {
+	
+		double latitude;
+    	int NSscalar = 0;
+    	
+    	latCordString= latCordString.replaceAll("\\s+","");    			
+		System.out.println(latCordString);
+		
+		if (latCordString.indexOf("N") >= 0 ){
+			
+			System.out.println("N");
+			latCordString = latCordString.replaceAll("N", "");
+			NSscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("S");
+			latCordString = latCordString.replaceAll("S", " ");
+			System.out.println(latCordString);
+			NSscalar = -1;
+		
+		}
+		
+		latCordString = latCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(latCordString);
+		latCordString = latCordString.replaceAll("\\s+"," ");
+		System.out.println(latCordString);
+		
+		String[] latCordArray = latCordString.split(" ");
+		double latDeg = Double.parseDouble(latCordArray[0]);
+		double latMin = Double.parseDouble(latCordArray[1]);
+		System.out.println("deg= " + latDeg);
+		System.out.println("min= " + latMin);
+
+		
+		latitude = (NSscalar) * ((latDeg) + (latMin/60) );
+		System.out.println("lat = " + latitude);
+
+    	return latitude;
+		
+	}
+
+    private double processDlong(String longCordString){
+    	int EWscalar = 0;
+    	longCordString= longCordString.replaceAll("\\s+","");    			
+		System.out.println(longCordString);
+		
+		if (longCordString.indexOf("E") >= 0 ){
+			
+			System.out.println("E");
+			longCordString = longCordString.replaceAll("E", " ");
+			EWscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("W");
+			longCordString= longCordString.replaceAll("W", " ");
+			System.out.println(longCordString);
+			EWscalar = -1;
+		
+		}
+		
+		longCordString = longCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(longCordString);
+		longCordString = longCordString.replaceAll("\\s+"," ");
+		System.out.println(longCordString);
+		
+		String[] longCordArray = longCordString.split(" ");
+		double longDeg = Double.parseDouble(longCordArray[0]);
+		double longitude = (EWscalar) * (longDeg) ;    			
+
+		return longitude;
+    	
+    }
+
+    
+    private double processDlat(String latCordString){
+    	int NSscalar = 0 ;
+    	latCordString = latCordString.replaceAll("\\s+","");    			
+		System.out.println(latCordString);
+		
+		if (latCordString.indexOf("N") >= 0 ){
+			
+			System.out.println("N");
+			latCordString = latCordString.replaceAll("N", "");
+			System.out.println(latCordString);
+			NSscalar = 1;
+			
+			
+		}else {
+			
+			System.out.println("S");
+			latCordString = latCordString.replaceAll("S", " ");
+			System.out.println(latCordString);
+			NSscalar = -1;
+		
+		}
+		
+		latCordString = latCordString.replaceAll("[^0-9.]", " ");
+		System.out.println(latCordString);
+		latCordString = latCordString.replaceAll("\\s+"," ");
+		System.out.println(latCordString);
+		
+		String[] latCordArray = latCordString.split(" ");
+		double latDeg = Double.parseDouble(latCordArray[0]);
+		double latitude = (NSscalar) * (latDeg) ;
+		return latitude;
+    	
+    }
+
+	private ArrayList<Location> generateLocationArray(String headerline, ArrayList<String> csvLines) {
     	ArrayList<Location> returnLocationArray = new ArrayList();
     	
     	String[] headerLineArray = headerline.split(",");
@@ -120,8 +419,108 @@ public class Model {
     		
     	}
     	
-    	if(cordSystem.toUpperCase().equals("DECIMAL")){
-        	for(int i = 0; i < csvLines.size(); i++){
+    	String cordCheck = csvLines.get(2);
+		String[]  cordCheckArray = cordCheck.split(",");
+		
+		String cord = cordCheckArray[longIndex];
+		cord = cord.replaceAll("\\s+","");
+		System.out.println(cord);
+
+		
+		if (cord.indexOf("\"") >= 0 ){
+			
+			System.out.println("doublequote");
+			
+			for(int i = 0; i < csvLines.size(); i++){
+
+    			String line = csvLines.get(i);
+    			String[] lineArray = line.split(",");
+    			
+    			String id = lineArray[idIndex];
+    			String name = lineArray[nameIndex];
+    			
+    			//LONG
+    			String longCordString = lineArray[longIndex];
+    			double longitude = processDMSlong(longCordString);
+				//
+				
+				//LAT
+    			String latCordString = lineArray[latIndex];
+    			double latitude = processDMSlat(latCordString);	
+				//    			
+
+    			Location l = new Location(id, name, longitude, latitude);
+    			System.out.println("adding location: [ " + l + " ]");
+    			returnLocationArray.add(l);
+    		
+			}
+			
+			
+			
+			
+			
+		}else if (cord.indexOf("\'") >= 0 ){
+			
+			System.out.println("singlequote");
+			
+			
+			for(int i = 0; i < csvLines.size(); i++){
+    			String line = csvLines.get(i);
+    			String[] lineArray = line.split(",");
+    			
+    			String id = lineArray[idIndex];
+    			String name = lineArray[nameIndex];
+    			
+    			//LONG
+    			String longCordString = lineArray[longIndex];
+    			double longitude = processDMlong(longCordString);	
+				//
+				
+				//LAT
+				String latCordString = lineArray[latIndex];
+    			double latitude = processDMlat(latCordString);
+				//
+    			Location l = new Location(id, name, longitude, latitude);
+    			System.out.println("adding location: [ " + l + " ]");
+    			returnLocationArray.add(l);
+    		
+			}
+			
+			
+			
+		}else if (cord.indexOf("°") >= 0 ){
+			
+			System.out.println("degree");
+			
+			
+			for(int i = 0; i < csvLines.size(); i++){
+    			String line = csvLines.get(i);
+    			String[] lineArray = line.split(",");
+    			
+    			String id = lineArray[idIndex];
+    			String name = lineArray[nameIndex];
+    			
+    			//LONG
+    			String longCordString = lineArray[longIndex];
+    			double longitude = processDlong(longCordString);	
+				//
+				
+				//LAT
+				String latCordString = lineArray[latIndex];
+    			double latitude = processDlat(latCordString);
+				//
+    			Location l = new Location(id, name, longitude, latitude);
+    			System.out.println("adding location: [ " + l + " ]");
+    			returnLocationArray.add(l);
+    		
+			}
+			
+			
+			
+		}else{
+			
+			System.out.println("nothing");
+			for(int i = 0; i < csvLines.size(); i++){
         		
     			String line = csvLines.get(i);
     			String[] lineArray = line.split(",");
@@ -130,84 +529,52 @@ public class Model {
     			String name = lineArray[nameIndex];
     			double longitude = Double.parseDouble(lineArray[longIndex]); 
     			double latitude = Double.parseDouble(lineArray[latIndex]); 
+    			
 
     			Location l = new Location(id, name, longitude, latitude);
     			System.out.println("adding location: [ " + l + " ]");
     			returnLocationArray.add(l);
     		
-        	}
-    	}else if(cordSystem.toUpperCase().equals("DMS")){
-        	for(int i = 0; i < csvLines.size(); i++){
-        		
-    			String line = csvLines.get(i);
-    			String[] lineArray = line.split(",");
-    
-    			String id = lineArray[idIndex];
-    			String name = lineArray[nameIndex];
-    			String longitude = lineArray[longIndex];
-    			String latitude = lineArray[latIndex];
+			}
 
-//    			String l = "";
-//    			for (int j = 0 ; i<longitude.length(); j ++){
-//    				
-//    				l = l + longitude.charAt(j);
-//    				
-//    			}
-    			longitude = longitude.replaceAll("[^A-Za-z0-9]", " ");
-    			System.out.println("longitude = ->" + longitude+ "<-");
-    			Scanner s1 = new Scanner(longitude);
-    			int degLong = s1.nextInt();
-    			int minLong = s1.nextInt();
-    			int secLong = s1.nextInt();
-    			String dirLong = s1.next();
-    			System.out.println(degLong +" "+ minLong+" " + secLong + " " + dirLong);
-    			
-    			
-    			
-    			latitude = latitude.replaceAll("[^A-Za-z0-9]", " ");
-    			System.out.println("latitude = ->" + latitude + "<-");
-    			Scanner s2 = new Scanner(latitude);
-    			int degLat = s2.nextInt();
-    			int minLat = s2.nextInt();
-    			int secLat = s2.nextInt();
-    			String dirLat = s2.next();
-    			System.out.println(degLat +" "+ minLat+" " + secLat + " " + dirLat);
-    			
-    			
-    			double longDegrees = 0;  
-    			double latDegrees = 0;   			
-    			
-
-    			
-    			Location l = new Location(id, name, longDegrees, latDegrees);
-    			System.out.println("adding location: [ " + l + " ]");
-    			returnLocationArray.add(l);
-    		
-        	}  		
-    		
-    	}
-
-
+		}
+			
+		
+        
 		return returnLocationArray;
 	}
 
-	public String getStatus() {return status;}
 	
+
+
+	public String getStatus() {return status;}
+	public Location getLocation(int i) {return Locations.get(i);}
+	public Leg getLeg(int i) {return Legs.get(i);}
+	public int getLegsLength() {return Legs.size();}
+	public int getLocationsLength() {return Locations.size();}
+	public ArrayList<Leg> getLegs() {return Legs;}
+	public ArrayList<Location> getLocations() {return Locations;}
+
+
+
+
 	
 	public static void main(String[] args) {
 		
-		Model m = new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv", "Decimal");
+		
+		Model m = new Model("src/Model/brews.csv");
 		
 		for(int i = 0; i < m.Locations.size(); i++){
-			System.out.println("Location [" + i + "] : " + m.Locations.get(i));
+			System.out.println("Location [" + i + "] : " + m.getLocation(i));
 		}
 		for(int i = 0; i < m.Legs.size(); i++){
-			System.out.println("Leg [" + i + "] : " + m.Legs.get(i));
+			System.out.println("Leg [" + i + "] : " + m.getLeg(i));
 		}
+
 		
-	
-		
+			
 	}
+
 
 
 }
