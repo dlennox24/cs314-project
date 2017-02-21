@@ -76,24 +76,45 @@ public class View {
 		fWriterSvg.write("\t</g>\n");
 		// /titles
 
-		// Adding locaiton labels for map
-		fWriterSvg.write("\t<g>\n\t\t<title>Locations</title>\n");
-		for(int i=0;i<this.locations.size();i++){
-			// System.out.println("size:"+this.locations.size());
-			// System.out.println(i);
-			fWriterSvg.write("\t\t<text"
-					+" id=\""+this.locations.get(i).id+"\""
-					+" x=\""+this.locations.get(i).x+"\""
-					+" y=\""+this.locations.get(i).y+"\""
-					+" text-anchor=\""+this.locations.get(i).textAnchor+"\""
-					+" font-size=\""+this.locations.get(i).fontSize+"\""
-					+" font-family=\""+this.locations.get(i).fontFamily+"\">"
-					+this.locations.get(i).displayedText+"</text>\n");
+		// Adding location labels for map
+		if(this.flags.contains("n")){
+			fWriterSvg.write("\t<g>\n\t\t<title>Locations</title>\n");
+			for(int i=0;i<this.locations.size();i++){
+				// System.out.println("size:"+this.locations.size());
+				// System.out.println(i);
+				fWriterSvg.write("\t\t<text"
+						+" id=\""+this.locations.get(i).id+"\""
+						+" x=\""+this.locations.get(i).x+"\""
+						+" y=\""+this.locations.get(i).y+"\""
+						+" text-anchor=\""+this.locations.get(i).textAnchor+"\""
+						+" font-size=\""+this.locations.get(i).fontSize+"\""
+						+" font-family=\""+this.locations.get(i).fontFamily+"\">"
+						+this.locations.get(i).displayedText+"</text>\n");
+			}
+			fWriterSvg.write("\t</g>\n");
 		}
-		fWriterSvg.write("\t</g>\n");
 		// /location labels
 
-		// Adding locaiton labels for map
+		// Adding location id for map
+		if(this.flags.contains("i")){
+			fWriterSvg.write("\t<g>\n\t\t<title>Locations</title>\n");
+			for(int i=0;i<this.locations.size();i++){
+				// System.out.println("size:"+this.locations.size());
+				// System.out.println(i);
+				fWriterSvg.write("\t\t<text"
+						+" id=\""+this.locations.get(i).id+"\""
+						+" x=\""+this.locations.get(i).x+"\""
+						+" y=\""+this.locations.get(i).y+"\""
+						+" text-anchor=\""+this.locations.get(i).textAnchor+"\""
+						+" font-size=\""+this.locations.get(i).fontSize+"\""
+						+" font-family=\""+this.locations.get(i).fontFamily+"\">"
+						+(i+1)+"</text>\n");
+			}
+			fWriterSvg.write("\t</g>\n");
+		}
+		// /location id
+
+		// Adding distance labels for map
 		fWriterSvg.write("\t<g>\n\t\t<title>Distances</title>\n");
 		for(int i=0;i<this.distances.size();i++){
 			fWriterSvg.write("\t\t<text"
@@ -106,7 +127,7 @@ public class View {
 					+this.distances.get(i).displayedText+"</text>\n");
 		}
 		fWriterSvg.write("\t</g>\n");
-		// /location labels
+		// /distance labels
 
 		// Adding basic map borders
 		fWriterSvg.write("\t<g>\n\t\t<title>Borders</title>\n");
@@ -170,7 +191,7 @@ public class View {
 	}
 
 	public static void main(String[] args) {
-		View v = new View("Custom Titles!",15454,"mi","fname");
+		View v = new View("Custom Titles!",15454,"","fname");
 		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start","end");
 		try {
 			v.finTrip();
