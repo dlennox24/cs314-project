@@ -15,6 +15,7 @@ public class View {
 	private double w = 1180;
 	private double b = 174.855;
 
+	private ArrayList<Leg> legsData = new ArrayList<Leg>();
 	private ArrayList<Stroke> legs = new ArrayList<Stroke>();
 	private ArrayList<Stroke> borders = new ArrayList<Stroke>();
 	private ArrayList<Label> titles = new ArrayList<Label>();
@@ -46,18 +47,11 @@ public class View {
 		// add leg data to the correct arraylists
 		int[] coord1 = coord2Pixel(x1,y1);
 		int[] coord2 = coord2Pixel(x2,y2);
-		this.legs.add(new Stroke(name1,2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
+		this.legsData.add(new Leg(name1,name2,dist));
+		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
 		this.locations.add(new Label(name1,name1,0,0,"left",16));
 		this.locations.add(new Label(name2,name2,0,0,"left",16));
 		this.locations.add(new Label(name2,name2,0,0,"left",16));
-	}
-
-	// Doesn't have labels
-	public void addLeg(double x1, double y1, double x2, double y2, int dist){
-		// add leg data to the correct arraylists
-		int[] coord1 = coord2Pixel(x1,y1);
-		int[] coord2 = coord2Pixel(x2,y2);
-		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#999"));
 	}
 
 	public void finTrip() throws IOException{
@@ -121,6 +115,16 @@ public class View {
 
 		File xmlOutput = new File(this.outputFilename+".xml");
 		FileWriter fWriterXml = new FileWriter(xmlOutput);
+		fWriterXml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<trip>\n");
+		for(int i=0;i<this.legsData.size();i++){
+			fWriterXml.write("\t<leg>\n"
+					+"\t\t<sequence>"+i+1+"</sequence>\n"
+					+"\t\t<start>"+this.legsData.get(i).startCityName+"</start>\n"
+					+"\t\t<finish>"+this.legsData.get(i).endCityName+"</finish>\n"
+					+"\t\t<mileage>"+this.legsData.get(i).dist+"</mileage>\n"
+					+"\t</leg>\n");
+		}
+		fWriterXml.write("</trip>");
 
 		fWriterSvg.close();
 		fWriterXml.close();
@@ -139,7 +143,7 @@ public class View {
 
 	public static void main(String[] args) {
 		View v = new View("Custom Titles!",15454,"mi","fname");
-		v.addLeg(37.094,-102.252,40.879,-108.948,99);
+		v.addLeg(37.094,-102.252,40.879,-108.948,99,"start","end");
 		try {
 			v.finTrip();
 		} catch (IOException e) {
