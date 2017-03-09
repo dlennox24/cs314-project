@@ -5,7 +5,7 @@ import Model.Model;
 import Presenter.Presenter;
 import Presenter.Trip;
 import View.View;
-
+import View.TripCoGUI;
 public class TripCo {
 
 	
@@ -38,8 +38,9 @@ public class TripCo {
 		P.getTrip(P,option);
 		P.finalView();
 		System.out.println(option);
-		System.out.println(filename);
-
+		System.out.println(newOutPutFile);
+		TripCoGUI t = new TripCoGUI(newOutPutFile.substring(0, newOutPutFile.length()-4));
+		t.run(newOutPutFile.substring(0, newOutPutFile.length()-4));
 		
 
 		

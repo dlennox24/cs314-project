@@ -23,7 +23,7 @@ void createTrip(String options){
 			double lat2 = Presenter.getModel().getLeg(i).getLocations().get(1).getLat();
 			double lon2 = Presenter.getModel().getLeg(i).getLocations().get(1).getLong();
 			int distance = Presenter.getModel().getLeg(i).getDistance();
-			String name1 = Presenter.getModel().getLeg(i).getLocations().get(1).getName();
+			String name1 = Presenter.getModel().getLeg(i).getLocations().get(0).getName();
 			String name2 = Presenter.getModel().getLeg(i).getLocations().get(1).getName();
 			Presenter.getView().addLeg(lat1, lon1, lat2, lon2, distance, name1, name2);
 		
