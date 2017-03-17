@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="DTR-27">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../../../../usr/lib64/eclipse/"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="../../../../../../../usr/share/eclipse/droplets/cdt/eclipse/plugins/org.junit_4.12.0.jar"/>
+        <pathelement location="../../../../../../../usr/share/eclipse/droplets/cdt/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+    <path id="JavaFX SDK.libraryclasspath">
+        <pathelement location="../../.eclipse/org.eclipse.platform_793567567_linux_gtk_x86_64/plugins/org.eclipse.fx.ide.css.jfx8_2.4.0.201605112122.jar"/>
+    </path>
+    <path id="Plug-in Dependencies.libraryclasspath"/>
+    <path id="DTR-27.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <path refid="JavaFX SDK.libraryclasspath"/>
+        <path refid="Plug-in Dependencies.libraryclasspath"/>
+        <pathelement location="batik-all-1.7.jar"/>
+        <pathelement location="xml-apis-2.0.2.jar"/>
+        <pathelement location="xml-apis-ext-1.3.04.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.xtend"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="DTR-27.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="SVGMapDisplay">
+        <java classname="View.SVGMapDisplay" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="test">
+        <java classname="test" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="TestView">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="View.TestView" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="TripCo">
+        <java classname="TripCo" failonerror="true" fork="yes">
+            <arg line="src/inputDM.csv -i"/>
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="Model (1)">
+        <java classname="junit.textui.TestRunner" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="TestPresenter.getStart">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Presenter.TestPresenter" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="SVGDisplay">
+        <java classname="View.SVGCanvasDemo" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="TestTrip">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Presenter.TestTrip" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="TestPresenter">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Presenter.TestPresenter" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="Model">
+        <java classname="Model.Model" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="TestTripCo">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Model.TestModel" todir="${junit.output.dir}"/>
+            <test name="Presenter.TestPresenter" todir="${junit.output.dir}"/>
+            <test name="TestTripCo" todir="${junit.output.dir}"/>
+            <test name="View.TestView" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="TestTrip.getTripList">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Presenter.TestTrip" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="TestTripCo (1)">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="TestTripCo" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="TestPresenter.getLeg">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Presenter.TestPresenter" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="TestModel">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="Model.TestModel" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="DTR-27.classpath"/>
+        </junit>
+    </target>
+    <target name="New_configuration (6)">
+        <java classname="junit.textui.TestRunner" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="New_configuration (7)">
+        <java classname="" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="New_configuration (5)">
+        <java classname="View.View" failonerror="true" fork="yes">
+            <classpath refid="DTR-27.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
