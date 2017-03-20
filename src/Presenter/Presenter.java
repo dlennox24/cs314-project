@@ -11,13 +11,14 @@ import View.View;
 public class Presenter {
 	private View view;
 	private static Model model;
-	
-	public Presenter(Model model,View view, String options) {
+	String bgFile = null;
+	public Presenter(Model model,View view, String options, String bgFile) {
 		
 	this.view
 	= view;
 	this.model
 	= model;
+	this.bgFile = bgFile;
 	}
 	public void start() {
 	 model.getStatus();
@@ -28,9 +29,10 @@ public class Presenter {
 	public View getView(){
 		return view;
 	}
-	public void finalView(){
+	public void finalView(String fileName){
 		try {
-			view.finTrip();
+			
+			view.finTrip(fileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

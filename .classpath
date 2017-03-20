@@ -8,7 +8,5 @@
 	<classpathentry kind="lib" path="batik-all-1.7.jar"/>
 	<classpathentry kind="lib" path="xml-apis-2.0.2.jar"/>
 	<classpathentry kind="lib" path="xml-apis-ext-1.3.04.jar"/>
-	<classpathentry kind="lib" path="/home/ap/Documents/DTR-27/xml-apis-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ap/Documents/DTR-27/xml-apis-ext-1.3.04.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

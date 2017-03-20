@@ -20,7 +20,7 @@ public class TestPresenter {
 		Model model = new Model("input.csv");
 		ArrayList<String> a = null;
 		View view = new View("Colorado",100,"anotherString", "FinalString");
-		Presenter Presenter = new Presenter(model,view,"aaa");
+		Presenter Presenter = new Presenter(model,view,"aaa","aaa");
 		assertEquals(model, Presenter.getModel());
 	
 	}
@@ -28,7 +28,7 @@ public class TestPresenter {
 		Model model = new Model("input.csv");
 		ArrayList<String> a = null;
 		View view = new View("Colorado",100,"anotherString", "FinalString");
-		Presenter Presenter = new Presenter(model,view,"aaa");
+		Presenter Presenter = new Presenter(model,view,"aaa","aaa");
 		assertEquals(view, Presenter.getView());
 	
 	}

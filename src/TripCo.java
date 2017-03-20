@@ -111,14 +111,14 @@ public class TripCo {
 		for(int i = 0; i < model.getLegsLength(); i++){
 			finalDistance += model.getLeg(i).getDistance();
 		}
-		Presenter P = new Presenter(model,new View("Colorado",finalDistance,option,newOutPutFile.substring(0, newOutPutFile.length()-4)),option);
+		Presenter P = new Presenter(model,new View("Colorado",finalDistance,option,newOutPutFile.substring(0, newOutPutFile.length()-4)),option,svgFilename);
 		
 		P.getTrip(P,option);
-		P.finalView();
+		P.finalView(svgFilename);
 		System.out.println(option);
 		System.out.println(newOutPutFile);
 		TripCoGUI t = new TripCoGUI(newOutPutFile.substring(0, newOutPutFile.length()-4));
-		//t.run(newOutPutFile.substring(0, newOutPutFile.length()-4));
+		t.run(newOutPutFile.substring(0, newOutPutFile.length()-4));
 
 	}
 

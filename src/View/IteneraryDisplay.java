@@ -81,7 +81,7 @@ public IteneraryDisplay(String fileName) {
 				String finish = document.getElementsByTagName("finish").item(i).getTextContent();
 				String mileage = document.getElementsByTagName("mileage").item(i).getTextContent();
 				System.out.println(sequence+'\n'+start+' '+finish+'\n'+mileage+'\n');
-				textArea.append("Sequence Number "+sequence+"\nStart Location "+start+"\nFinish Location "+finish+"\nMileage "+mileage+'\n');
+				textArea.append("Sequence Number "+sequence+"\nStart Location "+start+"\nFinish Location "+finish+"\nMileage "+mileage+'\n'+'\n');
 				i++;
 			}
 	    }

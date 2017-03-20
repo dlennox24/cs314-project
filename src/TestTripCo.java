@@ -21,7 +21,7 @@ public class TestTripCo {
 		Model model = new Model("input.csv");
 		ArrayList<String> a = null;
 		View view = new View("header",100, "a", "a");
-		Presenter Presenter = new Presenter(model,view, "aaa");
+		Presenter Presenter = new Presenter(model,view, "aaa", "aaa");
 		assertEquals(model, Presenter.getModel());
 	
 	}
