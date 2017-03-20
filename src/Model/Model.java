@@ -549,7 +549,7 @@ public class Model {
     			String line = csvLines.get(i);
     			String[] lineArray = line.split(",");
     			
-    			//ectract name and id from columns as strings
+    			//extract name and id from columns as strings
     			String id = lineArray[idIndex];
     			String name = lineArray[nameIndex];
     			
