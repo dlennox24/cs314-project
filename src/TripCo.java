@@ -29,6 +29,14 @@ public class TripCo {
 		String selectionFilename = null;
 		String svgFilename = null;
 		ArrayList<Integer> selectedIDs = new ArrayList<Integer>();
+		String opt = "NN";
+		boolean mFlag = false;
+		boolean iFlag = false;
+		boolean nFlag = false;
+		boolean gFlag = false;
+		boolean opt2Flag = false;
+		boolean opt3Flag = false;
+	
 
 		for (int i = 0; i < args.length; i++){
 			String temp = args[i];
@@ -44,28 +52,54 @@ public class TripCo {
 			
 		}
 		
+		if(option.contains("2")){
+			opt = "2";
+			opt2Flag=true;	
+		}
+		if(option.contains("3")){
+			opt = "3";
+			opt3Flag=true;	
+		}
+		if(option.contains("g")){
+			gFlag=true;	
+		}
+		if(option.contains("n")){
+			nFlag=true;	
+		}
+		if(option.contains("i")){
+			iFlag=true;	
+		}
+		if(option.contains("m")){
+			mFlag=true;	
+		}
 		
 		Model model = null; 
+		String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
+
 		if(selectionFilename != null){	
-			String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
 			try {
 				makeSelectionCSV(filename, tempSelectionsCSVfilename, selectedIDs, selectionFilename);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			Path tempSelectionsCSV = Paths.get("tempSELECTIONS.csv");
-			model = new Model(tempSelectionsCSVfilename);
-			try {
-				Files.delete(tempSelectionsCSV);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			
 		}else{
-			model = new Model(filename);
+			try {
+				Files.copy(Paths.get(filename),Paths.get(tempSelectionsCSVfilename));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
+		}
+		
+		model = new Model(tempSelectionsCSVfilename);
+		
+		Path tempSelectionsCSV = Paths.get(tempSelectionsCSVfilename);
+		try {
+			Files.delete(tempSelectionsCSV);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
 		System.out.println("filename: " + filename + "\nselctionfilename: " + selectionFilename +"\nbacgroundsvg: " + svgFilename +"\noptions:" + option);
@@ -84,7 +118,7 @@ public class TripCo {
 		System.out.println(option);
 		System.out.println(newOutPutFile);
 		TripCoGUI t = new TripCoGUI(newOutPutFile.substring(0, newOutPutFile.length()-4));
-		t.run(newOutPutFile.substring(0, newOutPutFile.length()-4));
+		//t.run(newOutPutFile.substring(0, newOutPutFile.length()-4));
 
 	}
 
@@ -113,22 +147,17 @@ public class TripCo {
 					line=line.replaceAll("<id>", "");
 					line=line.replaceAll("</id>", "");
 			    	line=line.replaceAll("\\s+","");   
-					System.out.println(line);
 					selectedIDs.add(Integer.parseInt(line));
 				}
 			}
 		
 
-		System.out.println();
-		for(Integer ID : selectedIDs){
-			System.out.println(ID);
-		}
+
 		String[] headerArray = headerLine.split(",");
 		int idIndex = -1;
 		int count = 0;
 		System.out.println();
 		for(String s : headerArray){
-			System.out.println(s);
 			if(s.toLowerCase().equals("id")){
 				idIndex=count;
 			}
@@ -145,8 +174,7 @@ public class TripCo {
 				String[] stringTempArray = s.split(",");
 				int id = Integer.parseInt(stringTempArray[idIndex]);
 				if(selectedIDs.contains(id)){
-					System.out.println(id);
-					System.out.println("writing: " + s);
+					System.out.println("writing: " + s + "\tid: " + id);
 					writer.write(s);
 					writer.newLine();
 
@@ -155,9 +183,7 @@ public class TripCo {
 			}
 			
 			writer.close();
-		
 
-		
 		
 	}
 
