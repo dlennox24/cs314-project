@@ -52,12 +52,18 @@ public class View {
 		this.distances.add(new Label("label"+dist,""+dist,(coord1[0]+coord2[0])/2,(coord1[1]+coord2[1])/2,"middle",16));
 	}
 
-	public void finTrip() throws IOException{
+	public void finTrip(String fileName) throws IOException{
 		// builds the SVG and XML files based off legs,borders,titles,locations,distances arraylists
 		File svgOutput = new File(this.outputFilename+".svg");
-		String BGfile = "coloradoBackGround.svg";
-		FileWriter fWriterSvg = getBGFile(this.outputFilename+".svg",BGfile );
-
+		FileWriter fWriterSvg = null; 
+		if(fileName != null){
+			 fWriterSvg = getBGFile(this.outputFilename+".svg",fileName );
+		}else{
+			 fWriterSvg = new FileWriter(svgOutput);
+			 fWriterSvg.write("<?xml version=\"1.0\"?>\n"
+						+"<svg width=\"1066\" height=\"783\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\">\n"
+						+"\n");
+		}
 		// Adding SVG file init syntax
 		
 	
@@ -239,12 +245,7 @@ public class View {
 		View v = new View("Custom Titles!",15454,"mn","fname");
 		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start & test","end");
 		System.out.println("start & test".replaceAll("\\s+", ""));
-		try {
-			v.finTrip();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		System.out.println("DONE");
 	}
 }
