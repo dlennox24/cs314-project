@@ -16,7 +16,7 @@ import View.IteneraryDisplay;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 
-public class OptionsGUI extends JFrame {
+public class OptionsGUI extends JFrame implements Runnable{
 
 	private JPanel contentPane;
 
@@ -29,8 +29,10 @@ public class OptionsGUI extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param op 
+	 * @param op 
 	 */
-	public OptionsGUI() {
+	public OptionsGUI(Options op) {
 		
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -50,21 +52,15 @@ public class OptionsGUI extends JFrame {
 		contentPane.add(chckbxMileage);
 		chckbxMileage.addActionListener(new ActionListener(){
 			
-			int count = 0;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 					
 					if(cmd.equals("Mileage")){
-						count++;
-						System.out.println(count);
+						op.optionsString = op.optionsString + "m"; 
 					
 					}
-					if(count % 2 == 1){
-						System.out.println("true");
-					}else{
-						System.out.println("false");
-					}
+
 				
 				}
 			
@@ -72,12 +68,18 @@ public class OptionsGUI extends JFrame {
 			});
 		
 	}
-	public void run() {
+	public void run(Options op) {
 		try {
-			OptionsGUI frame = new OptionsGUI();
+			OptionsGUI frame = new OptionsGUI(op);
 			frame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void run() {
+		
+	}
+
 }

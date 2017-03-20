@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<svg width="1066" height="783" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+
+	<g>
+		<title>Titles</title>
+		<text id="state" x="533" y="17" text-anchor="middle" font-size="20" font-family="Sans-serif">Colorado</text>
+		<text id="distance" x="533" y="764" text-anchor="middle" font-size="20" font-family="Sans-serif">130 miles</text>
+	</g>
+	<g>
+		<title>Distances</title>
+		<text id="label2" x="406" y="362" text-anchor="middle" font-size="16" font-family="Sans-serif">2</text>
+		<text id="label10" x="415" y="379" text-anchor="middle" font-size="16" font-family="Sans-serif">10</text>
+		<text id="label55" x="488" y="523" text-anchor="middle" font-size="16" font-family="Sans-serif">55</text>
+		<text id="label63" x="479" y="506" text-anchor="middle" font-size="16" font-family="Sans-serif">63</text>
+	</g>
+	<g>
+		<title>Borders</title>
+		<line id="north" x1="34" y1="34" x2="1027" y2="34" stroke-width="3" stroke="#333"/>
+		<line id="east" x1="1027" y1="34" x2="1027" y2="744" stroke-width="3" stroke="#333"/>
+		<line id="south" x1="1027" y1="744" x2="34" y2="744" stroke-width="3" stroke="#333"/>
+		<line id="west" x1="34" y1="744" x2="34" y2="34" stroke-width="3" stroke="#333"/>
+	</g>
+	<g>
+		<title>Legs</title>
+		<line id="leg0" x1="409" y1="369" x2="404" y2="356" stroke-width="2" stroke="#333"/>
+		<line id="leg1" x1="404" y1="356" x2="427" y2="403" stroke-width="2" stroke="#333"/>
+		<line id="leg2" x1="427" y1="403" x2="550" y2="643" stroke-width="2" stroke="#333"/>
+		<line id="leg3" x1="550" y1="643" x2="409" y2="369" stroke-width="2" stroke="#333"/>
+	</g>
+</svg>

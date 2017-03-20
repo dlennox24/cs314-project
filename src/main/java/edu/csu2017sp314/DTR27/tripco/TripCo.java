@@ -53,26 +53,44 @@ public class TripCo {
 			}
 			
 		}
+		Options op = new Options();
 		if(option.contains("g")){
 			gFlag=true;	
-			OptionsGUI gui = new OptionsGUI();
-			gui.run();
+			OptionsGUI gui = new OptionsGUI(op);
+			gui.run(op);
+
 		}
-		if(option.contains("2")){
+
+		while(op.done != true){
+			
+		}
+		option=op.optionsString;
+		String str2 = option;
+		String str3 = option;
+		String strN = option;
+		String strI = option;
+		String strM = option;
+		String finalOptions = "";
+
+
+		if(((option.length() - str2.replace("2", "").length()) % 2) == 1){
 			opt = "2";
 			opt2Flag=true;	
 		}
-		if(option.contains("3")){
+		if(((option.length() - str3.replace("3", "").length()) % 2) == 1){
 			opt = "3";
 			opt3Flag=true;	
 		}
-		if(option.contains("n")){
+		if(((option.length() - str3.replace("n", "").length()) % 2) == 1){
+			finalOptions = finalOptions + "n";
 			nFlag=true;	
 		}
-		if(option.contains("i")){
+		if(((option.length() - str3.replace("i", "").length()) % 2) == 1){
+			finalOptions = finalOptions + "i";
 			iFlag=true;	
 		}
-		if(option.contains("m")){
+		if(((option.length() - str3.replace("m", "").length()) % 2) == 1){
+			finalOptions = finalOptions + "m";
 			mFlag=true;	
 		}
 		
