@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trip>
+	<leg>
+		<sequence>1</sequence>
+		<start>Mount Elbert</start>
+		<finish>Mount Massive</finish>
+		<mileage>2</mileage>
+	</leg>
+	<leg>
+		<sequence>2</sequence>
+		<start>Mount Massive</start>
+		<finish>Mount Elbert</finish>
+		<mileage>2</mileage>
+	</leg>
+</trip>
