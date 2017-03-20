@@ -1,6 +1,7 @@
 package View;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,9 +10,10 @@ public class View {
 	private String status;
 	private String flags;
 	private String outputFilename;
-	private double h = 674.29;
-	private double w = 1180;
-	private double b = 174.855;
+	private double h = 710.69;//674.29 right val
+	private double w =1027.814;// 1180 right val
+	private double b =34.9122;//174.85
+
 
 	private ArrayList<Leg> legsData = new ArrayList<Leg>();
 	private ArrayList<Stroke> legs = new ArrayList<Stroke>();
@@ -27,13 +29,13 @@ public class View {
 		String borderColor = "#333";
 		int borderWidth = 3;
 		int width = (int) ((int) this.h+this.b);
-		this.borders.add(new Stroke("north",borderWidth,50,(int)this.b,1230,(int)this.b,borderColor));
-		this.borders.add(new Stroke("east",borderWidth,1230,(int)this.b,1230,width,borderColor));
-		this.borders.add(new Stroke("south",borderWidth,1230,width,50,width,borderColor));
-		this.borders.add(new Stroke("west",borderWidth,50,width,50,(int)this.b,borderColor));
+		this.borders.add(new Stroke("north",borderWidth,34,(int)this.b,1027,(int)this.b,borderColor));
+		this.borders.add(new Stroke("east",borderWidth,1027,(int)this.b,1027,width,borderColor));
+		this.borders.add(new Stroke("south",borderWidth,1027,width,34,width,borderColor));
+		this.borders.add(new Stroke("west",borderWidth,34,width,34,(int)this.b,borderColor));
 
-		this.titles.add(new Label("state",title,640,(int)this.b-((int)this.b/2),"middle",20));
-		this.titles.add(new Label("distance",totalDist+" miles",640,(int)this.b+(int)this.h+40,"middle",20));
+		this.titles.add(new Label("state",title,533,(int)this.b-((int)this.b/2),"middle",20));
+		this.titles.add(new Label("distance",totalDist+" miles",533,(int)this.b+(int)this.h+20,"middle",20));
 
 		this.status = "OK";
 	}
@@ -45,21 +47,21 @@ public class View {
 		int[] coord2 = coord2Pixel(x2,y2);
 		this.legsData.add(new Leg(name1,name2,dist));
 		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
-		this.locations.add(new Label("label"+name1.replaceAll("\\s+","").replaceAll("&+","and"),name1.replaceAll("&+","and"),coord1[0],coord1[1],"left",16));
-		this.locations.add(new Label("label"+name2.replaceAll("\\s+","").replaceAll("&+","and"),name2.replaceAll("&+","and"),coord2[0],coord2[1],"left",16));
+		this.locations.add(new Label("label"+name1.replaceAll("\\s+","").replaceAll("&+","and"),name1.replaceAll("&+","and"),coord1[0],coord1[1],"middle",16));
+		this.locations.add(new Label("label"+name2.replaceAll("\\s+","").replaceAll("&+","and"),name2.replaceAll("&+","and"),coord2[0],coord2[1],"middle",16));
 		this.distances.add(new Label("label"+dist,""+dist,(coord1[0]+coord2[0])/2,(coord1[1]+coord2[1])/2,"middle",16));
 	}
 
 	public void finTrip() throws IOException{
 		// builds the SVG and XML files based off legs,borders,titles,locations,distances arraylists
 		File svgOutput = new File(this.outputFilename+".svg");
-		FileWriter fWriterSvg = new FileWriter(svgOutput);
+		String BGfile = "coloradoBackGround.svg";
+		FileWriter fWriterSvg = getBGFile(this.outputFilename+".svg",BGfile );
 
 		// Adding SVG file init syntax
-		fWriterSvg.write("<?xml version=\"1.0\"?>\n"
-				+"<svg width=\"1280\" height=\"1024\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\">\n"
-				+"\n");
-
+		
+	
+		
 		// TODO could be enhanced with a generic method
 		// Adding titles for map
 		fWriterSvg.write("\t<g>\n\t\t<title>Titles</title>\n");
@@ -95,7 +97,7 @@ public class View {
 		}
 		// /location labels
 
-		// Adding location id for map
+		// Adding location id for map"coloradoBackGround.svg"
 		if(this.flags.contains("i")){
 			fWriterSvg.write("\t<g>\n\t\t<title>Locations</title>\n");
 			for(int i=0;i<this.locations.size();i++){
@@ -163,7 +165,7 @@ public class View {
 
 		// Close SVG syntax; file should be complete
 		fWriterSvg.write("</svg>");
-
+		
 		File xmlOutput = new File(this.outputFilename+".xml");
 		FileWriter fWriterXml = new FileWriter(xmlOutput);
 		fWriterXml.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<trip>\n");
@@ -182,7 +184,7 @@ public class View {
 	}
 
 	private int[] coord2Pixel(double lat, double lon){
-		double sx = 50+((lon+109)/7)*this.w;
+		double sx = 34+((lon+109)/7)*this.w;
 		double sy = this.b + ((41-lat)/4)*this.h;
 
 		return new int[]{(int)sx,(int)sy};
@@ -191,7 +193,48 @@ public class View {
 	public String getStatus(){
 		return this.status;
 	}
-
+	private FileWriter getBGFile(String fileName, String BGFile) throws IOException{
+		FileReader fr = null;
+        FileWriter fw = null;
+        try {
+            fr = new FileReader(BGFile);
+            fw = new FileWriter(fileName);
+         //   System.out.println(fileName);
+            int c = fr.read();
+            fw.write(c);
+            while(c!=-1) {
+            	c = fr.read();
+            	System.out.println("read: "+c);
+            	if((char)c >= 0xEF){
+            		//do nothing
+            		System.out.println("non printable char");
+            	}else if((char)c == '<'){
+            		int a = fr.read();
+            		if(a == '/'){
+            			int b = fr.read();
+            			if(b == 's'){
+            				break;
+            			}else{
+            				fw.write(c);
+            				fw.write(a);
+            				fw.write(b);
+            			}
+            		}else{
+            			fw.write(c);
+            			fw.write(a);
+            		}
+            			
+            	}else{
+            		fw.write(c);
+            	}
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        } finally {
+           fr.close();
+        }
+        return fw;
+	}
 	public static void main(String[] args) {
 		View v = new View("Custom Titles!",15454,"mn","fname");
 		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start & test","end");
