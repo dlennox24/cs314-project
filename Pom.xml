@@ -4,7 +4,7 @@
   http://maven.apache.org/xsd/maven-4.0.0.xsd'>
   <modelVersion>4.0.0</modelVersion>
   <url>https://github.com/csu2017sp314/DTR-27</url>
-  <groupId>com.csu2017sp314.DTR27</groupId>
+  <groupId>edu.csu2017sp314.DTR27</groupId>
   <artifactId>tripco</artifactId>
   <name>TripCo</name>
   <packaging>jar</packaging>
