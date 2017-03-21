@@ -15,11 +15,11 @@ public class TestPresenter {
 
   @Test
   public void getStart() {
-    assertEquals("OK", new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv").getStatus());
+    assertEquals("OK", new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv","NN").getStatus());
   }
   @Test
   public void getModel() {
-    Model model = new Model("input.csv");
+    Model model = new Model("input.csv","NN");
     ArrayList<String> a = null;
     View view = new View("Colorado",100,"anotherString", "FinalString");
     Presenter Presenter = new Presenter(model,view,"aaa","aaa");
@@ -27,7 +27,7 @@ public class TestPresenter {
 
   }
   public void getView() {
-    Model model = new Model("input.csv");
+    Model model = new Model("input.csv","NN");
     ArrayList<String> a = null;
     View view = new View("Colorado",100,"anotherString", "FinalString");
     Presenter Presenter = new Presenter(model,view,"aaa","aaa");

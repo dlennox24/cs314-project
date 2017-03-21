@@ -29,9 +29,8 @@ public class Location {
 	}
 	
 	public String toString(){
-		
-		return this.id + " , " + this.name + " , " + this.longitude.toString() + " , "+ this.latitude.toString();
-		
+//		return this.id + " , " + this.name + " , " + this.longitude.toString() + " , "+ this.latitude.toString();
+		return this.name;
 	}
 	
 	public String getId(){return this.id;}

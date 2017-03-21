@@ -14,21 +14,36 @@ public class Leg {
 		
 	}
 	public ArrayList<Location> getLocations(){
-		ArrayList<Location> ret = new ArrayList();
+		ArrayList<Location> ret = new ArrayList<Location>();
 		ret.add(this.locA);
 		ret.add(this.locB);
 		return ret;
 	}
 	public int getDistance(){
 		return this.distance;
-		
+	}
+	
+	public void setLocA(Location a){
+		this.locA = a;
+		this.distance = greatCircleDistance(a,this.locB);
+	}
+	
+	public void setLocB(Location b){
+		this.locB = b;
+		this.distance = greatCircleDistance(this.locA,b);
+	}
+	
+	public void setLocs(Location a, Location b){
+		this.locA = a;
+		this.locB = b;
+		this.distance = greatCircleDistance(a,b);
 	}
 	
 	public String toString(){
-		return this.locA.getName() + " to " + this.locB.getName() + " : " + this.distance;			
+		return this.locA.getName() + " to " + this.locB.getName() + " : " + this.distance;
 	}
 	
-	private int greatCircleDistance(Location locA, Location locB) {
+	public int greatCircleDistance(Location locA, Location locB) {
 			double x1 = Math.toRadians(locA.getLong());
 	        double y1 = Math.toRadians(locA.getLat());
 	        double x2 = Math.toRadians(locB.getLong());
