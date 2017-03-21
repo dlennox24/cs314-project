@@ -1,36 +1,34 @@
 DTR-27  TripCo v2.0
 
 Overview:
-    Usage: 
-        TripCo input_file.csv [options] [map.svg] [select.xml]
-        
-	TripCo v2.0 command l2ine takes one mandatory argument "input_file.csv". "input_file.csv" must be a CSV file, with columns Name, ID, Longitude, Latitude. 
-	Optional arguments include:
-            -g, which brings up a GUI, allowing user to input following options outisde the command line.
-            -n, which shows the name of the locations on the map.
-            -i, which shows put the ID of the locations on the map.
-            -m, which shows mileage on the map. 
-            -2, provides 2-opt trip optimization, on top of nearest neighbor.
-            -3, provides 3-opt trip optimizaiton, on top of 2-opt.
-            [map.svg], which adds a background svg, behind the desired trip.
-            [select.xml], a list of ID's, to be used as a subset of every location in the input file.
-            
-		
+Usage:
+      TripCo input_file.csv [options] [map.svg] [select.xml]
 
-	TripCo v2.0 produces two files. 
-		-An SVG file, containing a map of the locations, and the legs between them, a map of the trip for the user. 
-		-An XML file, containing the itinerary of the trip.
-                    
-                    The resulting SVG and XML will have the same name as the input file.
-                    The resulting SVG and XML will be viewable in the GUI. 
-		
+      TripCo v2.0 command line takes one mandatory argument "input_file.csv". "input_file.csv" must be a CSV file, with columns Name, ID, Longitude, Latitude.
+      Optional arguments include:
+        -g, which brings up a GUI, allowing user to input following options outisde the command line.
+        -n, which shows the name of the locations on the map.
+        -i, which shows put the ID of the locations on the map.
+        -m, which shows mileage on the map.
+        -2, provides 2-opt trip optimization, on top of nearest neighbor.
+        [map.svg], which adds a background svg, behind the desired trip.
+        [select.xml], a list of ID's, to be used as a subset of every location in the input file.
+
+      TripCo v2.0 produces two files.
+          -An SVG file, containing a map of the locations, and the legs between them, a map of the trip for the user.
+          -An XML file, containing the itinerary of the trip.
+
+          The resulting SVG and XML will have the same name as the input file.
+          The resulting SVG and XML will be viewable in the GUI.
+
 
 Purpose:
-	Version 2.0 of TripCo will provide users with a short, circuit trip between a list of locations that the user supplies. Version 2.0 handles a list of locations, containing the Name, ID, Latitude and Longitude of the users desired locations. A selection.xml can be supplied to reduce the list of locations to a subset of the original list. A map.svg can optionlly be supplied, to be used as a background image behind the TripCo tour. TripCo v2.0 will crunch the numbers and give users a map and itinerary, of the nearest neighbor tour and optionally apply 2-opt and 3-opt optimizations to the route. On the map, Locations will marked with either their name or ID. Legs in the trip, between locations, will be optionally marked with the distance. The Itinerary, will contain an overview of the trip, letting users know where to go, and in which order. The map will be an SVG file, and the itinerary will be a XML file, both veiwable in the GUI.
+      Version 2.0 of TripCo will provide users with a short, circuit trip between a list of locations that the user supplies. Version 2.0 handles a list of locations, containing the Name, ID, Latitude and Longitude of the users desired locations. A selection.xml can be supplied to reduce the list of locations to a subset of the original list. A map.svg can optionlly be supplied, to be used as a background image behind the TripCo tour. TripCo v2.0 will crunch the numbers and give users a map and itinerary, of the nearest neighbor tour and optionally apply 2-opt and 3-opt optimizations to the route. On the map, Locations will marked with either their name or ID. Legs in the trip, between locations, will be optionally marked with the distance. The Itinerary, will contain an overview of the trip, letting users know where to go, and in which order. The map will be an SVG file, and the itinerary will be a XML file, both veiwable in the GUI.
 
 Issue Summary:
-        Selecting and saving a subset of selected locations from the GUI, is not a feature in v2.0.
-	Tracking the user, is not a feature in v2.0.
+      3-opt is not fully functional in v2.0
+      Selecting and saving a subset of selected locations from the GUI, is not a feature in v2.0.
+      Tracking the user, is not a feature in v2.0.
 
 Notes:
-	Great Circle distance algorithm from - http://introcs.cs.princeton.edu/java/12types/GreatCircle.java.html
+      Great Circle distance algorithm from - http://introcs.cs.princeton.edu/java/12types/GreatCircle.java.html
