@@ -116,7 +116,7 @@ public class TripCo {
 
     }
 
-    model = new Model(tempSelectionsCSVfilename);
+    model = new Model(tempSelectionsCSVfilename,opt);
 
     Path tempSelectionsCSV = Paths.get(tempSelectionsCSVfilename);
     try {

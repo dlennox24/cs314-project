@@ -7,7 +7,7 @@ import main.java.edu.csu2017sp314.DTR27.tripco.Model.Model;
 
 public class TestModel {
 	
-	Model m = new Model("src/input.csv");
+	Model m = new Model("src/input.csv","NN");
 
   
     @Test
