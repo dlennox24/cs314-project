@@ -52,6 +52,7 @@ public IteneraryDisplay(String fileName) {
 		contentPane.setLayout(null);
 		
 		TextArea textArea = new TextArea();
+		
 		Populate(textArea, fileName);
 		textArea.setEditable(false);
 		textArea.setBounds(20, 10, 410, 243);
@@ -68,7 +69,7 @@ public IteneraryDisplay(String fileName) {
 	}
 	public void Populate(TextArea textArea, String fileName){
 		try {
-
+			
 			File file = new File(fileName+".xml");
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
 			        .newInstance();
@@ -78,7 +79,11 @@ public IteneraryDisplay(String fileName) {
 			while(document.getElementsByTagName("sequence").item(i) != null){
 				String sequence = document.getElementsByTagName("sequence").item(i).getTextContent();
 				String start = document.getElementsByTagName("start").item(i).getTextContent();
+			
+					System.out.println(start);
+				
 				String finish = document.getElementsByTagName("finish").item(i).getTextContent();
+				
 				String mileage = document.getElementsByTagName("mileage").item(i).getTextContent();
 				System.out.println(sequence+'\n'+start+' '+finish+'\n'+mileage+'\n');
 				textArea.append("Sequence Number "+sequence+"\nStart Location "+start+"\nFinish Location "+finish+"\nMileage "+mileage+'\n'+'\n');
