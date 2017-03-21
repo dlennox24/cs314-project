@@ -1,8 +1,8 @@
 package test.java.edu.csu2017sp314.DTR27.tripco;
 
-import Presenter.Presenter;
-import Model.Model;
-import View.View;
+import main.java.edu.csu2017sp314.DTR27.tripco.Presenter.Presenter;
+import main.java.edu.csu2017sp314.DTR27.tripco.Model.Model;
+import main.java.edu.csu2017sp314.DTR27.tripco.View.View;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;

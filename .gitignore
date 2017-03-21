@@ -3,3 +3,5 @@
 /**/bin/
 /**/*.csv
 /**/*.xml
+/**/*.svg
+!/src/coloradoBg.svg

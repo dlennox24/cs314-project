@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import View.IteneraryDisplay;
+import main.java.edu.csu2017sp314.DTR27.tripco.View.IteneraryDisplay;
 import main.java.edu.csu2017sp314.DTR27.tripco.View.SVGMapDisplay;
 
 import javax.swing.JRadioButton;

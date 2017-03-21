@@ -245,7 +245,7 @@ public class Model {
 		
 		
 		try {
-			
+//			System.out.println(filename);
 			Scanner scanner = new Scanner(new File(filename));
 			Scanner scanner2 = new Scanner(new File(filename));
 			
