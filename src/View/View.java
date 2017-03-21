@@ -45,7 +45,7 @@ public class View {
 		// add leg data to the correct arraylists
 		int[] coord1 = coord2Pixel(x1,y1);
 		int[] coord2 = coord2Pixel(x2,y2);
-		this.legsData.add(new Leg(name1,name2,dist));
+		this.legsData.add(new Leg(name1.replaceAll("&", "and"),name2.replaceAll("&", "and"),dist));
 		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
 		this.locations.add(new Label("label"+name1.replaceAll("\\s+","").replaceAll("&+","and"),name1.replaceAll("&+","and"),coord1[0],coord1[1],"middle",16));
 		this.locations.add(new Label("label"+name2.replaceAll("\\s+","").replaceAll("&+","and"),name2.replaceAll("&+","and"),coord2[0],coord2[1],"middle",16));
@@ -210,7 +210,7 @@ public class View {
             fw.write(c);
             while(c!=-1) {
             	c = fr.read();
-            	System.out.println("read: "+c);
+            	//System.out.println("read: "+c);
             	if((char)c >= 0xEF){
             		//do nothing
             		System.out.println("non printable char");

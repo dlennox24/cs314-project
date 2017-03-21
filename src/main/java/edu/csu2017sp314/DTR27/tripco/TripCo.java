@@ -53,15 +53,20 @@ public class TripCo {
 			}
 			
 		}
+		String finalOptions = "";
 		Options op = new Options();
 		if(option.contains("g")){
 			gFlag=true;	
 			OptionsGUI gui = new OptionsGUI(op);
 			gui.run(op);
 
+		}else{
+			finalOptions = option;
+			op.done = true;
 		}
 
 		while(op.done != true){
+			System.out.println(op.optionsString);
 			
 		}
 		option=op.optionsString;
@@ -70,7 +75,7 @@ public class TripCo {
 		String strN = option;
 		String strI = option;
 		String strM = option;
-		String finalOptions = "";
+	
 
 
 		if(((option.length() - str2.replace("2", "").length()) % 2) == 1){
@@ -132,7 +137,7 @@ public class TripCo {
 		for(int i = 0; i < model.getLegsLength(); i++){
 			finalDistance += model.getLeg(i).getDistance();
 		}
-		Presenter P = new Presenter(model,new View("Colorado",finalDistance,option,newOutPutFile.substring(0, newOutPutFile.length()-4)),option,svgFilename);
+		Presenter P = new Presenter(model,new View("Colorado",finalDistance,finalOptions,newOutPutFile.substring(0, newOutPutFile.length()-4)),option,svgFilename);
 		
 		P.getTrip(P,option);
 		P.finalView(svgFilename);

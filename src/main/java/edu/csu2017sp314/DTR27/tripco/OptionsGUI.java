@@ -12,8 +12,10 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import View.IteneraryDisplay;
+import main.java.edu.csu2017sp314.DTR27.tripco.View.SVGMapDisplay;
 
 import javax.swing.JRadioButton;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 public class OptionsGUI extends JFrame implements Runnable{
@@ -58,16 +60,84 @@ public class OptionsGUI extends JFrame implements Runnable{
 					
 					if(cmd.equals("Mileage")){
 						op.optionsString = op.optionsString + "m"; 
-					
+						}
 					}
-
-				
-				}
+				});
 			
-			
-			});
+		JCheckBox name = new JCheckBox("Name");
+		name.setBounds(15, 55, 129, 23);
+		contentPane.add(name);
+		name.addActionListener(new ActionListener(){
 		
-	}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String cmd = e.getActionCommand();
+				
+				if(cmd.equals("Name")){
+					op.optionsString = op.optionsString + "n"; 
+					}
+				}
+			});
+		JCheckBox id = new JCheckBox("id");
+		id.setBounds(15, 75, 129, 23);
+		contentPane.add(id);
+		id.addActionListener(new ActionListener(){
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String cmd = e.getActionCommand();
+				
+				if(cmd.equals("id")){
+					op.optionsString = op.optionsString + "i"; 
+					}
+				}
+			});
+		JCheckBox opt3 = new JCheckBox("3-opt");
+		opt3.setBounds(15, 95, 129, 23);
+		contentPane.add(opt3);
+		opt3.addActionListener(new ActionListener(){
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String cmd = e.getActionCommand();
+				System.out.println(cmd);
+				if(cmd.equals("3-opt")){
+					op.optionsString = op.optionsString + "3"; 
+					}
+				}
+			});
+		JCheckBox opt2 = new JCheckBox("2-opt");
+		opt2.setBounds(15, 115, 129, 23);
+		contentPane.add(opt2);
+		opt2.addActionListener(new ActionListener(){
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String cmd = e.getActionCommand();
+				System.out.println(cmd);
+				if(cmd.equals("2-opt")){
+					op.optionsString = op.optionsString + "2"; 
+					}
+				}
+			});
+		JButton DisplayButton = new JButton("Finish");
+		DisplayButton.setBounds(12, 200, 220, 30);
+		contentPane.add(DisplayButton);
+		DisplayButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String cmd = e.getActionCommand();
+				System.out.println(cmd);
+				if(cmd.equals("Finish")){
+					op.done = true;
+					
+					
+				}
+				
+			}
+		});
+		}
+
 	public void run(Options op) {
 		try {
 			OptionsGUI frame = new OptionsGUI(op);
