@@ -503,7 +503,7 @@ public class Model {
 		}
 
 		//extract a sample coordinate, to test for format
-		String cordCheck = csvLines.get(2);
+		String cordCheck = csvLines.get(0);
 		String[]  cordCheckArray = cordCheck.split(",");
 		String cord = cordCheckArray[longIndex];
 		cord = cord.replaceAll("\\s+","");
