@@ -140,6 +140,7 @@ public class Model {
 			if(total < LOW ){
 				LOW = total;
 				NN = visited;
+
 			}
 
 		}
@@ -186,13 +187,60 @@ public class Model {
 			return ret;
 		}
 	}
+	private ArrayList<Leg> createLegArrayFromInt(ArrayList<Integer> NN) {
+		long t = 0;
+		ArrayList<Leg> ret = new ArrayList<Leg>();
+		for(int i = 0; i < NN.size()-1;){
+			//make two locations, starting at index 0 of the nearest arrayList
+			Location a = this.Locations.get(NN.get(i));
+			i++;
+			Location b = this.Locations.get(NN.get(i));
 
-	private int calcTotalDist(ArrayList<Location> nodes){
+			//make a leg and add it to the return array lsit of legs.
+			Leg l = new Leg(a,b);
+			System.out.print(l.getDistance() + " | ");
+			t = t + l.getDistance();
+			ret.add(l);
+
+		}
+
+		//add the final leg, from the last location to the starting location.
+		//have to look up the indexes from the nearest array list
+		Location a = this.Locations.get(NN.get(NN.size()-1));
+		Location b = this.Locations.get(NN.get(0));
+		Leg l = new Leg(a,b);
+		ret.add(l);
+		t = t + l.getDistance();
+		return ret;
+	}
+
+	
+	public int calcTotalDistLegs(ArrayList<Leg> nodes){
+		ArrayList<Location> n = new ArrayList<Location>();
+
+		for(int i=0;i<nodes.size();i++){
+			n.add(nodes.get(i).getLocations().get(0));
+		}
+		System.out.println(n);
+		int count=0;
+		
+		for(int i=0;i<nodes.size()-1;i++){
+			Leg leg = new Leg(n.get(i),n.get(i+1));
+			count+=leg.getDistance();
+			//System.out.print(leg.getDistance() + " ");
+		}
+		Leg leg = new Leg(n.get(n.size()-1),n.get(0));
+		count = count + leg.getDistance();
+		return count;
+	}
+	public int calcTotalDist(ArrayList<Location> nodes){
 		int count=0;
 		for(int i=0;i<nodes.size()-1;i++){
 			Leg leg = new Leg(nodes.get(i),nodes.get(i+1));
 			count+=leg.getDistance();
 		}
+		Leg leg = new Leg(nodes.get(nodes.size()-1),nodes.get(0));
+		count = count + leg.getDistance();
 		return count;
 	}
 
@@ -204,7 +252,7 @@ public class Model {
 			nodes.add(legs.get(i).getLocations().get(0));
 			System.out.println(legs.get(i).getLocations().get(0));
 		}
-		nodes.add(nodes.get(0)); // adds return to start
+		//nodes.add(nodes.get(0)); // adds return to start
 		System.out.println(nodes);
 		
 		ArrayList<Location> existingRoute = nodes;
@@ -219,7 +267,10 @@ public class Model {
 					System.out.println(newDist+" < "+bestDist);
 					if(newDist<bestDist){
 						System.out.println("updated route");
+						System.out.println("new BEST: " + newDist);
 						existingRoute = newRoute;
+						System.out.println(existingRoute);
+						System.out.println();
 					}else{
 						done = true;
 					}
@@ -229,6 +280,7 @@ public class Model {
 		
 		System.out.println("\nFINISH 2OPT");
 		System.out.println(existingRoute);
+		System.out.println(calcTotalDist(existingRoute));
 		legs = new ArrayList<Leg>();
 		for(int i=0;i<existingRoute.size()-1;i++){
 			legs.add(new Leg(existingRoute.get(i),existingRoute.get(i+1)));

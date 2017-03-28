@@ -58,6 +58,13 @@ public class TripCo {
 
     }else{
       finalOptions = option;
+      if(finalOptions.contains("2")){
+    	  opt="2";
+    	  
+      }else if(finalOptions.contains("3")){
+    	  opt="3";
+    	  
+      }
       op.done = true;
     }
 
@@ -78,15 +85,15 @@ public class TripCo {
           opt = "3";
           opt3Flag=true;
         }
-        if(((option.length() - str3.replace("n", "").length()) % 2) == 1){
+        if(((option.length() - strN.replace("n", "").length()) % 2) == 1){
           finalOptions = finalOptions + "n";
           nFlag=true;
         }
-        if(((option.length() - str3.replace("i", "").length()) % 2) == 1){
+        if(((option.length() - strI.replace("i", "").length()) % 2) == 1){
           finalOptions = finalOptions + "i";
           iFlag=true;
         }
-        if(((option.length() - str3.replace("m", "").length()) % 2) == 1){
+        if(((option.length() - strM.replace("m", "").length()) % 2) == 1){
           finalOptions = finalOptions + "m";
           mFlag=true;
         }
@@ -111,23 +118,26 @@ public class TripCo {
 
     }
 
+    System.out.println();
+    System.out.println(model.getLegs());
+    System.out.println(model.calcTotalDistLegs(model.getLegs()));
 
-
-    System.out.println("filename: " + filename + "\nselctionfilename: " + selectionFilename +"\nbacgroundsvg: " + svgFilename +"\noptions:" + option);
+    System.out.println("filename: " + filename + "\nselctionfilename: " + selectionFilename +"\nbacgroundsvg: " + svgFilename +"\noptions:" + option + "\nopt:" + opt);
     String[] outputFileName = filename.split("/");
     String newOutPutFile = outputFileName[outputFileName.length-1];
     System.out.println("newOutputFile: " + newOutPutFile);
 
-    int finalDistance = 0;
-    for(int i = 0; i < model.getLegsLength(); i++){
-      finalDistance += model.getLeg(i).getDistance();
-    }
+    int finalDistance = model.calcTotalDistLegs(model.getLegs());
+
+//    for(int i = 0; i < model.getLegsLength(); i++){
+//      finalDistance += model.getLeg(i).getDistance();
+//    }
+    System.out.println(finalDistance);
     Presenter P = new Presenter(model,new View("Colorado",finalDistance,finalOptions,newOutPutFile.substring(0, newOutPutFile.length()-4)),option,svgFilename);
 
     P.getTrip(P,option);
     P.finalView(svgFilename);
-    System.out.println(option);
-    System.out.println(newOutPutFile);
+
     TripCoGUI t = new TripCoGUI(newOutPutFile.substring(0, newOutPutFile.length()-4));
     t.run(newOutPutFile.substring(0, newOutPutFile.length()-4));
 
