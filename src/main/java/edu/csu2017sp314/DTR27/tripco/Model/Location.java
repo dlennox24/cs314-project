@@ -8,6 +8,7 @@ public class Location {
 	private String name;
 	private Double longitude;
 	private Double latitude;
+	public String extraInfo;
 	
 	
 	public Location(String ID, String NAME, Double LONG, Double LAT){
@@ -25,6 +26,7 @@ public class Location {
 		this.name = NAME;
 		this.longitude = LONG;
 		this.latitude = LAT;
+		this.extraInfo=EXTRA;
 		
 	}
 	

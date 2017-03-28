@@ -4,19 +4,27 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Model {
 	private String status;
 	private ArrayList<Location> Locations;
 	private ArrayList<Leg> Legs;
+	public HashMap<String, Integer> columnTitleIndex= new HashMap<String, Integer>();
+	
 
 	// Constructor
 	// param: filename of the CSV file. 
 	public Model(String filename, String opt) {
 		//readCSV takes the filepath, and returns an arrayList of all locations
+		this.columnTitleIndex=generateComlumnTitlesAndIndex(filename);
 		this.Locations = readCSV(filename);
-
+		String selectionColumn = "";
+		String selectionCriteria = "";
+		System.out.println("Locations : " + this.Locations);
+		this.Locations = filterLocations(this.Locations, selectionColumn, selectionCriteria);
+		System.out.println("Filterd Locations : " + this.Locations);
 		//generateLegs takes the Locations arrayList and generates arrayList of all Legs
 		//    all trips and calculations happen withtin generate legs
 		//    may need to be moved outside the constructor, and called to support options.
@@ -24,6 +32,40 @@ public class Model {
 
 		this.status = "OK";
 	}
+	public Model(String filename, String opt, String SelectionColumn, String SelectionCriteria) {
+		//readCSV takes the filepath, and returns an arrayList of all locations
+		this.columnTitleIndex=generateComlumnTitlesAndIndex(filename);
+		this.Locations = readCSV(filename);
+		String selectionColumn = SelectionColumn;
+		String selectionCriteria = SelectionCriteria;
+		System.out.println("Locations : " + this.Locations);
+		this.Locations = filterLocations(this.Locations, selectionColumn, selectionCriteria);
+		System.out.println("Filterd Locations : " + this.Locations);
+		//generateLegs takes the Locations arrayList and generates arrayList of all Legs
+		//    all trips and calculations happen withtin generate legs
+		//    may need to be moved outside the constructor, and called to support options.
+		this.Legs = generateLegs(this.Locations, opt);
+
+		this.status = "OK";
+	}
+
+
+	private ArrayList<Location> filterLocations(ArrayList<Location> locations2, String selectionColumn, String selectionCriteria) {
+			String search = selectionColumn.toUpperCase() + ":" + selectionCriteria+"#";
+			ArrayList<Location> ret = new ArrayList<Location>();
+			if (selectionColumn == "" || selectionCriteria == ""){
+				return locations2;
+			}
+			
+			for(Location l : locations2){
+				if(l.extraInfo.contains(search)){
+					ret.add(l);
+				}
+				
+			}
+			return ret;
+	}
+
 
 	// generateLegs: 
 	// param: arrayList of Locations
@@ -325,6 +367,26 @@ public class Model {
 		return legs;
 	}
 
+	private HashMap<String, Integer> generateComlumnTitlesAndIndex(String filename) {
+		HashMap<String, Integer> ret= new HashMap<String, Integer>();
+		try {
+			Scanner scanner = new Scanner(new File(filename));
+			String headerLine = getHeaderLine(scanner);
+			String [] headerArray = headerLine.split(",");
+			int count = 0;
+			for (String item : headerArray){
+				ret.put(item.toUpperCase(), count);
+				count++;
+			}
+			System.out.println("--------------header array column index------------------------");
+			System.out.println(ret);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
+
 	//get the header line of the CSV file and return as string (id,name,longitude,latitude)
 	private String getHeaderLine(Scanner scanner) {
 		String ret = null;
@@ -545,15 +607,25 @@ public class Model {
 		int nameIndex = -1;
 		int longIndex = -1;
 		int latIndex = -1;
+		ArrayList<Integer> otherIndexes = new ArrayList<Integer>();
 
 		//save the index of the columns we care about
-		for(int i = 0; i < headerLineArray.length; i++ ){
-			if(headerLineArray[i].toUpperCase().equals("ID")){ idIndex = i; }
-			if(headerLineArray[i].toUpperCase().equals("NAME")){ nameIndex = i; }
-			if(headerLineArray[i].toUpperCase().equals("LONGITUDE")){ longIndex = i; }
-			if(headerLineArray[i].toUpperCase().equals("LATITUDE")){ latIndex = i; }
+//		for(int i = 0; i < headerLineArray.length; i++ ){
+//			if(headerLineArray[i].toUpperCase().equals("ID")){ idIndex = i; }
+//			if(headerLineArray[i].toUpperCase().equals("NAME")){ nameIndex = i; }
+//			if(headerLineArray[i].toUpperCase().equals("LONGITUDE")){ longIndex = i; }
+//			if(headerLineArray[i].toUpperCase().equals("LATITUDE")){ latIndex = i; }
+//		}
+		for(String key : this.columnTitleIndex.keySet() ){
+			if(key.equals("ID")){ idIndex = this.columnTitleIndex.get(key); }
+			else if(key.equals("NAME")){ nameIndex = this.columnTitleIndex.get(key); }
+			else if(key.equals("LONGITUDE")){ longIndex = this.columnTitleIndex.get(key); }
+			else if(key.equals("LATITUDE")){ latIndex = this.columnTitleIndex.get(key); }
+			else{
+				otherIndexes.add(columnTitleIndex.get(key));
+			}
+			
 		}
-
 		//extract a sample coordinate, to test for format
 		String cordCheck = csvLines.get(0);
 		String[]  cordCheckArray = cordCheck.split(",");
@@ -563,99 +635,76 @@ public class Model {
 		System.out.println(cord);
 
 		//test the coordinate to check if  in DMS. DM, or D format
+		//read all the lines form the CSV file
+		for(int i = 0; i < csvLines.size(); i++){
 
-		if (cord.indexOf("\"") >= 0 ){
+			// get each line and split on commas
+			String line = csvLines.get(i);
+			String[] lineArray = line.split(",");
 
-			System.out.println("doublequote");
-
-			//read all the lines form the CSV file
-			for(int i = 0; i < csvLines.size(); i++){
-
-				// get each line and split on commas
-				String line = csvLines.get(i);
-				String[] lineArray = line.split(",");
-
-				//extract name and id from columns as strings
-				String id = lineArray[idIndex];
-				String name = lineArray[nameIndex];
+			//extract name and id from columns as strings
+			String id = lineArray[idIndex];
+			String name = lineArray[nameIndex];
+			double longitude;
+			double latitude;
+			if (cord.indexOf("\"") >= 0 ){
+				System.out.println("DMS");
 
 				//process coordinates based on format
 				//LONG
 				String longCordString = lineArray[longIndex];
-				double longitude = processDMS(longCordString);
-
+				longitude = processDMS(longCordString);
 
 				//LAT
 				String latCordString = lineArray[latIndex];
-				double latitude = processDMS(latCordString);	
-				//    			
-
-				//create the location and add to the return array
-				Location l = new Location(id, name, longitude, latitude);
-				System.out.println("adding location: [ " + l + " ]");
-				returnLocationArray.add(l);
-			}
-		}else if (cord.indexOf("\'") >= 0 ){
-			System.out.println("singlequote");
-
-			for(int i = 0; i < csvLines.size(); i++){
-				String line = csvLines.get(i);
-				String[] lineArray = line.split(",");
-
-				String id = lineArray[idIndex];
-				String name = lineArray[nameIndex];
+				latitude = processDMS(latCordString);	
+				//    		
+				
+			}else if (cord.indexOf("\'") >= 0 ){
+				System.out.println("DM");
 
 				//LONG
 				String longCordString = lineArray[longIndex];
-				double longitude = processDM(longCordString);	
-
+				longitude = processDM(longCordString);	
 				//LAT
 				String latCordString = lineArray[latIndex];
-				double latitude = processDM(latCordString);
+				latitude = processDM(latCordString);
+				
 
-				Location l = new Location(id, name, longitude, latitude);
-				System.out.println("adding location: [ " + l + " ]");
-				returnLocationArray.add(l);
-			}
-		}else if (cord.indexOf("°") >= 0 ){
-			System.out.println("degree");
-
-			for(int i = 0; i < csvLines.size(); i++){
-				String line = csvLines.get(i);
-				String[] lineArray = line.split(",");
-
-				String id = lineArray[idIndex];
-				String name = lineArray[nameIndex];
+			}else if (cord.indexOf("°") >= 0 ){
+				System.out.println("D");
 
 				//LONG
 				String longCordString = lineArray[longIndex];
-				double longitude = processD(longCordString);	
+				longitude = processD(longCordString);	
 
 				//LAT
 				String latCordString = lineArray[latIndex];
-				double latitude = processD(latCordString);
-
-				Location l = new Location(id, name, longitude, latitude);
-				System.out.println("adding location: [ " + l + " ]");
-				returnLocationArray.add(l);
+				latitude = processD(latCordString);
+			}else{
+				System.out.println("nothing");
+				longitude = Double.parseDouble(lineArray[longIndex]); 
+				latitude = Double.parseDouble(lineArray[latIndex]); 
 			}
-		}else{
-			System.out.println("nothing");
-			for(int i = 0; i < csvLines.size(); i++){
-				String line = csvLines.get(i);
-				String[] lineArray = line.split(",");
 
-				String id = lineArray[idIndex];
-				String name = lineArray[nameIndex];
-				double longitude = Double.parseDouble(lineArray[longIndex]); 
-				double latitude = Double.parseDouble(lineArray[latIndex]); 
+			//create EXTRA string
+			String extra = "";
+			for(String columnTitle : columnTitleIndex.keySet()){
+				if(otherIndexes.contains(columnTitleIndex.get(columnTitle))){
+					extra = extra + columnTitle +":"+lineArray[columnTitleIndex.get(columnTitle)] + "#";
+				}
 
-
-				Location l = new Location(id, name, longitude, latitude);
-				System.out.println("adding location: [ " + l + " ]");
-				returnLocationArray.add(l);
 			}
+
+
+			//create the location and add to the return array
+			Location l = new Location(id, name, longitude, latitude,extra);
+			System.out.println("adding location: [ " + l + " ]");
+			System.out.println(l.extraInfo);
+			returnLocationArray.add(l);
+
 		}
+		
 		return returnLocationArray;
 	}
 
@@ -669,8 +718,12 @@ public class Model {
 	public ArrayList<Location> getLocations() {return Locations;}
 
 	public static void main(String[] args) {
-		String inputFile = "src/testFiles/brews.csv";
-		Model m = new Model(inputFile,"NN");
+		String inputFile = "src/testFiles/coairports.csv";
+		String sc = "type";
+		String s = "medium_airport";
+		//Model m = new Model(inputFile,"NN");
+		Model m = new Model(inputFile,"NN",sc,s);
+
 		//Model n = new Model(inputFile,"2");
 		//		Model o = new Model(inputFile,"3");
 
