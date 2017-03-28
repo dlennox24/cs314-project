@@ -3,8 +3,8 @@ package main.java.edu.csu2017sp314.DTR27.tripco.Model;
 import java.util.ArrayList;
 
 public class Leg {
-	private Location locA = null;
-	private Location locB = null;
+	Location locA = null;
+	Location locB = null;
 	private int distance;
 	
 	public Leg(Location A, Location B){

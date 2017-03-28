@@ -197,77 +197,49 @@ public class Model {
 	}
 
 	//	TODO: Implement
-	private ArrayList<Location> nodes = new ArrayList<Location>();
 	private ArrayList<Leg> twoOpt(ArrayList<Leg> legs){
-		System.out.println(legs);
+		System.out.println("\nTWO OPT START");
+		Leg calcDist = new Leg(legs.get(0).locA, legs.get(0).locB);
+		ArrayList<Location> locs = new ArrayList<Location>();
 		for(int i=0;i<legs.size();i++){
-			nodes.add(legs.get(i).getLocations().get(0));
-			System.out.println(legs.get(i).getLocations().get(0));
+			locs.add(legs.get(i).locA);
 		}
-		nodes.add(nodes.get(0)); // adds return to start
-		System.out.println(nodes);
-		
-		ArrayList<Location> existingRoute = nodes;
-		ArrayList<Location> newRoute = new ArrayList<Location>();
-		boolean done = false;
-		while(!done){
-			int bestDist = calcTotalDist(existingRoute);
-			for(int i=0;i<nodes.size()-1;i++){
-				for(int k=i+1;k<nodes.size();k++){
-					newRoute = twoOptSwap(existingRoute,i,k);
-					int newDist = calcTotalDist(newRoute);
-					System.out.println(newDist+" < "+bestDist);
-					if(newDist<bestDist){
-						System.out.println("updated route");
-						existingRoute = newRoute;
-					}else{
-						done = true;
+		locs.add(legs.get(0).locA);
+		int minChange;
+		do{
+			minChange = 0;
+			for(int i=0;i<locs.size()-2;i++){
+				System.out.println("i: "+i);
+				if(i==3){
+					System.out.println(i);
+				}
+				for(int j=i+2;j<locs.size()-1;j++){
+					System.out.println("j: "+j);
+					if(j==44){
+						System.out.println(locs.size());
+					}
+					int change = calcDist.greatCircleDistance(locs.get(i),locs.get(j))
+							+ calcDist.greatCircleDistance(locs.get(i+1),locs.get(j+1))
+							- calcDist.greatCircleDistance(locs.get(i),locs.get(i+1))
+							- calcDist.greatCircleDistance(locs.get(j),locs.get(j+1));
+					if(minChange > change){
+						minChange = change;
+						System.out.println("Swap");
+						System.out.println("\tExisting: \n\t\t"+locs.get(i)+" --> "+locs.get(i+1)+"\n\t\t"+locs.get(j)+" --> "+locs.get(j+1));
+						System.out.println("\tNew: \n\t\t"+locs.get(i)+" --> "+locs.get(j)+"\n\t\t"+locs.get(i+1)+" --> "+locs.get(j+1));
+						Collections.swap(locs, i+1, j);
 					}
 				}
 			}
+		}while(minChange < 0);
+		ArrayList<Leg> newRoute = new ArrayList<Leg>();
+		for(int i=0;i<locs.size()-1;i++){
+			newRoute.add(new Leg(locs.get(i),locs.get(i+1)));
 		}
-		
-		System.out.println("\nFINISH 2OPT");
-		System.out.println(existingRoute);
-		legs = new ArrayList<Leg>();
-		for(int i=0;i<existingRoute.size()-1;i++){
-			legs.add(new Leg(existingRoute.get(i),existingRoute.get(i+1)));
-		}
-		legs.add(new Leg(existingRoute.get(existingRoute.size()-1),existingRoute.get(0)));
-		
-		System.out.println(legs);
-		return legs;
-	}
-
-	private ArrayList<Location> twoOptSwap(ArrayList<Location> nodes, int i, int k){
-		ArrayList<Location> newRoute = new ArrayList<Location>();
-		System.out.println("======TWO OPT========="+i+","+k);
-		System.out.println(nodes);
-//		if(i==0){
-//			newRoute.add(nodes.get(0));
-//		}
-//		take route[1] to route[i-1] and add them in order to new_route
-		for(int c=0;c<i+1;c++){
-			newRoute.add(nodes.get(c));
-		}
-		System.out.println(newRoute);
-		if(i==0 && k==4){
-			System.out.println("");
-		}
-//		take route[i] to route[k] and add them in reverse order to new_route
-		for(int c=k;c>i;c--){
-			newRoute.add(nodes.get(c));
-		}
-		System.out.println(newRoute);
-		
-//		take route[k+1] to end and add them in order to new_route
-		for(int c=k+1;c<nodes.size();c++){
-			newRoute.add(nodes.get(c));
-		}
-		System.out.println(newRoute);
+		System.out.println("TWO OPT STOP\n");
 		return newRoute;
-
 	}
+
 	//	TODO: Implement
 	private ArrayList<Leg> threeOpt(ArrayList<Leg> legs){
 		return legs;
@@ -670,28 +642,28 @@ public class Model {
 
 	//	TODO: bookmark for main
 	public static void main(String[] args) {
-		String inputFile = "src/inputDM.csv";
+		String inputFile = "src/cogrid45.csv";
 		Model m = new Model(inputFile,"NN");
 		Model n = new Model(inputFile,"2");
-		//		Model o = new Model(inputFile,"3");
-
-		//		for(int i = 0; i < m.Locations.size(); i++){
-		//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
-		//		}
+//		Model o = new Model(inputFile,"3");
+//
+//		for(int i = 0; i < m.Locations.size(); i++){
+//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
+//		}
 		int totalDistM = 0;
 		int totalDistN = 0;
-		//		int totalDistO = 0;
+//		int totalDistO = 0;
 		for(int i = 0; i < m.Legs.size(); i++){
 			System.out.println("Leg [" + i + "] : ");
 			System.out.println("\t"+m.getLeg(i));
 			System.out.println("\t"+n.getLeg(i));
-			//			System.out.println("\t"+o.getLeg(i));
+//			System.out.println("\t"+o.getLeg(i));
 			totalDistM += m.getLeg(i).getDistance();
 			totalDistN += n.getLeg(i).getDistance();
-			//			totalDistO += o.getLeg(i).getDistance();
+//			totalDistO += o.getLeg(i).getDistance();
 		}
 		System.out.println("Total Distance (nn)   : "+totalDistM);
 		System.out.println("Total Distance (2opt) : "+totalDistN);
-		//		System.out.println("Total Distance (3opt) : "+totalDistO);
+//		System.out.println("Total Distance (3opt) : "+totalDistO);
 	}
 }
