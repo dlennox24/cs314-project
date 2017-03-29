@@ -40,7 +40,8 @@ public class TripCoGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TripCoGUI(String fileName) {
+	public TripCoGUI(String file) {
+		final String fileName = file;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setTitle("TripCO");
