@@ -73,6 +73,8 @@ public class Model {
 
 		//set a high value to test against, every next low will replace this.
 		int LOW = 99999;
+		int low = 99999;
+		ArrayList<ArrayList<Leg>> allTours = new ArrayList<ArrayList<Leg>>();
 
 		for(int i = 0; i < this.Locations.size(); i++){
 			//arrayList of the visited locations indexes.
@@ -131,6 +133,8 @@ public class Model {
 			System.out.print(visited + " ");
 			System.out.print(l.getDistance() + "\t");
 			System.out.println(total);
+			ArrayList<Leg> temp = createLegArrayFromInt(visited);
+			allTours.add(temp);
 
 			//if the total distance is less then the other nearest tours. save the arraylist of the order of the trip
 			//save the lowest distance
@@ -140,13 +144,26 @@ public class Model {
 			}
 		}
 
+
+		
+
 		System.out.println();
-		System.out.println(NN + "\t");
+		ArrayList<Leg> temp2 = createLegArrayFromInt(NN);
+		System.out.println(calcTotalDistLegs(temp2));
 
+		Optimizer optimize = new Optimizer();
+		if(opt == "2"){
+			return optimize.twoOpt(allTours, "");
+		}else if(opt == "3"){
+			return optimize.threeOpt(optimize.twoOpt(ret));
+		}else{
+			return createLegArrayFromInt(NN);
+		}
+	}
+
+	private ArrayList<Leg> createLegArrayFromInt(ArrayList<Integer> NN) {
 		long t = 0;
-
-		//add the legs in order of the Nearest Neighbor arrayList
-		//must -1 because the increment happens within.		
+		ArrayList<Leg> ret = new ArrayList<Leg>();
 		for(int i = 0; i < NN.size()-1;){
 			//make two locations, starting at index 0 of the nearest arrayList
 			Location a = this.Locations.get(NN.get(i));
@@ -155,9 +172,10 @@ public class Model {
 
 			//make a leg and add it to the return array lsit of legs.
 			Leg l = new Leg(a,b);
-			System.out.print(l.getDistance() + " | ");
+			//System.out.print(l.getDistance() + " | ");
 			t = t + l.getDistance();
 			ret.add(l);
+
 		}
 
 		//add the final leg, from the last location to the starting location.
@@ -167,21 +185,40 @@ public class Model {
 		Leg l = new Leg(a,b);
 		ret.add(l);
 		t = t + l.getDistance();
-
-		System.out.print(l.getDistance() + "\t total:");
-		System.out.println(t);
-		System.out.println();
-		
-		Optimizer optimize = new Optimizer();
-		if(opt == "2"){
-			return optimize.twoOpt(ret);
-		}else if(opt == "3"){
-			return optimize.threeOpt(optimize.twoOpt(ret));
-		}else{
-			return ret;
-		}
+		return ret;
 	}
 
+	
+	public int calcTotalDistLegs(ArrayList<Leg> nodes){
+		ArrayList<Location> n = new ArrayList<Location>();
+
+		for(int i=0;i<nodes.size();i++){
+			n.add(nodes.get(i).getLocations().get(0));
+		}
+		System.out.println(n);
+		int count=0;
+		
+		for(int i=0;i<nodes.size()-1;i++){
+			Leg leg = new Leg(n.get(i),n.get(i+1));
+			count+=leg.getDistance();
+			//System.out.print(leg.getDistance() + " ");
+		}
+		Leg leg = new Leg(n.get(n.size()-1),n.get(0));
+		count = count + leg.getDistance();
+		return count;
+	}
+	public int calcTotalDist(ArrayList<Location> nodes){
+		int count=0;
+		for(int i=0;i<nodes.size()-1;i++){
+			Leg leg = new Leg(nodes.get(i),nodes.get(i+1));
+			count+=leg.getDistance();
+		}
+		Leg leg = new Leg(nodes.get(nodes.size()-1),nodes.get(0));
+		count = count + leg.getDistance();
+		return count;
+	}
+
+	
 	//get the header line of the CSV file and return as string (id,name,longitude,latitude)
 	private String getHeaderLine(Scanner scanner) {
 		String ret = null;
