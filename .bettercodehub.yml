@@ -1,3 +1,9 @@
 component_depth: 8
 languages:
 - java
+production:
+  include:
+    /src/main/java/edu/csu2017sp314/DTR27/tripco/.*
+test:
+  include:
+    /src/test/java/edu/csu2017sp314/DTR27/tripco/.*
