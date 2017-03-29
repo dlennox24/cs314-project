@@ -197,49 +197,77 @@ public class Model {
 	}
 
 	//	TODO: Implement
+	private ArrayList<Location> nodes = new ArrayList<Location>();
 	private ArrayList<Leg> twoOpt(ArrayList<Leg> legs){
-		System.out.println("\nTWO OPT START");
-		Leg calcDist = new Leg(legs.get(0).locA, legs.get(0).locB);
-		ArrayList<Location> locs = new ArrayList<Location>();
+		System.out.println(legs);
 		for(int i=0;i<legs.size();i++){
-			locs.add(legs.get(i).locA);
+			nodes.add(legs.get(i).getLocations().get(0));
+			System.out.println(legs.get(i).getLocations().get(0));
 		}
-		locs.add(legs.get(0).locA);
-		int minChange;
-		do{
-			minChange = 0;
-			for(int i=0;i<locs.size()-2;i++){
-				System.out.println("i: "+i);
-				if(i==3){
-					System.out.println(i);
-				}
-				for(int j=i+2;j<locs.size()-1;j++){
-					System.out.println("j: "+j);
-					if(j==44){
-						System.out.println(locs.size());
-					}
-					int change = calcDist.greatCircleDistance(locs.get(i),locs.get(j))
-							+ calcDist.greatCircleDistance(locs.get(i+1),locs.get(j+1))
-							- calcDist.greatCircleDistance(locs.get(i),locs.get(i+1))
-							- calcDist.greatCircleDistance(locs.get(j),locs.get(j+1));
-					if(minChange > change){
-						minChange = change;
-						System.out.println("Swap");
-						System.out.println("\tExisting: \n\t\t"+locs.get(i)+" --> "+locs.get(i+1)+"\n\t\t"+locs.get(j)+" --> "+locs.get(j+1));
-						System.out.println("\tNew: \n\t\t"+locs.get(i)+" --> "+locs.get(j)+"\n\t\t"+locs.get(i+1)+" --> "+locs.get(j+1));
-						Collections.swap(locs, i+1, j);
+		nodes.add(nodes.get(0)); // adds return to start
+		System.out.println(nodes);
+		
+		ArrayList<Location> existingRoute = nodes;
+		ArrayList<Location> newRoute = new ArrayList<Location>();
+		boolean done = false;
+		while(!done){
+			int bestDist = calcTotalDist(existingRoute);
+			for(int i=0;i<nodes.size()-1;i++){
+				for(int k=i+1;k<nodes.size();k++){
+					newRoute = twoOptSwap(existingRoute,i,k);
+					int newDist = calcTotalDist(newRoute);
+					System.out.println(newDist+" < "+bestDist);
+					if(newDist<bestDist){
+						System.out.println("updated route");
+						existingRoute = newRoute;
+					}else{
+						done = true;
 					}
 				}
 			}
-		}while(minChange < 0);
-		ArrayList<Leg> newRoute = new ArrayList<Leg>();
-		for(int i=0;i<locs.size()-1;i++){
-			newRoute.add(new Leg(locs.get(i),locs.get(i+1)));
 		}
-		System.out.println("TWO OPT STOP\n");
-		return newRoute;
+		
+		System.out.println("\nFINISH 2OPT");
+		System.out.println(existingRoute);
+		legs = new ArrayList<Leg>();
+		for(int i=0;i<existingRoute.size()-1;i++){
+			legs.add(new Leg(existingRoute.get(i),existingRoute.get(i+1)));
+		}
+		legs.add(new Leg(existingRoute.get(existingRoute.size()-1),existingRoute.get(0)));
+		
+		System.out.println(legs);
+		return legs;
 	}
 
+	private ArrayList<Location> twoOptSwap(ArrayList<Location> nodes, int i, int k){
+		ArrayList<Location> newRoute = new ArrayList<Location>();
+		System.out.println("======TWO OPT========="+i+","+k);
+		System.out.println(nodes);
+//		if(i==0){
+//			newRoute.add(nodes.get(0));
+//		}
+//		take route[1] to route[i-1] and add them in order to new_route
+		for(int c=0;c<i+1;c++){
+			newRoute.add(nodes.get(c));
+		}
+		System.out.println(newRoute);
+		if(i==0 && k==4){
+			System.out.println("");
+		}
+//		take route[i] to route[k] and add them in reverse order to new_route
+		for(int c=k;c>i;c--){
+			newRoute.add(nodes.get(c));
+		}
+		System.out.println(newRoute);
+		
+//		take route[k+1] to end and add them in order to new_route
+		for(int c=k+1;c<nodes.size();c++){
+			newRoute.add(nodes.get(c));
+		}
+		System.out.println(newRoute);
+		return newRoute;
+
+	}
 	//	TODO: Implement
 	private ArrayList<Leg> threeOpt(ArrayList<Leg> legs){
 		return legs;
@@ -297,214 +325,162 @@ public class Model {
 		return generateLocationArray(headerLine, csvLines);
 
 	}
-
-	//process the longitude coordinate of a DegreeMinSecond return a double
-	private double processDMSlong(String longCordString){
-		double longitude;
+	private double processDMS(String cordString){
+		double value;
 
 		//set a value to keep track of if we have a positive or negative coordinate
-		int EWscalar = 0;
+		int scalar = 0;
 
 		//strip all white space from the string
-		longCordString= longCordString.replaceAll("\\s+","");    			
-		System.out.println(longCordString);
+		cordString= cordString.replaceAll("\\s+","");    			
+		System.out.println(cordString);
 
 		//check if the coordinate is East or West hemisphere
-		if (longCordString.indexOf("E") >= 0 ){
-			System.out.println("E");
+		if ((cordString.indexOf("E") >= 0) || (cordString.indexOf("N") >= 0)){
+			System.out.println("EN");
 
 			//strip the letter from the coordinate
 			//set the scalar
-			longCordString = longCordString.replaceAll("E", "");
-			EWscalar = 1;
+			cordString = cordString.replaceAll("E", "");
+			cordString = cordString.replaceAll("N", "");
+
+			scalar = 1;
 		}else {
-			System.out.println("W");
-			longCordString = longCordString.replaceAll("W", " ");
-			System.out.println(longCordString);
-			EWscalar = -1;
+			System.out.println("WS");
+			cordString = cordString.replaceAll("W", " ");
+			cordString = cordString.replaceAll("S", "");
+
+			System.out.println(cordString);
+			scalar = -1;
 		}
 
 		//strip the string of characters not a number or a decimal and replace with a space
-		longCordString = longCordString.replaceAll("[^0-9.]", " ");
-		System.out.println(longCordString);
+		cordString = cordString.replaceAll("[^0-9.]", " ");
+		System.out.println(cordString);
 
 		//strip all white space from the string
-		longCordString = longCordString.replaceAll("\\s+"," ");
-		System.out.println(longCordString);
+		cordString = cordString.replaceAll("\\s+"," ");
+		System.out.println(cordString);
 
 		//split the string on spaces and extract the values
-		String[] longCordArray = longCordString.split(" ");
-		double longDeg = Double.parseDouble(longCordArray[0]);
-		double longMin = Double.parseDouble(longCordArray[1]);
-		double longSec = Double.parseDouble(longCordArray[2]);
+		String[] cordArray = cordString.split(" ");
+		double Deg = Double.parseDouble(cordArray[0]);
+		double Min = Double.parseDouble(cordArray[1]);
+		double Sec = Double.parseDouble(cordArray[2]);
 
 		//turn the seperate fields into one coordinate
-		longitude = (EWscalar) * (longDeg) + (longMin/60) + (longSec/3600);
+		value = (scalar) * ((Deg) + (Min/60) + (Sec/3600));
+		System.out.println("value = " + value);
+		System.out.println();
 
-		return longitude;
+		return value;
 
 	}
-	private double processDMSlat(String latCordString){
-		double latitude;
-		int NSscalar = 0;
+	
+	private double processDM(String cordString){
+		double value;
 
-		latCordString= latCordString.replaceAll("\\s+","");    			
-		System.out.println(latCordString);
+		//set a value to keep track of if we have a positive or negative coordinate
+		int scalar = 0;
 
-		if (latCordString.indexOf("N") >= 0 ){
-			System.out.println("N");
-			latCordString = latCordString.replaceAll("N", "");
-			NSscalar = 1;
+		//strip all white space from the string
+		cordString= cordString.replaceAll("\\s+","");    			
+		System.out.println(cordString);
+
+		//check if the coordinate is East or West hemisphere
+		if ((cordString.indexOf("E") >= 0) || (cordString.indexOf("N") >= 0)){
+			System.out.println("EN");
+
+			//strip the letter from the coordinate
+			//set the scalar
+			cordString = cordString.replaceAll("E", "");
+			cordString = cordString.replaceAll("N", "");
+
+			scalar = 1;
 		}else {
-			System.out.println("S");
-			latCordString = latCordString.replaceAll("S", " ");
-			System.out.println(latCordString);
-			NSscalar = -1;
+			System.out.println("WS");
+			cordString = cordString.replaceAll("W", " ");
+			cordString = cordString.replaceAll("S", "");
+
+			System.out.println(cordString);
+			scalar = -1;
 		}
 
-		latCordString = latCordString.replaceAll("[^0-9.]", " ");
-		System.out.println(latCordString);
-		latCordString = latCordString.replaceAll("\\s+"," ");
-		System.out.println(latCordString);
+		//strip the string of characters not a number or a decimal and replace with a space
+		cordString = cordString.replaceAll("[^0-9.]", " ");
+		System.out.println(cordString);
 
-		String[] latCordArray = latCordString.split(" ");
-		double latDeg = Double.parseDouble(latCordArray[0]);
-		double latMin = Double.parseDouble(latCordArray[1]);
-		double latSec = Double.parseDouble(latCordArray[2]);
-		System.out.println("deg= " + latDeg);
-		System.out.println("min= " + latMin);
-		System.out.println("sec= " + latSec);
+		//strip all white space from the string
+		cordString = cordString.replaceAll("\\s+"," ");
+		System.out.println(cordString);
 
+		//split the string on spaces and extract the values
+		String[] cordArray = cordString.split(" ");
+		double Deg = Double.parseDouble(cordArray[0]);
+		double Min = Double.parseDouble(cordArray[1]);
 
-		latitude = (NSscalar) * ((latDeg) + (latMin/60) + (latSec/3600));
-		System.out.println("lat = " + latitude);
+		//turn the seperate fields into one coordinate
+		value = (scalar) * ((Deg) + (Min/60));
+		System.out.println("value = " + value);
+		System.out.println();
 
-		return latitude;
+		return value;
+
 	}
+	
+	private double processD(String cordString){
+		double value;
 
-	private double processDMlong(String longCordString) {
-		double longitude;
-		int EWscalar = 0;
+		//set a value to keep track of if we have a positive or negative coordinate
+		int scalar = 0;
 
-		longCordString= longCordString.replaceAll("\\s+","");    			
-		System.out.println(longCordString);
+		//strip all white space from the string
+		cordString= cordString.replaceAll("\\s+","");    			
+		System.out.println(cordString);
 
-		if (longCordString.indexOf("E") >= 0 ){
-			System.out.println("E");
-			longCordString = longCordString.replaceAll("E", "");
-			EWscalar = 1;
+		//check if the coordinate is East or West hemisphere
+		if ((cordString.indexOf("E") >= 0) || (cordString.indexOf("N") >= 0)){
+			System.out.println("EN");
+
+			//strip the letter from the coordinate
+			//set the scalar
+			cordString = cordString.replaceAll("E", "");
+			cordString = cordString.replaceAll("N", "");
+
+			scalar = 1;
 		}else {
-			System.out.println("W");
-			longCordString = longCordString.replaceAll("W", " ");
-			System.out.println(longCordString);
-			EWscalar = -1;
+			System.out.println("WS");
+			cordString = cordString.replaceAll("W", " ");
+			cordString = cordString.replaceAll("S", "");
+
+			System.out.println(cordString);
+			scalar = -1;
 		}
 
-		longCordString = longCordString.replaceAll("[^0-9.]", " ");
-		System.out.println(longCordString);
-		longCordString = longCordString.replaceAll("\\s+"," ");
-		System.out.println(longCordString);
+		//strip the string of characters not a number or a decimal and replace with a space
+		cordString = cordString.replaceAll("[^0-9.]", " ");
+		System.out.println(cordString);
 
-		String[] longCordArray = longCordString.split(" ");
-		double longDeg = Double.parseDouble(longCordArray[0]);
-		double longMin = Double.parseDouble(longCordArray[1]);
+		//strip all white space from the string
+		cordString = cordString.replaceAll("\\s+"," ");
+		System.out.println(cordString);
 
-		longitude = (EWscalar) * (longDeg) + (longMin/60);
+		//split the string on spaces and extract the values
+		String[] cordArray = cordString.split(" ");
+		double Deg = Double.parseDouble(cordArray[0]);
 
-		return longitude;
+
+		//turn the seperate fields into one coordinate
+		value = (scalar) * ((Deg));
+		System.out.println("value = " + value);
+		System.out.println();
+
+		return value;
+
 	}
-	private double processDMlat(String latCordString) {
+	
+	
 
-		double latitude;
-		int NSscalar = 0;
-
-		latCordString= latCordString.replaceAll("\\s+","");    			
-		System.out.println(latCordString);
-
-		if (latCordString.indexOf("N") >= 0 ){
-			System.out.println("N");
-			latCordString = latCordString.replaceAll("N", "");
-			NSscalar = 1;
-		}else {
-			System.out.println("S");
-			latCordString = latCordString.replaceAll("S", " ");
-			System.out.println(latCordString);
-			NSscalar = -1;
-		}
-
-		latCordString = latCordString.replaceAll("[^0-9.]", " ");
-		System.out.println(latCordString);
-		latCordString = latCordString.replaceAll("\\s+"," ");
-		System.out.println(latCordString);
-
-		String[] latCordArray = latCordString.split(" ");
-		double latDeg = Double.parseDouble(latCordArray[0]);
-		double latMin = Double.parseDouble(latCordArray[1]);
-		System.out.println("deg= " + latDeg);
-		System.out.println("min= " + latMin);
-
-		latitude = (NSscalar) * ((latDeg) + (latMin/60) );
-		System.out.println("lat = " + latitude);
-
-		return latitude;
-	}
-
-	private double processDlong(String longCordString){
-		int EWscalar = 0;
-		longCordString= longCordString.replaceAll("\\s+","");    			
-		System.out.println(longCordString);
-
-		if (longCordString.indexOf("E") >= 0 ){
-			System.out.println("E");
-			longCordString = longCordString.replaceAll("E", " ");
-			EWscalar = 1;
-		}else {
-			System.out.println("W");
-			longCordString= longCordString.replaceAll("W", " ");
-			System.out.println(longCordString);
-			EWscalar = -1;
-		}
-
-		longCordString = longCordString.replaceAll("[^0-9.]", " ");
-		System.out.println(longCordString);
-		longCordString = longCordString.replaceAll("\\s+"," ");
-		System.out.println(longCordString);
-
-		String[] longCordArray = longCordString.split(" ");
-		double longDeg = Double.parseDouble(longCordArray[0]);
-		double longitude = (EWscalar) * (longDeg) ;    			
-
-		return longitude;
-	}
-
-
-	private double processDlat(String latCordString){
-		int NSscalar = 0 ;
-		latCordString = latCordString.replaceAll("\\s+","");    			
-		System.out.println(latCordString);
-
-		if (latCordString.indexOf("N") >= 0 ){
-			System.out.println("N");
-			latCordString = latCordString.replaceAll("N", "");
-			System.out.println(latCordString);
-			NSscalar = 1;
-		}else {
-			System.out.println("S");
-			latCordString = latCordString.replaceAll("S", " ");
-			System.out.println(latCordString);
-			NSscalar = -1;
-		}
-
-		latCordString = latCordString.replaceAll("[^0-9.]", " ");
-		System.out.println(latCordString);
-		latCordString = latCordString.replaceAll("\\s+"," ");
-		System.out.println(latCordString);
-
-		String[] latCordArray = latCordString.split(" ");
-		double latDeg = Double.parseDouble(latCordArray[0]);
-		double latitude = (NSscalar) * (latDeg) ;
-		return latitude;
-	}
 
 	//parse the lines from the CSV and create locations from the lines
 	private ArrayList<Location> generateLocationArray(String headerline, ArrayList<String> csvLines) {
@@ -527,7 +503,7 @@ public class Model {
 		}
 
 		//extract a sample coordinate, to test for format
-		String cordCheck = csvLines.get(2);
+		String cordCheck = csvLines.get(0);
 		String[]  cordCheckArray = cordCheck.split(",");
 		String cord = cordCheckArray[longIndex];
 		cord = cord.replaceAll("\\s+","");
@@ -554,12 +530,12 @@ public class Model {
 				//process coordinates based on format
 				//LONG
 				String longCordString = lineArray[longIndex];
-				double longitude = processDMSlong(longCordString);
+				double longitude = processDMS(longCordString);
 
 
 				//LAT
 				String latCordString = lineArray[latIndex];
-				double latitude = processDMSlat(latCordString);	
+				double latitude = processDMS(latCordString);	
 				//    			
 
 				//create the location and add to the return array
@@ -579,11 +555,11 @@ public class Model {
 
 				//LONG
 				String longCordString = lineArray[longIndex];
-				double longitude = processDMlong(longCordString);	
+				double longitude = processDM(longCordString);	
 
 				//LAT
 				String latCordString = lineArray[latIndex];
-				double latitude = processDMlat(latCordString);
+				double latitude = processDM(latCordString);
 
 				Location l = new Location(id, name, longitude, latitude);
 				System.out.println("adding location: [ " + l + " ]");
@@ -601,11 +577,11 @@ public class Model {
 
 				//LONG
 				String longCordString = lineArray[longIndex];
-				double longitude = processDlong(longCordString);	
+				double longitude = processD(longCordString);	
 
 				//LAT
 				String latCordString = lineArray[latIndex];
-				double latitude = processDlat(latCordString);
+				double latitude = processD(latCordString);
 
 				Location l = new Location(id, name, longitude, latitude);
 				System.out.println("adding location: [ " + l + " ]");
@@ -640,30 +616,29 @@ public class Model {
 	public ArrayList<Leg> getLegs() {return Legs;}
 	public ArrayList<Location> getLocations() {return Locations;}
 
-	//	TODO: bookmark for main
 	public static void main(String[] args) {
-		String inputFile = "src/cogrid45.csv";
+		String inputFile = "src/testFiles/brews.csv";
 		Model m = new Model(inputFile,"NN");
-		Model n = new Model(inputFile,"2");
-//		Model o = new Model(inputFile,"3");
-//
-//		for(int i = 0; i < m.Locations.size(); i++){
-//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
+		//Model n = new Model(inputFile,"2");
+		//		Model o = new Model(inputFile,"3");
+
+		//		for(int i = 0; i < m.Locations.size(); i++){
+		//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
+		//		}
+//		int totalDistM = 0;
+//		int totalDistN = 0;
+//		//		int totalDistO = 0;
+//		for(int i = 0; i < m.Legs.size(); i++){
+//			System.out.println("Leg [" + i + "] : ");
+//			System.out.println("\t"+m.getLeg(i));
+//			System.out.println("\t"+n.getLeg(i));
+//			//			System.out.println("\t"+o.getLeg(i));
+//			totalDistM += m.getLeg(i).getDistance();
+//			totalDistN += n.getLeg(i).getDistance();
+//			//			totalDistO += o.getLeg(i).getDistance();
 //		}
-		int totalDistM = 0;
-		int totalDistN = 0;
-//		int totalDistO = 0;
-		for(int i = 0; i < m.Legs.size(); i++){
-			System.out.println("Leg [" + i + "] : ");
-			System.out.println("\t"+m.getLeg(i));
-			System.out.println("\t"+n.getLeg(i));
-//			System.out.println("\t"+o.getLeg(i));
-			totalDistM += m.getLeg(i).getDistance();
-			totalDistN += n.getLeg(i).getDistance();
-//			totalDistO += o.getLeg(i).getDistance();
-		}
-		System.out.println("Total Distance (nn)   : "+totalDistM);
-		System.out.println("Total Distance (2opt) : "+totalDistN);
-//		System.out.println("Total Distance (3opt) : "+totalDistO);
+//		System.out.println("Total Distance (nn)   : "+totalDistM);
+//		System.out.println("Total Distance (2opt) : "+totalDistN);
+		//		System.out.println("Total Distance (3opt) : "+totalDistO);
 	}
 }

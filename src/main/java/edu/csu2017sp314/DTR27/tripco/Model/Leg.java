@@ -11,6 +11,7 @@ public class Leg {
 		this.locA = A;
 		this.locB = B;
 		this.distance = greatCircleDistance( A, B);
+		//System.out.println("start: " + locA.getName() + "\nfinish: " + locB.getName() + "\ndis: " + distance) ;
 		
 	}
 	public ArrayList<Location> getLocations(){
@@ -60,31 +61,34 @@ public class Leg {
 //	        angle1 = Math.toDegrees(angle1);
 //
 //	        // each degree on a great circle of Earth is 60 nautical miles
-//	        double distance1 = 60 * angle1;
+//	        double distance1 = (3961) * angle1;
 //
-//	        System.out.println(distance1 + " nautical miles");
-//
+//	       // System.out.println(distance1 + " nautical miles");
+
 
 	       /*************************************************************************
 	        * Compute using Haverside formula
 	        *************************************************************************/
-	        double a = Math.pow(Math.sin((x2-x1)/2), 2)
-	                 + Math.cos(x1) * Math.cos(x2) * Math.pow(Math.sin((y2-y1)/2), 2);
+	        //km =6371
+	        final int R = 3959; // Radious of the earth
+			Double lat1 =locA.getLat();
+			Double lon1 =locA.getLong();
+			Double lat2 = locB.getLat();
+			Double lon2 = locB.getLong();
+			Double latDistance = Math.toRadians(lat2-lat1);
+			Double lonDistance = Math.toRadians(lon2-lon1);
+			Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + 
+					   Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * 
+					   Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+			Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+			Double distance = R * c;
+			
+			//System.out.println("start: " + locA.getName() + " lat: "+locA.getLat()+" long: " + locA.getLong()+ "\nfinish: " + locB.getName() + " lat: "+locB.getLat()+" long: " + locB.getLong() + "\ndis: " + distance) ;
 
-	        // great circle distance in radians
-	        double angle2 = 2 * Math.asin(Math.min(1, Math.sqrt(a)));
-
-	        // convert back to degrees
-	        angle2 = Math.toDegrees(angle2);
-
-	        // each degree on a great circle of Earth is 60 nautical miles
-	        double distance2 = 60 * angle2;
-
-	        //System.out.println(distance2 + " nautical miles");
 		
-		
-		return (int) Math.round(distance2);
+		return (int) Math.ceil(distance);
 	}
+	
 
 	public static void main(String[] args) {
 		

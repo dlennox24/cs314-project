@@ -26,7 +26,7 @@ public class TripCo {
     String filename = null;
     String selectionFilename = null;
     String svgFilename = null;
-    ArrayList<Integer> selectedIDs = new ArrayList<Integer>();
+    ArrayList<String> selectedIDs = new ArrayList<String>();
     String opt = "NN";
     boolean mFlag = false;
     boolean iFlag = false;
@@ -63,67 +63,55 @@ public class TripCo {
 
     while(op.done != true){
       System.out.println(op.optionsString);
+      option=op.optionsString;
+      String str2 = option;
+      String str3 = option;
+      String strN = option;
+      String strI = option;
+      String strM = option;
 
-    }
-    option=op.optionsString;
-    String str2 = option;
-    String str3 = option;
-    String strN = option;
-    String strI = option;
-    String strM = option;
-
-
-
-    if(((option.length() - str2.replace("2", "").length()) % 2) == 1){
-      opt = "2";
-      opt2Flag=true;
-    }
-    if(((option.length() - str3.replace("3", "").length()) % 2) == 1){
-      opt = "3";
-      opt3Flag=true;
-    }
-    if(((option.length() - str3.replace("n", "").length()) % 2) == 1){
-      finalOptions = finalOptions + "n";
-      nFlag=true;
-    }
-    if(((option.length() - str3.replace("i", "").length()) % 2) == 1){
-      finalOptions = finalOptions + "i";
-      iFlag=true;
-    }
-    if(((option.length() - str3.replace("m", "").length()) % 2) == 1){
-      finalOptions = finalOptions + "m";
-      mFlag=true;
+      if(((option.length() - str2.replace("2", "").length()) % 2) == 1){
+          opt = "2";
+          opt2Flag=true;
+        }
+        if(((option.length() - str3.replace("3", "").length()) % 2) == 1){
+          opt = "3";
+          opt3Flag=true;
+        }
+        if(((option.length() - str3.replace("n", "").length()) % 2) == 1){
+          finalOptions = finalOptions + "n";
+          nFlag=true;
+        }
+        if(((option.length() - str3.replace("i", "").length()) % 2) == 1){
+          finalOptions = finalOptions + "i";
+          iFlag=true;
+        }
+        if(((option.length() - str3.replace("m", "").length()) % 2) == 1){
+          finalOptions = finalOptions + "m";
+          mFlag=true;
+        }
+   
     }
 
     Model model = null;
-    String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
 
     if(selectionFilename != null){
       try {
+    	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
         makeSelectionCSV(filename, tempSelectionsCSVfilename, selectedIDs, selectionFilename);
+        model = new Model(tempSelectionsCSVfilename,opt);
+        //Files.delete(tempSelectionsCSVfilename);
       } catch (IOException e) {
         e.printStackTrace();
       }
 
 
     }else{
-      try {
-    	  System.out.println(filename);
-        Files.copy(Paths.get(filename),Paths.get(tempSelectionsCSVfilename));
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    	model = new Model(filename,opt);
 
     }
 
-    model = new Model(tempSelectionsCSVfilename,opt);
 
-    Path tempSelectionsCSV = Paths.get(tempSelectionsCSVfilename);
-    try {
-      Files.delete(tempSelectionsCSV);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     System.out.println("filename: " + filename + "\nselctionfilename: " + selectionFilename +"\nbacgroundsvg: " + svgFilename +"\noptions:" + option);
     String[] outputFileName = filename.split("/");
@@ -145,7 +133,7 @@ public class TripCo {
 
   }
 
-  private static void makeSelectionCSV(String filename, String tempSelectionsCSVfilename, ArrayList<Integer> selectedIDs, String selectionFilename) throws IOException {
+  private static void makeSelectionCSV(String filename, String tempSelectionsCSVfilename, ArrayList<String> selectedIDs, String selectionFilename) throws IOException {
     ArrayList<String> csvStrings = null;
     String headerLine = null;
 
@@ -170,8 +158,9 @@ public class TripCo {
           line=line.replaceAll("<id>", "");
           line=line.replaceAll("</id>", "");
             line=line.replaceAll("\\s+","");
-          selectedIDs.add(Integer.parseInt(line));
+          selectedIDs.add(line);
         }
+       System.out.println(selectedIDs);
       }
 
 
@@ -195,8 +184,9 @@ public class TripCo {
       writer.newLine();
       for(String s : csvStrings){
         String[] stringTempArray = s.split(",");
-        int id = Integer.parseInt(stringTempArray[idIndex]);
+        String id = (stringTempArray[idIndex]);
         if(selectedIDs.contains(id)){
+        	System.out.println(s);
           System.out.println("writing: " + s + "\tid: " + id);
           writer.write(s);
           writer.newLine();
