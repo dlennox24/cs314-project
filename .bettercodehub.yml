@@ -3,7 +3,7 @@ languages:
 - java
 production:
   include:
-    /src/main/java/edu/csu2017sp314/DTR27/tripco/.*
+    - /src/main/java/edu/csu2017sp314/DTR27/tripco/.*\.java
 test:
   include:
-    /src/test/java/edu/csu2017sp314/DTR27/tripco/.*
+    - /src/test/java/edu/csu2017sp314/DTR27/tripco/.*\.java
