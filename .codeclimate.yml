@@ -1,0 +1,8 @@
+engines:
+  checkstyle:
+    enabled: true
+    channel: "beta"
+
+ratings:
+  paths:
+  - "/src/main/java/edu/csu2017sp314/DTR27/tripco/**.java"
