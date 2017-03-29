@@ -63,11 +63,8 @@ public class Model {
 		//NEAREST NEIGHBOR
 		for(int i = 0; i < this.Locations.size(); i++){
 			//System.out.print("|");
-
 			for(int j = 0; j < this.Locations.size(); j++){
 				//System.out.print(distances[i][j] + "  ");
-
-
 			}
 			//System.out.println("|");
 		}
@@ -141,7 +138,6 @@ public class Model {
 				LOW = total;
 				NN = visited;
 			}
-
 		}
 
 		System.out.println();
@@ -162,7 +158,6 @@ public class Model {
 			System.out.print(l.getDistance() + " | ");
 			t = t + l.getDistance();
 			ret.add(l);
-
 		}
 
 		//add the final leg, from the last location to the starting location.
@@ -173,104 +168,18 @@ public class Model {
 		ret.add(l);
 		t = t + l.getDistance();
 
-
 		System.out.print(l.getDistance() + "\t total:");
 		System.out.println(t);
 		System.out.println();
-
+		
+		Optimizer optimize = new Optimizer();
 		if(opt == "2"){
-			return twoOpt(ret);
+			return optimize.twoOpt(ret);
 		}else if(opt == "3"){
-			return threeOpt(twoOpt(ret));
+			return optimize.threeOpt(optimize.twoOpt(ret));
 		}else{
 			return ret;
 		}
-	}
-
-	private int calcTotalDist(ArrayList<Location> nodes){
-		int count=0;
-		for(int i=0;i<nodes.size()-1;i++){
-			Leg leg = new Leg(nodes.get(i),nodes.get(i+1));
-			count+=leg.getDistance();
-		}
-		return count;
-	}
-
-	//	TODO: Implement
-	private ArrayList<Location> nodes = new ArrayList<Location>();
-	private ArrayList<Leg> twoOpt(ArrayList<Leg> legs){
-		System.out.println(legs);
-		for(int i=0;i<legs.size();i++){
-			nodes.add(legs.get(i).getLocations().get(0));
-			System.out.println(legs.get(i).getLocations().get(0));
-		}
-		nodes.add(nodes.get(0)); // adds return to start
-		System.out.println(nodes);
-		
-		ArrayList<Location> existingRoute = nodes;
-		ArrayList<Location> newRoute = new ArrayList<Location>();
-		boolean done = false;
-		while(!done){
-			int bestDist = calcTotalDist(existingRoute);
-			for(int i=0;i<nodes.size()-1;i++){
-				for(int k=i+1;k<nodes.size();k++){
-					newRoute = twoOptSwap(existingRoute,i,k);
-					int newDist = calcTotalDist(newRoute);
-					System.out.println(newDist+" < "+bestDist);
-					if(newDist<bestDist){
-						System.out.println("updated route");
-						existingRoute = newRoute;
-					}else{
-						done = true;
-					}
-				}
-			}
-		}
-		
-		System.out.println("\nFINISH 2OPT");
-		System.out.println(existingRoute);
-		legs = new ArrayList<Leg>();
-		for(int i=0;i<existingRoute.size()-1;i++){
-			legs.add(new Leg(existingRoute.get(i),existingRoute.get(i+1)));
-		}
-		legs.add(new Leg(existingRoute.get(existingRoute.size()-1),existingRoute.get(0)));
-		
-		System.out.println(legs);
-		return legs;
-	}
-
-	private ArrayList<Location> twoOptSwap(ArrayList<Location> nodes, int i, int k){
-		ArrayList<Location> newRoute = new ArrayList<Location>();
-		System.out.println("======TWO OPT========="+i+","+k);
-		System.out.println(nodes);
-//		if(i==0){
-//			newRoute.add(nodes.get(0));
-//		}
-//		take route[1] to route[i-1] and add them in order to new_route
-		for(int c=0;c<i+1;c++){
-			newRoute.add(nodes.get(c));
-		}
-		System.out.println(newRoute);
-		if(i==0 && k==4){
-			System.out.println("");
-		}
-//		take route[i] to route[k] and add them in reverse order to new_route
-		for(int c=k;c>i;c--){
-			newRoute.add(nodes.get(c));
-		}
-		System.out.println(newRoute);
-		
-//		take route[k+1] to end and add them in order to new_route
-		for(int c=k+1;c<nodes.size();c++){
-			newRoute.add(nodes.get(c));
-		}
-		System.out.println(newRoute);
-		return newRoute;
-
-	}
-	//	TODO: Implement
-	private ArrayList<Leg> threeOpt(ArrayList<Leg> legs){
-		return legs;
 	}
 
 	//get the header line of the CSV file and return as string (id,name,longitude,latitude)
@@ -302,14 +211,13 @@ public class Model {
 		return ret;
 	}
 
-
 	//read the CSV file, generate a locationArray.
 	private ArrayList<Location> readCSV(String filename) {
 		String headerLine = null;
 		ArrayList<String> csvLines = new ArrayList<String>();
 
 		try {
-			//			System.out.println(filename);
+//			System.out.println(filename);
 			Scanner scanner = new Scanner(new File(filename));
 			Scanner scanner2 = new Scanner(new File(filename));
 
@@ -323,8 +231,8 @@ public class Model {
 		}
 
 		return generateLocationArray(headerLine, csvLines);
-
 	}
+	
 	private double processDMS(String cordString){
 		double value;
 
@@ -374,7 +282,6 @@ public class Model {
 		System.out.println();
 
 		return value;
-
 	}
 	
 	private double processDM(String cordString){
@@ -425,7 +332,6 @@ public class Model {
 		System.out.println();
 
 		return value;
-
 	}
 	
 	private double processD(String cordString){
@@ -469,19 +375,14 @@ public class Model {
 		String[] cordArray = cordString.split(" ");
 		double Deg = Double.parseDouble(cordArray[0]);
 
-
 		//turn the seperate fields into one coordinate
 		value = (scalar) * ((Deg));
 		System.out.println("value = " + value);
 		System.out.println();
 
 		return value;
-
 	}
 	
-	
-
-
 	//parse the lines from the CSV and create locations from the lines
 	private ArrayList<Location> generateLocationArray(String headerline, ArrayList<String> csvLines) {
 		//return arraylist of locations
@@ -511,9 +412,7 @@ public class Model {
 		System.out.println(cord);
 
 		//test the coordinate to check if  in DMS. DM, or D format
-
 		if (cord.indexOf("\"") >= 0 ){
-
 			System.out.println("doublequote");
 
 			//read all the lines form the CSV file
