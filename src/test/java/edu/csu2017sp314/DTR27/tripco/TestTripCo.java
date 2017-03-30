@@ -16,11 +16,11 @@ public class TestTripCo {
 
 	@Test
 	public void getStart() {
-		assertEquals("OK", new Model("/s/bach/n/under/gtjohnso/cs314/DTR-27/src/Model/input.csv","NN").getStatus());
+		assertEquals("OK", new Model("src/testFiles/COgrid45.csv","NN").getStatus());
 	}
 	@Test
 	public void getModel() {
-		Model model = new Model("input.csv","NN");
+		Model model = new Model("src/testFiles/COgrid45.csv","NN");
 		ArrayList<String> a = null;
 		View view = new View("header",100, "a", "a");
 		Presenter Presenter = new Presenter(model,view, "aaa", "aaa");
