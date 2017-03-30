@@ -34,8 +34,8 @@ public class OptionsGUI extends JFrame implements Runnable{
 	 * @param op 
 	 * @param op 
 	 */
-	public OptionsGUI(Options op) {
-		
+	public OptionsGUI(Options opp) {
+		final Options op = opp;
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
