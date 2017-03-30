@@ -5,3 +5,4 @@
 /**/*.xml
 /**/*.svg
 !/src/coloradoBg.svg
+!/src/testFiles/**
