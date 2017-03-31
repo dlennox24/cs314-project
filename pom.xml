@@ -44,7 +44,7 @@
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
         <configuration>
-          <repoToken><<em><strong>yourRepoTokenHere</strong></em>></repoToken>
+          <repoToken><<em><strong>L95l6njsPRIKYtA4q2hu3lQHlFodb7aly</strong></em>></repoToken>
           <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
         </configuration>
       </plugin>
