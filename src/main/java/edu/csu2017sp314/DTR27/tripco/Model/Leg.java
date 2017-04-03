@@ -14,6 +14,9 @@ public class Leg {
 		//System.out.println("start: " + locA.getName() + "\nfinish: " + locB.getName() + "\ndis: " + distance) ;
 		
 	}
+	
+	public Leg(){}
+	
 	public ArrayList<Location> getLocations(){
 		ArrayList<Location> ret = new ArrayList<Location>();
 		ret.add(this.locA);

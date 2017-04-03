@@ -153,9 +153,9 @@ public class Model {
 
 		Optimizer optimize = new Optimizer();
 		if(opt == "2"){
-			return optimize.twoOpt(allTours, "");
+			return optimize.twoOpt(allTours);
 		}else if(opt == "3"){
-			return optimize.threeOpt(optimize.twoOpt(ret));
+			return optimize.threeOpt(allTours);
 		}else{
 			return createLegArrayFromInt(NN);
 		}

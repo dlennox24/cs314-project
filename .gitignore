@@ -2,7 +2,8 @@
 /**/RemoteSystemsTempFiles/
 /**/bin/
 /**/*.csv
-/**/*.xml
-/**/*.svg
-!/src/coloradoBg.svg
 !/src/testFiles/**
+/**/*.xml
+!/src/testFiles/*.test.xml
+/**/*.svg
+!/src/testFiles/coloradoBg.svg
