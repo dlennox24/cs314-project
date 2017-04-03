@@ -78,16 +78,40 @@ public class Optimizer {
 					for(int j=i+2;j<locs.size()-1;j++){
 						for(int k=j+1;k<locs.size()-2;k++){
 							double[] dist = new double[8];
-							dist[0] = calcDist(locs.get(i),locs.get(i+1)) + calcDist(locs.get(j),locs.get(j+1)) + calcDist(locs.get(k),locs.get(k+1)); //base
-							// 2-opt
-							dist[1] = calcDist(locs.get(i),locs.get(i+1)) + calcDist(locs.get(j),locs.get(k)) + calcDist(locs.get(j+1),locs.get(k+1)); //opt2_0
-							dist[2] = calcDist(locs.get(j),locs.get(j+1)) + calcDist(locs.get(k),locs.get(i)) + calcDist(locs.get(k+1),locs.get(i+1)); //opt2_1
-							dist[3] = calcDist(locs.get(k),locs.get(k+1)) + calcDist(locs.get(i),locs.get(j)) + calcDist(locs.get(i+1),locs.get(j+1)); //opt2_2
-							// 3-opt
-							dist[4] = calcDist(locs.get(k),locs.get(i+1)) + calcDist(locs.get(i),locs.get(j+1)) + calcDist(locs.get(j),locs.get(k+1)); //opt3_0
-							dist[5] = calcDist(locs.get(i),locs.get(k)) + calcDist(locs.get(j),locs.get(k+1)) + calcDist(locs.get(j+1),locs.get(i+1)); //opt3_1
-							dist[6] = calcDist(locs.get(k),locs.get(j)) + calcDist(locs.get(i),locs.get(j+1)) + calcDist(locs.get(i+1),locs.get(k+1)); //opt3_2
-							dist[7] = calcDist(locs.get(j),locs.get(i)) + calcDist(locs.get(k),locs.get(i+1)) + calcDist(locs.get(k+1),locs.get(j+1)); //opt3_3
+//							base
+							dist[0] = calcDist(locs.get(i),locs.get(i+1))
+									+ calcDist(locs.get(j),locs.get(j+1))
+									+ calcDist(locs.get(k),locs.get(k+1));
+//							2-opt
+//							opt2_0
+							dist[1] = calcDist(locs.get(i),locs.get(i+1))
+									+ calcDist(locs.get(j),locs.get(k))
+									+ calcDist(locs.get(j+1),locs.get(k+1));
+//							opt2_1
+							dist[2] = calcDist(locs.get(j),locs.get(j+1))
+									+ calcDist(locs.get(k),locs.get(i))
+									+ calcDist(locs.get(k+1),locs.get(i+1));
+//							opt2_2
+							dist[3] = calcDist(locs.get(k),locs.get(k+1))
+									+ calcDist(locs.get(i),locs.get(j))
+									+ calcDist(locs.get(i+1),locs.get(j+1));
+//							3-opt
+//							opt3_0
+							dist[4] = calcDist(locs.get(k),locs.get(i+1))
+									+ calcDist(locs.get(i),locs.get(j+1))
+									+ calcDist(locs.get(j),locs.get(k+1));
+//							opt3_1
+							dist[5] = calcDist(locs.get(i),locs.get(k))
+									+ calcDist(locs.get(j),locs.get(k+1))
+									+ calcDist(locs.get(j+1),locs.get(i+1));
+//							opt3_2
+							dist[6] = calcDist(locs.get(k),locs.get(j))
+									+ calcDist(locs.get(i),locs.get(j+1))
+									+ calcDist(locs.get(i+1),locs.get(k+1));
+//							opt3_3
+							dist[7] = calcDist(locs.get(j),locs.get(i))
+									+ calcDist(locs.get(k),locs.get(i+1))
+									+ calcDist(locs.get(k+1),locs.get(j+1));
 							int minId = 0; 
 							for(int d=1;d<8;d++){
 								if(dist[d]<dist[minId]){
@@ -99,7 +123,6 @@ public class Optimizer {
 								System.out.println("min:"+minChange);
 							}
 							switch (minId) {
-							case 0: break; //already shortest path. no improvements can be made
 							case 1:{ //(i,i+1) (j,j+1) (k,k+1)
 								Collections.swap(locs, k, j+1); //(i,i+1) (j,k) (j+1,k+1)
 								break;
@@ -133,6 +156,10 @@ public class Optimizer {
 								Collections.swap(locs, k+1, i+1); //(i,k+1) (j,j+1) (k,i+1)
 								Collections.swap(locs, i, j+1); //(j+1,k+1) (j,i) (k,i+1)
 								Collections.swap(locs, j+1, k+1); //(j,i) (k,i+1) (k+1,j+1)		needed for correct order
+								break;
+							}
+							default:{
+								//already shortest path. no improvements can be made
 								break;
 							}
 							}
