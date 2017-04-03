@@ -239,8 +239,8 @@ public class Model {
 
 		while(scanner2.hasNextLine()){	
 			String line = scanner2.nextLine();
-			System.out.println(line);
-			if (!line.equals("")){
+			System.out.println("Line = " +line);
+			if (!line.isEmpty()){
 				ret.add(line); 
 			}
 		}
@@ -254,19 +254,19 @@ public class Model {
 		ArrayList<String> csvLines = new ArrayList<String>();
 
 		try {
-//			System.out.println(filename);
+			System.out.println(filename);
 			Scanner scanner = new Scanner(new File(filename));
 			Scanner scanner2 = new Scanner(new File(filename));
 
 			headerLine = getHeaderLine(scanner);
-			scanner = null;
+			//scanner = null;
 			csvLines = getCSVlines(scanner2);
-			scanner2 = null;
+			//scanner2 = null;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
+		
 		return generateLocationArray(headerLine, csvLines);
 	}
 	
@@ -441,6 +441,7 @@ public class Model {
 		}
 
 		//extract a sample coordinate, to test for format
+		System.out.println(csvLines.size());
 		String cordCheck = csvLines.get(0);
 		String[]  cordCheckArray = cordCheck.split(",");
 		String cord = cordCheckArray[longIndex];

@@ -53,8 +53,11 @@ public class TripCo {
     Options op = new Options();
     if(option.contains("g")){
       gFlag=true;
-      OptionsGUI gui = new OptionsGUI(op);
-      gui.run(op);
+      System.out.println(filename);
+      Model mo = new Model(filename, "");
+      OptionsGUI gui = new OptionsGUI(op,mo);
+      
+      gui.run(op, mo);
 
     }else{
       finalOptions = option;
@@ -94,11 +97,11 @@ public class TripCo {
     }
 
     Model model = null;
-
+    selectionFilename = op.selectionFile;
     if(selectionFilename != null){
       try {
     	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
-        makeSelectionCSV(filename, tempSelectionsCSVfilename, selectedIDs, selectionFilename);
+        makeSelectionCSV(filename, tempSelectionsCSVfilename, op.intArray, selectionFilename);
         model = new Model(tempSelectionsCSVfilename,opt);
         //Files.delete(tempSelectionsCSVfilename);
       } catch (IOException e) {
@@ -185,6 +188,7 @@ public class TripCo {
       for(String s : csvStrings){
         String[] stringTempArray = s.split(",");
         String id = (stringTempArray[idIndex]);
+        System.out.println("id = " + id + selectedIDs);
         if(selectedIDs.contains(id)){
         	System.out.println(s);
           System.out.println("writing: " + s + "\tid: " + id);
