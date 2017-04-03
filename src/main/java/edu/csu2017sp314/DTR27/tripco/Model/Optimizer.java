@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Optimizer {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 //	TODO: Refactor
 	ArrayList<Leg> nearestNeighbor(ArrayList<Leg> route){
 		return route;
@@ -118,7 +113,9 @@ public class Optimizer {
 									minId = d;
 								}
 							}
-							minChange = dist[minId] - dist[0]; //minDistance - basePathDistance; gets total distance improvement
+							
+							//minDistance - basePathDistance; gets total distance improvement
+							minChange = dist[minId] - dist[0];
 							if(minId !=0){
 								System.out.println("min:"+minChange);
 							}
