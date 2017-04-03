@@ -209,6 +209,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 					
 		}
 		fWriter.write("</destinations>");
+		//adding 
 		fWriter.write("</selection>");
 		fWriter.close();
 	}

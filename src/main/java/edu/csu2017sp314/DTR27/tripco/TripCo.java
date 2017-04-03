@@ -173,7 +173,7 @@ public class TripCo {
     int count = 0;
     System.out.println();
     for(String s : headerArray){
-      if(s.toLowerCase().equals("id")){
+      if(s.toLowerCase().equals("name")){
         idIndex=count;
       }
       count++;
