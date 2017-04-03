@@ -33,8 +33,8 @@ public class Optimizer {
 		return newRoute;
 	}
 	
-	double calcDist(Location a, Location b){
-		return new Leg().greatCircleDistanceDouble(a, b);
+	double calcDist(Location start, Location end){
+		return new Leg().greatCircleDistanceDouble(start, end);
 	}
 	
 	ArrayList<Leg> twoOpt(ArrayList<ArrayList<Leg>> allTours) {
