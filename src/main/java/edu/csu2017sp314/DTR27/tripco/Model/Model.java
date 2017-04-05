@@ -10,11 +10,13 @@ public class Model {
 	private String status;
 	private ArrayList<Location> Locations;
 	private ArrayList<Leg> Legs;
+	private String units;
 
 	// Constructor
 	// param: filename of the CSV file. 
-	public Model(String filename, String opt) {
+	public Model(String filename, String opt, String units) {
 		//readCSV takes the filepath, and returns an arrayList of all locations
+		this.units=units;
 		this.Locations = readCSV(filename);
 
 		//generateLegs takes the Locations arrayList and generates arrayList of all Legs
@@ -42,7 +44,7 @@ public class Model {
 			for(int j = 0; j < this.Locations.size(); j++){
 				Location a = this.Locations.get(i);
 				Location b = this.Locations.get(j);
-				Leg l = new Leg(a,b);
+				Leg l = new Leg(a,b, this.units);
 				distances[i][j] = l.getDistance();
 			}
 		}	
@@ -127,7 +129,7 @@ public class Model {
 			//not a value in the distances table, so have to make two locations and get the distance and add
 			Location a = this.Locations.get(currentIndex);
 			Location b = this.Locations.get(startingIndex);
-			Leg l = new Leg(a,b);
+			Leg l = new Leg(a,b, this.units);
 			total = total + l.getDistance();
 
 			System.out.print(visited + " ");
@@ -171,7 +173,7 @@ public class Model {
 			Location b = this.Locations.get(NN.get(i));
 
 			//make a leg and add it to the return array lsit of legs.
-			Leg l = new Leg(a,b);
+			Leg l = new Leg(a,b, this.units);
 			//System.out.print(l.getDistance() + " | ");
 			t = t + l.getDistance();
 			ret.add(l);
@@ -182,7 +184,7 @@ public class Model {
 		//have to look up the indexes from the nearest array list
 		Location a = this.Locations.get(NN.get(NN.size()-1));
 		Location b = this.Locations.get(NN.get(0));
-		Leg l = new Leg(a,b);
+		Leg l = new Leg(a,b, this.units);
 		ret.add(l);
 		t = t + l.getDistance();
 		return ret;
@@ -199,21 +201,21 @@ public class Model {
 		int count=0;
 		
 		for(int i=0;i<nodes.size()-1;i++){
-			Leg leg = new Leg(n.get(i),n.get(i+1));
+			Leg leg = new Leg(n.get(i),n.get(i+1), this.units);
 			count+=leg.getDistance();
 			//System.out.print(leg.getDistance() + " ");
 		}
-		Leg leg = new Leg(n.get(n.size()-1),n.get(0));
+		Leg leg = new Leg(n.get(n.size()-1),n.get(0), this.units);
 		count = count + leg.getDistance();
 		return count;
 	}
 	public int calcTotalDist(ArrayList<Location> nodes){
 		int count=0;
 		for(int i=0;i<nodes.size()-1;i++){
-			Leg leg = new Leg(nodes.get(i),nodes.get(i+1));
+			Leg leg = new Leg(nodes.get(i),nodes.get(i+1), this.units);
 			count+=leg.getDistance();
 		}
-		Leg leg = new Leg(nodes.get(nodes.size()-1),nodes.get(0));
+		Leg leg = new Leg(nodes.get(nodes.size()-1),nodes.get(0), this.units);
 		count = count + leg.getDistance();
 		return count;
 	}
@@ -555,7 +557,7 @@ public class Model {
 
 	public static void main(String[] args) {
 		String inputFile = "src/testFiles/brews.csv";
-		Model m = new Model(inputFile,"NN");
+		Model m = new Model(inputFile,"NN", "M");
 		//Model n = new Model(inputFile,"2");
 		//		Model o = new Model(inputFile,"3");
 

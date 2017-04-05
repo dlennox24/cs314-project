@@ -64,7 +64,23 @@ public class OptionsGUI extends JFrame implements Runnable{
 		contentPane.add(txtWelcomeToTripco);
 		txtWelcomeToTripco.setColumns(10);
 		
-		JCheckBox chckbxMileage = new JCheckBox("Mileage");
+		JCheckBox chckbxKilometer = new JCheckBox("Kilometers");
+		chckbxKilometer.setBounds(205, 36, 129, 23);
+		contentPane.add(chckbxKilometer);
+		chckbxKilometer.addActionListener(new ActionListener(){
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String cmd = e.getActionCommand();
+					
+					if(cmd.equals("Kilometers")){
+						op.optionsString = op.optionsString + "k"; 
+						}
+					}
+				});
+			
+		
+		JCheckBox chckbxMileage = new JCheckBox("Miles");
 		chckbxMileage.setBounds(15, 36, 129, 23);
 		contentPane.add(chckbxMileage);
 		chckbxMileage.addActionListener(new ActionListener(){
@@ -73,12 +89,12 @@ public class OptionsGUI extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 					
-					if(cmd.equals("Mileage")){
+					if(cmd.equals("Miles")){
 						op.optionsString = op.optionsString + "m"; 
 						}
 					}
 				});
-			
+
 		JCheckBox name = new JCheckBox("Name");
 		name.setBounds(15, 55, 129, 23);
 		contentPane.add(name);

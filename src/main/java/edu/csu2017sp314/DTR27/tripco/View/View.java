@@ -10,8 +10,8 @@ public class View {
 	private String status;
 	private String flags;
 	private String outputFilename;
-	private double h = 710.69;//674.29 right val
-	private double w =1027.814;// 1180 right val
+	private double h = 692;//674.29 right val
+	private double w =1377;// 1180 right val
 	private double b =34.9122;//174.85
 
 
@@ -190,8 +190,8 @@ public class View {
 	}
 
 	private int[] coord2Pixel(double lat, double lon){
-		double sx = 34+((lon+109)/7)*this.w;
-		double sy = this.b + ((41-lat)/4)*this.h;
+		double sx = 34+((lon+180)/7)*this.w;
+		double sy = this.b + ((90-lat)/4)*this.h;
 
 		return new int[]{(int)sx,(int)sy};
 	}
