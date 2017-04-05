@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -19,6 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import main.java.edu.csu2017sp314.DTR27.tripco.Model.Model;
 import main.java.edu.csu2017sp314.DTR27.tripco.View.IteneraryDisplay;
@@ -48,10 +55,10 @@ public class OptionsGUI extends JFrame implements Runnable{
 	 * @param op 
 	 * @param op 
 	 */
-	public OptionsGUI(Options opp, Model mo) {
+	public OptionsGUI(Options opp, Model mo, String selectionFileName) {
 		final Options op = opp;
 		Model model = mo;
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -135,8 +142,29 @@ public class OptionsGUI extends JFrame implements Runnable{
 					}
 				}
 			});
+		JButton loadButton = new JButton("Load");
+		loadButton.setBounds(180, 200, 140, 30);
+		contentPane.add(loadButton);
+		loadButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String cmd = e.getActionCommand();
+				System.out.println(cmd);
+				if(cmd.equals("Load")){
+					TextArea list = new TextArea();
+					Populate(list,op.selectionFile);
+					 //JOptionPane.showMessageDialog (null,new JScrollPane(list), "Here's Your Selected Stops", JOptionPane.INFORMATION_MESSAGE);
+					 list.setBounds(180, 40, 300, 130);
+					 contentPane.add(list);
+			       //op.done= true;
+			      
+					
+				}
+				
+			}
+		});
 		JButton DisplayButton = new JButton("Finish");
-		DisplayButton.setBounds(12, 200, 220, 30);
+		DisplayButton.setBounds(12, 200, 140, 30);
 		contentPane.add(DisplayButton);
 		DisplayButton.addActionListener(new ActionListener(){
 			@Override
@@ -154,9 +182,9 @@ public class OptionsGUI extends JFrame implements Runnable{
 		
 		}
 
-	public void run(Options op, Model model) {
+	public void run(Options op, Model model, String selectionFile) {
 		try {
-			OptionsGUI frame = new OptionsGUI(op, model);
+			OptionsGUI frame = new OptionsGUI(op, model, selectionFile);
 			String[] LocationTitles = new String[model.getLocationsLength()];
 			populateStringArray(LocationTitles, model);
 			JList list = new JList(LocationTitles);
@@ -173,7 +201,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 	        list.setBounds(15, 170, 300, 23);
 	        
 	        JOptionPane.showMessageDialog (null,new JScrollPane(list), "Select Destinations", JOptionPane.QUESTION_MESSAGE);
-	        //you are here trying to get selections to work based on indecies
+	      
 	        int[] selected = list.getSelectedIndices();
 	        ArrayList<String> intArray = new ArrayList<String>();
 	        for(int i = 0; i < selected.length; i++){
@@ -183,7 +211,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 	        }
 	        //list.setSelectedIndices(selected);
 	        op.intArray = intArray;
-	        writeSelectionXML(model,selected);
+	        writeSelectionXML(model,selected, selectionFile);
 	        op.selectionFile = "selections.xml";
 			frame.setVisible(true);
 		} catch (Exception e) {
@@ -198,7 +226,28 @@ public class OptionsGUI extends JFrame implements Runnable{
 		}
 		return LocationArray;
 	}
-	private void writeSelectionXML(Model model, int[] ids) throws IOException{
+	public void Populate(TextArea textArea, String fileName2){
+		try {
+			File file2 = new File(fileName2);
+			DocumentBuilderFactory documentBuilderFactory2 = DocumentBuilderFactory
+			        .newInstance();
+			DocumentBuilder documentBuilder2 = documentBuilderFactory2.newDocumentBuilder();
+			Document document2 = documentBuilder2.parse(file2);
+			int i2 = 0;
+			//textArea.append("Destinations:");
+			while(document2.getElementsByTagName("id").item(i2) != null){
+				String id = document2.getElementsByTagName("id").item(i2).getTextContent();
+				textArea.append("\n"+"Selected Destination "+id+"\n");
+				i2++;
+			}
+	    }
+	    catch (Exception e){
+	        System.out.println("Error reading configuration file:");
+	        //System.out.println(e.getMessage());
+	    }
+	    
+	}
+	private void writeSelectionXML(Model model, int[] ids, String selectionFile) throws IOException, SAXException, ParserConfigurationException{
 		File xmlOutput = new File("selections.xml");
 		FileWriter fWriter = new FileWriter(xmlOutput);
 		fWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<selection>\n");
@@ -207,6 +256,28 @@ public class OptionsGUI extends JFrame implements Runnable{
 		for(int i=0;i<ids.length;i++){
 			fWriter.write("\t\t<id>"+model.getLocation(ids[i]-1)+"</id>\n");
 					
+		}
+		if(selectionFile != null){
+		File file = new File(selectionFile);
+		
+			
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+		        .newInstance();
+		DocumentBuilder documentBuilder = null;
+		
+		documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		
+		Document document = documentBuilder.parse(file);
+		int i = 0;
+		
+		while(document.getElementsByTagName("id").item(i) != null){
+			String id = document.getElementsByTagName("id").item(i).getTextContent();
+			//System.out.println(id);
+			fWriter.write("\t\t<id>"+id+"</id>\n");
+			i++;
+			
+		
+		}
 		}
 		fWriter.write("</destinations>");
 		//adding 
