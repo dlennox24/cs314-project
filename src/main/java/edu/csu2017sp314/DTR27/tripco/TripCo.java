@@ -54,10 +54,12 @@ public class TripCo {
     if(option.contains("g")){
       gFlag=true;
       System.out.println(filename);
+      System.out.println(selectionFilename);
       Model mo = new Model(filename, "");
-      OptionsGUI gui = new OptionsGUI(op,mo);
       
-      gui.run(op, mo);
+      OptionsGUI gui = new OptionsGUI(op,mo,selectionFilename);
+      
+      gui.run(op, mo, selectionFilename);
 
     }else{
       finalOptions = option;
@@ -95,24 +97,18 @@ public class TripCo {
         }
    
     }
-
     Model model = null;
     selectionFilename = op.selectionFile;
     if(selectionFilename != null){
-      try {
-    	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
-        makeSelectionCSV(filename, tempSelectionsCSVfilename, op.intArray, selectionFilename);
-        model = new Model(tempSelectionsCSVfilename,opt);
-        //Files.delete(tempSelectionsCSVfilename);
-      } catch (IOException e) {
-        e.printStackTrace();
+        try {
+      	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
+          makeSelectionCSV(filename, tempSelectionsCSVfilename, op.intArray, selectionFilename);
+          model = new Model(tempSelectionsCSVfilename,opt);
+          //Files.delete(tempSelectionsCSVfilename);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
-
-
-    }else{
-    	model = new Model(filename,opt);
-
-    }
 
 
 
@@ -145,9 +141,9 @@ public class TripCo {
       Scanner scanner2 = new Scanner(new File(filename));
 
       headerLine = getHeaderLine(scanner);
-      scanner = null;
+     // scanner = null;
       csvStrings = getCSVlines(scanner2);
-      scanner2 = null;
+   //   scanner2 = null;
 
 
 
@@ -160,7 +156,7 @@ public class TripCo {
           System.out.println(line);
           line=line.replaceAll("<id>", "");
           line=line.replaceAll("</id>", "");
-            line=line.replaceAll("\\s+","");
+           line=line.replaceAll("\\s+","");
           selectedIDs.add(line);
         }
        System.out.println(selectedIDs);
@@ -188,6 +184,7 @@ public class TripCo {
       for(String s : csvStrings){
         String[] stringTempArray = s.split(",");
         String id = (stringTempArray[idIndex]);
+        id = id.replaceAll("\\s", "");
         System.out.println("id = " + id + selectedIDs);
         if(selectedIDs.contains(id)){
         	System.out.println(s);

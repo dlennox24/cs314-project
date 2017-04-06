@@ -3,9 +3,9 @@
     <title> name </title>
     <filename>file.csv</filename>
     <destinations>
-        <id>pello</id>
-        <id>davematt</id>
-        <id>dlennox</id>
-        <id>gtjohnso</id>
+        <id>Stop1</id>
+        <id>Stop2</id>
+        <id>Stop15</id>
+        <id>Stop17</id>
     </destinations>
 </selection>
