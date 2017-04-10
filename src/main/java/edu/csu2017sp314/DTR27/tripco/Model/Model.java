@@ -146,20 +146,17 @@ public class Model {
 			}
 		}
 
-
-		
-
 		System.out.println();
 		ArrayList<Leg> temp2 = createLegArrayFromInt(NN);
 		System.out.println(calcTotalDistLegs(temp2));
-
+		
 		Optimizer optimize = new Optimizer();
-		if(opt == "2"){
-			return optimize.twoOpt(allTours, "");
-		}else if(opt == "3"){
-			return optimize.threeOpt(optimize.twoOpt(ret));
+		if(opt == "3"){
+			return optimize.threeOpt(allTours);
+		}else if(opt == "2"){
+			return optimize.twoOpt(allTours);
 		}else{
-			return createLegArrayFromInt(NN);
+			return optimize.locsToLegs(this.Locations);
 		}
 	}
 
@@ -557,29 +554,29 @@ public class Model {
 	public ArrayList<Leg> getLegs() {return Legs;}
 	public ArrayList<Location> getLocations() {return Locations;}
 
-	public static void main(String[] args) {
-		String inputFile = "src/testFiles/brews.csv";
-		Model m = new Model(inputFile,"NN", "M");
-		//Model n = new Model(inputFile,"2");
-		//		Model o = new Model(inputFile,"3");
-
-		//		for(int i = 0; i < m.Locations.size(); i++){
-		//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
-		//		}
-//		int totalDistM = 0;
-//		int totalDistN = 0;
-//		//		int totalDistO = 0;
-//		for(int i = 0; i < m.Legs.size(); i++){
-//			System.out.println("Leg [" + i + "] : ");
-//			System.out.println("\t"+m.getLeg(i));
-//			System.out.println("\t"+n.getLeg(i));
-//			//			System.out.println("\t"+o.getLeg(i));
-//			totalDistM += m.getLeg(i).getDistance();
-//			totalDistN += n.getLeg(i).getDistance();
-//			//			totalDistO += o.getLeg(i).getDistance();
-//		}
-//		System.out.println("Total Distance (nn)   : "+totalDistM);
-//		System.out.println("Total Distance (2opt) : "+totalDistN);
-		//		System.out.println("Total Distance (3opt) : "+totalDistO);
-	}
+//	public static void main(String[] args) {
+//		String inputFile = "src/testFiles/brews.csv";
+//		Model m = new Model(inputFile,"NN");
+//		//Model n = new Model(inputFile,"2");
+//		//		Model o = new Model(inputFile,"3");
+//
+//		//		for(int i = 0; i < m.Locations.size(); i++){
+//		//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
+//		//		}
+////		int totalDistM = 0;
+////		int totalDistN = 0;
+////		//		int totalDistO = 0;
+////		for(int i = 0; i < m.Legs.size(); i++){
+////			System.out.println("Leg [" + i + "] : ");
+////			System.out.println("\t"+m.getLeg(i));
+////			System.out.println("\t"+n.getLeg(i));
+////			//			System.out.println("\t"+o.getLeg(i));
+////			totalDistM += m.getLeg(i).getDistance();
+////			totalDistN += n.getLeg(i).getDistance();
+////			//			totalDistO += o.getLeg(i).getDistance();
+////		}
+////		System.out.println("Total Distance (nn)   : "+totalDistM);
+////		System.out.println("Total Distance (2opt) : "+totalDistN);
+//		//		System.out.println("Total Distance (3opt) : "+totalDistO);
+//	}
 }
