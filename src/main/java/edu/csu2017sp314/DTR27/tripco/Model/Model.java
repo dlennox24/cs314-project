@@ -10,11 +10,13 @@ public class Model {
 	private String status;
 	private ArrayList<Location> Locations;
 	private ArrayList<Leg> Legs;
+	private String units;
 
 	// Constructor
 	// param: filename of the CSV file. 
-	public Model(String filename, String opt) {
+	public Model(String filename, String opt, String units) {
 		//readCSV takes the filepath, and returns an arrayList of all locations
+		this.units=units;
 		this.Locations = readCSV(filename);
 
 		//generateLegs takes the Locations arrayList and generates arrayList of all Legs
@@ -42,7 +44,7 @@ public class Model {
 			for(int j = 0; j < this.Locations.size(); j++){
 				Location a = this.Locations.get(i);
 				Location b = this.Locations.get(j);
-				Leg l = new Leg(a,b);
+				Leg l = new Leg(a,b, this.units);
 				distances[i][j] = l.getDistance();
 			}
 		}	
@@ -127,7 +129,7 @@ public class Model {
 			//not a value in the distances table, so have to make two locations and get the distance and add
 			Location a = this.Locations.get(currentIndex);
 			Location b = this.Locations.get(startingIndex);
-			Leg l = new Leg(a,b);
+			Leg l = new Leg(a,b, this.units);
 			total = total + l.getDistance();
 
 			System.out.print(visited + " ");
@@ -168,7 +170,7 @@ public class Model {
 			Location b = this.Locations.get(NN.get(i));
 
 			//make a leg and add it to the return array lsit of legs.
-			Leg l = new Leg(a,b);
+			Leg l = new Leg(a,b, this.units);
 			//System.out.print(l.getDistance() + " | ");
 			t = t + l.getDistance();
 			ret.add(l);
@@ -179,7 +181,7 @@ public class Model {
 		//have to look up the indexes from the nearest array list
 		Location a = this.Locations.get(NN.get(NN.size()-1));
 		Location b = this.Locations.get(NN.get(0));
-		Leg l = new Leg(a,b);
+		Leg l = new Leg(a,b, this.units);
 		ret.add(l);
 		t = t + l.getDistance();
 		return ret;
@@ -196,21 +198,21 @@ public class Model {
 		int count=0;
 		
 		for(int i=0;i<nodes.size()-1;i++){
-			Leg leg = new Leg(n.get(i),n.get(i+1));
+			Leg leg = new Leg(n.get(i),n.get(i+1), this.units);
 			count+=leg.getDistance();
 			//System.out.print(leg.getDistance() + " ");
 		}
-		Leg leg = new Leg(n.get(n.size()-1),n.get(0));
+		Leg leg = new Leg(n.get(n.size()-1),n.get(0), this.units);
 		count = count + leg.getDistance();
 		return count;
 	}
 	public int calcTotalDist(ArrayList<Location> nodes){
 		int count=0;
 		for(int i=0;i<nodes.size()-1;i++){
-			Leg leg = new Leg(nodes.get(i),nodes.get(i+1));
+			Leg leg = new Leg(nodes.get(i),nodes.get(i+1), this.units);
 			count+=leg.getDistance();
 		}
-		Leg leg = new Leg(nodes.get(nodes.size()-1),nodes.get(0));
+		Leg leg = new Leg(nodes.get(nodes.size()-1),nodes.get(0), this.units);
 		count = count + leg.getDistance();
 		return count;
 	}
@@ -236,8 +238,8 @@ public class Model {
 
 		while(scanner2.hasNextLine()){	
 			String line = scanner2.nextLine();
-			System.out.println(line);
-			if (!line.equals("")){
+			System.out.println("Line = " +line);
+			if (!line.isEmpty()){
 				ret.add(line); 
 			}
 		}
@@ -251,19 +253,19 @@ public class Model {
 		ArrayList<String> csvLines = new ArrayList<String>();
 
 		try {
-//			System.out.println(filename);
+			System.out.println(filename);
 			Scanner scanner = new Scanner(new File(filename));
 			Scanner scanner2 = new Scanner(new File(filename));
 
 			headerLine = getHeaderLine(scanner);
-			scanner = null;
+			//scanner = null;
 			csvLines = getCSVlines(scanner2);
-			scanner2 = null;
+			//scanner2 = null;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
+		
 		return generateLocationArray(headerLine, csvLines);
 	}
 	
@@ -438,6 +440,7 @@ public class Model {
 		}
 
 		//extract a sample coordinate, to test for format
+		System.out.println(csvLines.size());
 		String cordCheck = csvLines.get(0);
 		String[]  cordCheckArray = cordCheck.split(",");
 		String cord = cordCheckArray[longIndex];
@@ -529,6 +532,7 @@ public class Model {
 				String id = lineArray[idIndex];
 				String name = lineArray[nameIndex];
 				double longitude = Double.parseDouble(lineArray[longIndex]); 
+				System.out.println(lineArray[latIndex]);
 				double latitude = Double.parseDouble(lineArray[latIndex]); 
 
 
@@ -543,6 +547,7 @@ public class Model {
 	//getters and setters
 	public String getStatus() {return status;}
 	public Location getLocation(int i) {return Locations.get(i);}
+	
 	public Leg getLeg(int i) {return Legs.get(i);}
 	public int getLegsLength() {return Legs.size();}
 	public int getLocationsLength() {return Locations.size();}
