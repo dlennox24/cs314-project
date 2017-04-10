@@ -65,9 +65,16 @@ public class TripCo {
       SQLreader sql = new SQLreader();
       sql.run("gtjohnso", "830103947");
       Model mo = new Model("output.csv", "", units);
-      OptionsGUI gui = new OptionsGUI(op,mo);
       
-      gui.run(op, mo);
+	try {
+		OptionsGUI gui = new OptionsGUI(op,mo, selectionFilename);
+		gui.run(op, mo, selectionFilename);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+      
+      
 
     }else{
       finalOptions = option;
@@ -75,7 +82,7 @@ public class TripCo {
     }
 
     while(op.done != true){
-      System.out.println(op.optionsString);
+      //System.out.println(op.optionsString);
       option=op.optionsString;
       String str2 = option;
       String str3 = option;
@@ -119,12 +126,9 @@ public class TripCo {
       } catch (IOException e) {
         e.printStackTrace();
       }
+	}
 
-
-    }else{
-    	model = new Model(filename,opt, units);
-
-    }
+  
 
 
 
@@ -185,7 +189,7 @@ public class TripCo {
     int count = 0;
     System.out.println();
     for(String s : headerArray){
-      if(s.toLowerCase().equals("name")){
+      if(s.toLowerCase().equals("id")){
         idIndex=count;
       }
       count++;

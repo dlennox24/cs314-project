@@ -535,6 +535,7 @@ public class Model {
 				String id = lineArray[idIndex];
 				String name = lineArray[nameIndex];
 				double longitude = Double.parseDouble(lineArray[longIndex]); 
+				System.out.println(lineArray[latIndex]);
 				double latitude = Double.parseDouble(lineArray[latIndex]); 
 
 
@@ -549,6 +550,7 @@ public class Model {
 	//getters and setters
 	public String getStatus() {return status;}
 	public Location getLocation(int i) {return Locations.get(i);}
+	
 	public Leg getLeg(int i) {return Legs.get(i);}
 	public int getLegsLength() {return Legs.size();}
 	public int getLocationsLength() {return Locations.size();}
