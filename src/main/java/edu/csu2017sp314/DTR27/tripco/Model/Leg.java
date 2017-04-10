@@ -7,10 +7,10 @@ public class Leg {
 	Location locB = null;
 	private int distance;
 	
-	public Leg(Location A, Location B){
+	public Leg(Location A, Location B, String units){
 		this.locA = A;
 		this.locB = B;
-		this.distance = greatCircleDistance( A, B);
+		this.distance = greatCircleDistance( A, B, units);
 		//System.out.println("start: " + locA.getName() + "\nfinish: " + locB.getName() + "\ndis: " + distance) ;
 		
 	}
@@ -24,27 +24,27 @@ public class Leg {
 		return this.distance;
 	}
 	
-	public void setLocA(Location a){
+	public void setLocA(Location a, String units){
 		this.locA = a;
-		this.distance = greatCircleDistance(a,this.locB);
+		this.distance = greatCircleDistance(a,this.locB,units);
 	}
 	
-	public void setLocB(Location b){
+	public void setLocB(Location b, String units){
 		this.locB = b;
-		this.distance = greatCircleDistance(this.locA,b);
+		this.distance = greatCircleDistance(this.locA,b,units);
 	}
 	
-	public void setLocs(Location a, Location b){
+	public void setLocs(Location a, Location b, String units){
 		this.locA = a;
 		this.locB = b;
-		this.distance = greatCircleDistance(a,b);
+		this.distance = greatCircleDistance(a,b,units);
 	}
 	
 	public String toString(){
 		return this.locA.getName() + " to " + this.locB.getName() + " : " + this.distance;
 	}
 	
-	public int greatCircleDistance(Location locA, Location locB) {
+	public int greatCircleDistance(Location locA, Location locB, String units) {
 			double x1 = Math.toRadians(locA.getLong());
 	        double y1 = Math.toRadians(locA.getLat());
 	        double x2 = Math.toRadians(locB.getLong());
@@ -69,8 +69,14 @@ public class Leg {
 	       /*************************************************************************
 	        * Compute using Haverside formula
 	        *************************************************************************/
-	        //km =6371
-	        final int R = 3959; // Radious of the earth
+	        int R;
+	        if(units.toUpperCase().equals("K")){
+	        	R = 6371; //KILOMETER
+	        	
+	        }else{
+	        	//km =6371
+	        	R = 3959; // MILES Radious of the earth
+	        }
 			Double lat1 =locA.getLat();
 			Double lon1 =locA.getLong();
 			Double lat2 = locB.getLat();

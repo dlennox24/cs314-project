@@ -16,7 +16,7 @@ public class Optimizer {
 	
 	ArrayList<Leg> twoOpt(ArrayList<Leg> route){
 		System.out.println("TWO OPT START");
-		Leg calcDist = new Leg(route.get(0).locA, route.get(0).locB);
+		Leg calcDist = new Leg(route.get(0).locA, route.get(0).locB, "M");
 		ArrayList<Location> locs = new ArrayList<Location>();
 		for(int i=0;i<route.size();i++){
 			locs.add(route.get(i).locA);
@@ -49,7 +49,7 @@ public class Optimizer {
 		}while(minChange < 0);
 		ArrayList<Leg> newRoute = new ArrayList<Leg>();
 		for(int i=0;i<locs.size()-1;i++){
-			newRoute.add(new Leg(locs.get(i),locs.get(i+1)));
+			newRoute.add(new Leg(locs.get(i),locs.get(i+1), "M"));
 		}
 		System.out.println("TWO OPT STOP");
 		return newRoute;
@@ -65,7 +65,7 @@ public class Optimizer {
 		
 			
 		System.out.println("TWO OPT START");
-		Leg calcDist = new Leg(route.get(0).locA, route.get(0).locB);
+		Leg calcDist = new Leg(route.get(0).locA, route.get(0).locB, a);
 		ArrayList<Location> locs = new ArrayList<Location>();
 		for(int i=0;i<route.size();i++){
 			locs.add(route.get(i).locA);
@@ -98,7 +98,7 @@ public class Optimizer {
 		}while(minChange < 0);
 		ArrayList<Leg> newRoute = new ArrayList<Leg>();
 		for(int i=0;i<locs.size()-1;i++){
-			newRoute.add(new Leg(locs.get(i),locs.get(i+1)));
+			newRoute.add(new Leg(locs.get(i),locs.get(i+1), "M"));
 		}
 		System.out.println("TWO OPT STOP");
 		return newRoute;

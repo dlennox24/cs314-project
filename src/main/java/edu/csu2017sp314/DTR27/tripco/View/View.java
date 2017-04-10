@@ -10,8 +10,8 @@ public class View {
 	private String status;
 	private String flags;
 	private String outputFilename;
-	private double h = 710.69;//674.29 right val
-	private double w =1027.814;// 1180 right val
+	private double h = 692;//674.29 right val
+	private double w =1377;// 1180 right val
 	private double b =34.9122;//174.85
 
 
@@ -26,16 +26,7 @@ public class View {
 		this.flags = flags;
 		this.outputFilename = filename;
 
-		String borderColor = "#333";
-		int borderWidth = 3;
-		int width = (int) ((int) this.h+this.b);
-		this.borders.add(new Stroke("north",borderWidth,34,(int)this.b,1027,(int)this.b,borderColor));
-		this.borders.add(new Stroke("east",borderWidth,1027,(int)this.b,1027,width,borderColor));
-		this.borders.add(new Stroke("south",borderWidth,1027,width,34,width,borderColor));
-		this.borders.add(new Stroke("west",borderWidth,34,width,34,(int)this.b,borderColor));
-
-		this.titles.add(new Label("state",title,533,(int)this.b-((int)this.b/2),"middle",20));
-		this.titles.add(new Label("distance",totalDist+" miles",533,(int)this.b+(int)this.h+20,"middle",20));
+	
 
 		this.status = "OK";
 	}
@@ -190,10 +181,15 @@ public class View {
 	}
 
 	private int[] coord2Pixel(double lat, double lon){
-		double sx = 34+((lon+109)/7)*this.w;
-		double sy = this.b + ((41-lat)/4)*this.h;
+		double mapHeight = 512, mapWidth = 1024;
+		
+		double sx = (lon +180) * (mapWidth/360);
+		double latRad = Math.toRadians(lat);
+		double mercN = Math.log(Math.tan((Math.PI/4)+(latRad/2)));
+		double sy = (mapHeight/2)-(mapWidth*mercN/(2*Math.PI));
+		//sy = Math.toDegrees(sy);
 
-		return new int[]{(int)sx,(int)sy};
+		return new int[]{(int)Math.round(sx),(int)Math.round(sy)};
 	}
 
 	public String getStatus(){

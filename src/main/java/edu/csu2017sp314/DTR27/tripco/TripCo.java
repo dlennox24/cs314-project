@@ -14,6 +14,7 @@ import java.util.Scanner;
 import main.java.edu.csu2017sp314.DTR27.tripco.Model.Leg;
 import main.java.edu.csu2017sp314.DTR27.tripco.Model.Location;
 import main.java.edu.csu2017sp314.DTR27.tripco.Model.Model;
+import main.java.edu.csu2017sp314.DTR27.tripco.Model.SQLreader;
 import main.java.edu.csu2017sp314.DTR27.tripco.Presenter.Presenter;
 import main.java.edu.csu2017sp314.DTR27.tripco.Presenter.Trip;
 import main.java.edu.csu2017sp314.DTR27.tripco.View.View;
@@ -49,17 +50,31 @@ public class TripCo {
       }
 
     }
+    String units;
+    if(option.contains("k")){
+    	units = "K";
+    	
+    }else{
+    	units = "M";
+    }
     String finalOptions = "";
     Options op = new Options();
     if(option.contains("g")){
       gFlag=true;
       System.out.println(filename);
-      System.out.println(selectionFilename);
-      Model mo = new Model(filename, "");
+      SQLreader sql = new SQLreader();
+      sql.run("gtjohnso", "830103947");
+      Model mo = new Model("output.csv", "", units);
       
-      OptionsGUI gui = new OptionsGUI(op,mo,selectionFilename);
+	try {
+		OptionsGUI gui = new OptionsGUI(op,mo, selectionFilename);
+		gui.run(op, mo, selectionFilename);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       
-      gui.run(op, mo, selectionFilename);
+      
 
     }else{
       finalOptions = option;
@@ -67,7 +82,7 @@ public class TripCo {
     }
 
     while(op.done != true){
-      System.out.println(op.optionsString);
+      //System.out.println(op.optionsString);
       option=op.optionsString;
       String str2 = option;
       String str3 = option;
@@ -92,29 +107,34 @@ public class TripCo {
           iFlag=true;
         }
         if(((option.length() - str3.replace("m", "").length()) % 2) == 1){
-          finalOptions = finalOptions + "m";
-          mFlag=true;
+          units="M";
         }
+        if(((option.length() - str3.replace("k", "").length()) % 2) == 1){
+            units="K";
+          }
    
     }
+
     Model model = null;
     selectionFilename = op.selectionFile;
     if(selectionFilename != null){
-        try {
-      	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
-          makeSelectionCSV(filename, tempSelectionsCSVfilename, op.intArray, selectionFilename);
-          model = new Model(tempSelectionsCSVfilename,opt);
-          //Files.delete(tempSelectionsCSVfilename);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+      try {
+    	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
+        makeSelectionCSV("output.csv", tempSelectionsCSVfilename, op.intArray, selectionFilename);
+        model = new Model(tempSelectionsCSVfilename,opt, units);
+        //Files.delete(tempSelectionsCSVfilename);
+      } catch (IOException e) {
+        e.printStackTrace();
       }
+	}
+
+  
 
 
 
     System.out.println("filename: " + filename + "\nselctionfilename: " + selectionFilename +"\nbacgroundsvg: " + svgFilename +"\noptions:" + option);
-    String[] outputFileName = filename.split("/");
-    String newOutPutFile = outputFileName[outputFileName.length-1];
+    //String[] outputFileName = filename.split("/");
+    String newOutPutFile = "output.csv";
     System.out.println("newOutputFile: " + newOutPutFile);
 
     int finalDistance = 0;
@@ -141,9 +161,9 @@ public class TripCo {
       Scanner scanner2 = new Scanner(new File(filename));
 
       headerLine = getHeaderLine(scanner);
-     // scanner = null;
+      scanner = null;
       csvStrings = getCSVlines(scanner2);
-   //   scanner2 = null;
+      scanner2 = null;
 
 
 
@@ -156,7 +176,7 @@ public class TripCo {
           System.out.println(line);
           line=line.replaceAll("<id>", "");
           line=line.replaceAll("</id>", "");
-           line=line.replaceAll("\\s+","");
+            line=line.replaceAll("\\s+","");
           selectedIDs.add(line);
         }
        System.out.println(selectedIDs);
@@ -169,7 +189,7 @@ public class TripCo {
     int count = 0;
     System.out.println();
     for(String s : headerArray){
-      if(s.toLowerCase().equals("name")){
+      if(s.toLowerCase().equals("id")){
         idIndex=count;
       }
       count++;

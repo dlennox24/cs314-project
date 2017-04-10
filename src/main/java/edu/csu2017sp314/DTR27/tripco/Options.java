@@ -6,5 +6,6 @@ public class Options {
 	public boolean done = false;
 	public String optionsString = "";
 	public ArrayList<String> intArray = null;
+	public int[] id = null;
 	public String selectionFile = null;
 }
