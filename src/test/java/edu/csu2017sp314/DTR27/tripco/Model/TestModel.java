@@ -8,6 +8,9 @@ import main.java.edu.csu2017sp314.DTR27.tripco.Model.Model;
 public class TestModel {
 	
 	Model m = new Model("src/testFiles/COgrid45.csv","NN", "M");
+	Model m2 = new Model("src/testFiles/COgrid45.csv","NN", "K");
+	Model m3 = new Model("src/testFiles/COgrid45.csv","2", "K");
+	Model m4 = new Model("src/testFiles/COgrid45.csv","3", "K");
 
   
     @Test
@@ -20,7 +23,14 @@ public class TestModel {
     public void testStatus2(){
     	assertEquals("OK", m.getStatus());
     }
-    
+    @Test 
+    public void test2opt(){
+    	assertEquals("OK", m3.getStatus());
+    }
+    @Test 
+    public void test3opt(){
+   	assertEquals("OK", m4.getStatus());
+    }
     
     @Test
     public void testGetLegs1()
@@ -78,15 +88,16 @@ public class TestModel {
     @Test
     public void testGetLocation1()
     {
-    	assertNotNull(m.getLocation(0));
+    	assertNotNull(m2.getLocation(0));
     }
     
     @Test 
     public void testGetLocation2()
     {
-    	assertTrue(0 <= m.getLocation(0).getId().length());
+    	assertTrue(0 <= m2.getLocation(0).getId().length());
     }
     
+
     
   
 
