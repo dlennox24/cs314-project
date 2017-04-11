@@ -8,14 +8,31 @@ public class Location {
 	private String name;
 	private Double longitude;
 	private Double latitude;
+	public String elevation;
+	public String municipality;
+	public String region;
+	public String country;
+	public String continent;
+	public String airportURL;
+	public String regionURL;
+	public String countryURL;
+
 	
 	
-	public Location(String ID, String NAME, Double LONG, Double LAT){
+	public Location(String ID, String NAME, Double LONG, Double LAT, String ELEVATION, String MUNICIPALITY, String REGION, String COUNTRY, String CONTINENT, String AIRPORTURL, String REGIONURL, String COUNTRYURL){
 		
 		this.id = ID;
 		this.name = NAME;
 		this.longitude = LONG;
 		this.latitude = LAT;
+		this.elevation = ELEVATION;
+		this.municipality = MUNICIPALITY;
+		this.region = REGION;
+		this.country = COUNTRY;
+		this.continent = CONTINENT;
+		this.airportURL = AIRPORTURL;
+		this.regionURL = REGIONURL;
+		this.countryURL = COUNTRYURL;
 		
 	}
 	
