@@ -15,7 +15,7 @@ public class SQLreader {
         final static String myDriver = "com.mysql.jdbc.Driver";
         final static String myUrl = "jdbc:mysql://faure.cs.colostate.edu/cs314";
         final static String count = "SELECT COUNT(1) ";
-        final static String columns = "SELECT airports.id,airports.name,latitude,longitude,municipality,regions.name,countries.name,continents.name ";
+        final static String columns = "SELECT airports.id,airports.name,latitude,longitude,municipality,regions.name,countries.name,continents.name, airports.elevation_ft, airports.wikipedia_link, countries.wikipedia_link, regions.wikipedia_link ";
         final static String airports = "FROM airports ";
         final static String continents = "FROM continents ";
         final static String where =  "WHERE type='large_airport'";
@@ -93,15 +93,15 @@ public class SQLreader {
 	                        			System.out.println("id,name,latitude,longitude,municipality,region,country,continent");
 	                        			File file = new File("output.csv");
 	                        			 BufferedWriter writer = new BufferedWriter( new FileWriter(file));
-	                        		      writer.write("id,name,latitude,longitude,municipality,region,country,continent\n");
+	                        		      writer.write("id,name,latitude,longitude,municipality,region,country,continent,elevation,airportwiki,countrywiki,regionwiki\n");
 	                        			
 							while (rs.next()) {
-	                           				for (int i = 1; i <= 7; i++){ 
+	                           				for (int i = 1; i <=11; i++){ 
 	                                				System.out.printf("%s,", rs.getString(i));
 	                                				writer.write(String.format("%s,", rs.getString(i)));
 	                           				}
-	                            				System.out.printf("%s\n", rs.getString(8));
-	                            				writer.write(String.format("%s\n", rs.getString(8)));
+	                            				System.out.printf("%s\n", rs.getString(12));
+	                            				writer.write(String.format("%s\n", rs.getString(12)));
 	                         			}
 							writer.close();
 						} finally { rs.close(); }
