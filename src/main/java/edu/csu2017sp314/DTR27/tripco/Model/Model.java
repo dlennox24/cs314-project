@@ -3,7 +3,6 @@ package main.java.edu.csu2017sp314.DTR27.tripco.Model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class Model {
@@ -71,10 +70,9 @@ public class Model {
 			//System.out.println("|");
 		}
 
-		ArrayList<Integer> NN = new ArrayList<Integer>();
+		ArrayList<Integer> nearestNeighbor = new ArrayList<Integer>();
 
 		//set a high value to test against, every next low will replace this.
-		int LOW = 99999;
 		int low = 99999;
 		ArrayList<ArrayList<Leg>> allTours = new ArrayList<ArrayList<Leg>>();
 
@@ -140,14 +138,14 @@ public class Model {
 
 			//if the total distance is less then the other nearest tours. save the arraylist of the order of the trip
 			//save the lowest distance
-			if(total < LOW ){
-				LOW = total;
-				NN = visited;
+			if(total < low ){
+				low = total;
+				nearestNeighbor = visited;
 			}
 		}
 
 		System.out.println();
-		ArrayList<Leg> temp2 = createLegArrayFromInt(NN);
+		ArrayList<Leg> temp2 = createLegArrayFromInt(nearestNeighbor);
 		System.out.println(calcTotalDistLegs(temp2));
 		
 		Optimizer optimize = new Optimizer();
@@ -156,18 +154,18 @@ public class Model {
 		}else if(opt == "2"){
 			return optimize.twoOpt(allTours);
 		}else{
-			return optimize.locsToLegs(this.Locations);
+			return createLegArrayFromInt(nearestNeighbor);
 		}
 	}
 
-	private ArrayList<Leg> createLegArrayFromInt(ArrayList<Integer> NN) {
+	private ArrayList<Leg> createLegArrayFromInt(ArrayList<Integer> nearestNeighbor) {
 		long t = 0;
 		ArrayList<Leg> ret = new ArrayList<Leg>();
-		for(int i = 0; i < NN.size()-1;){
+		for(int i = 0; i < nearestNeighbor.size()-1;){
 			//make two locations, starting at index 0 of the nearest arrayList
-			Location a = this.Locations.get(NN.get(i));
+			Location a = this.Locations.get(nearestNeighbor.get(i));
 			i++;
-			Location b = this.Locations.get(NN.get(i));
+			Location b = this.Locations.get(nearestNeighbor.get(i));
 
 			//make a leg and add it to the return array lsit of legs.
 			Leg l = new Leg(a,b, this.units);
@@ -179,8 +177,8 @@ public class Model {
 
 		//add the final leg, from the last location to the starting location.
 		//have to look up the indexes from the nearest array list
-		Location a = this.Locations.get(NN.get(NN.size()-1));
-		Location b = this.Locations.get(NN.get(0));
+		Location a = this.Locations.get(nearestNeighbor.get(nearestNeighbor.size()-1));
+		Location b = this.Locations.get(nearestNeighbor.get(0));
 		Leg l = new Leg(a,b, this.units);
 		ret.add(l);
 		t = t + l.getDistance();
@@ -664,30 +662,4 @@ public class Model {
 	public int getLocationsLength() {return Locations.size();}
 	public ArrayList<Leg> getLegs() {return Legs;}
 	public ArrayList<Location> getLocations() {return Locations;}
-
-//	public static void main(String[] args) {
-//		String inputFile = "src/testFiles/brews.csv";
-//		Model m = new Model(inputFile,"NN");
-//		//Model n = new Model(inputFile,"2");
-//		//		Model o = new Model(inputFile,"3");
-//
-//		//		for(int i = 0; i < m.Locations.size(); i++){
-//		//			System.out.println("Location [" + i + "] : " + m.getLocation(i));
-//		//		}
-////		int totalDistM = 0;
-////		int totalDistN = 0;
-////		//		int totalDistO = 0;
-////		for(int i = 0; i < m.Legs.size(); i++){
-////			System.out.println("Leg [" + i + "] : ");
-////			System.out.println("\t"+m.getLeg(i));
-////			System.out.println("\t"+n.getLeg(i));
-////			//			System.out.println("\t"+o.getLeg(i));
-////			totalDistM += m.getLeg(i).getDistance();
-////			totalDistN += n.getLeg(i).getDistance();
-////			//			totalDistO += o.getLeg(i).getDistance();
-////		}
-////		System.out.println("Total Distance (nn)   : "+totalDistM);
-////		System.out.println("Total Distance (2opt) : "+totalDistN);
-//		//		System.out.println("Total Distance (3opt) : "+totalDistO);
-//	}
 }
