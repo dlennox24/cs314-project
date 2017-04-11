@@ -28,7 +28,8 @@ public class View {
 		this.outputFilename = filename;
 
 	
-
+		this.titles.add(new Label("DTR-27","DTR-27",512,485,"middle",20));
+		this.titles.add(new Label("distance",totalDist+"Miles",512,505,"middle",20));
 		this.status = "OK";
 	}
 
@@ -60,8 +61,10 @@ public class View {
 		
 	
 		
+		String title;
 		// TODO could be enhanced with a generic method
 		// Adding titles for map
+		
 		fWriterSvg.write("\t<g>\n\t\t<title>Titles</title>\n");
 		for(int i=0;i<this.titles.size();i++){
 			fWriterSvg.write("\t\t<text"

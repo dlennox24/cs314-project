@@ -201,7 +201,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 		
 			 File file = new File("output.csv");
   			 BufferedWriter writer = new BufferedWriter( new FileWriter(file));
-  		      writer.write("id,name,latitude,longitude,municipality,region,country,continent\n");
+  		      writer.write("id,name,latitude,longitude,municipality,region,country,continent,elevation,airportwiki,countrywiki,regionwiki\n");
 		selectButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -351,7 +351,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 				}
 			}
 		});
-		JButton inputButton = new JButton("Send");
+		JButton inputButton = new JButton("Add filter");
 		inputButton.setBounds(580, 400, 100, 30);
 		contentPane.add(inputButton);
 	    JTextArea editTextArea = new JTextArea("Input Region");
@@ -373,7 +373,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 				
 			}
 		});
-	    JButton inputButton2 = new JButton("Send");
+	    JButton inputButton2 = new JButton("Add filter");
 		inputButton2.setBounds(580, 450, 100, 30);
 		contentPane.add(inputButton2);
 	    JTextArea editTextArea2 = new JTextArea("Input Manicupality");
@@ -395,7 +395,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 				
 			}
 		});
-	    JButton inputButton3 = new JButton("Send");
+	    JButton inputButton3 = new JButton("Add filter");
 		inputButton3.setBounds(180, 300, 100, 30);
 		contentPane.add(inputButton3);
 	    JTextArea editTextArea3 = new JTextArea("Input Country");
@@ -417,7 +417,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 				
 			}
 		});
-	    JButton inputButton4 = new JButton("Send");
+	    JButton inputButton4 = new JButton("Add filter");
 		inputButton4.setBounds(180, 400, 100, 30);
 		contentPane.add(inputButton4);
 	    JTextArea editTextArea4 = new JTextArea("Input Airport Name");

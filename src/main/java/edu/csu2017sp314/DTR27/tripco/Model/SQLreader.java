@@ -141,15 +141,15 @@ public class SQLreader {
                  			
 					while (rs.next()) {
 								String line = "";
-                    				for (int i = 1; i <= 7; i++){ 
+                    				for (int i = 1; i <= 11; i++){ 
                          				System.out.printf("%s,", rs.getString(i));
                          				writer.write(String.format("%s,", rs.getString(i)));
                          				line += String.format("%s,", rs.getString(i));
                          				
                     				}
-                     				System.out.printf("%s\n", rs.getString(8));
-                     				writer.write(String.format("%s\n", rs.getString(8)));
-                     				line+= String.format("%s\n", rs.getString(8));
+                     				System.out.printf("%s\n", rs.getString(12));
+                     				writer.write(String.format("%s\n", rs.getString(12)));
+                     				line+= String.format("%s\n", rs.getString(12));
                      				idArray.add(line);
                   			}
 							
