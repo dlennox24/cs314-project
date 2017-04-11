@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class View {
@@ -97,7 +98,7 @@ public class View {
 		// Adding location id for map"coloradoBackGround.svg"
 		if(this.flags.contains("i")){
 			fWriterSvg.write("\t<g>\n\t\t<title>Locations</title>\n");
-			for(int i=0;i<this.locations.size();i++){
+			for(int i=0;i<this.locations.size();i+=2){
 				// System.out.println("size:"+this.locations.size());
 				// System.out.println(i);
 				fWriterSvg.write("\t\t<text"
@@ -116,7 +117,7 @@ public class View {
 		// Adding distance labels for map
 		if(this.flags.contains("m")){
 			fWriterSvg.write("\t<g>\n\t\t<title>Distances</title>\n");
-			for(int i=0;i<this.distances.size();i++){
+			for(int i=0;i<this.distances.size();i+=2){
 				fWriterSvg.write("\t\t<text"
 						+" id=\""+this.distances.get(i).id+"\""
 						+" x=\""+this.distances.get(i).x+"\""
@@ -148,14 +149,58 @@ public class View {
 		// Adding legs
 		fWriterSvg.write("\t<g>\n\t\t<title>Legs</title>\n");
 		for(int i=0;i<this.legs.size();i++){
-			fWriterSvg.write("\t\t<line"
-					+" id=\""+this.legs.get(i).id+"\""
-					+" x1=\""+this.legs.get(i).x1+"\""
-					+" y1=\""+this.legs.get(i).y1+"\""
-					+" x2=\""+this.legs.get(i).x2+"\""
-					+" y2=\""+this.legs.get(i).y2+"\""
-					+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
-					+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+			int mapWidth = 1024;
+			int diff = this.legs.get(i).x1 - this.legs.get(i).x2;
+			if(diff < -512 || diff > 512){
+				String id = this.legs.get(i).id;
+				Stroke leg = this.legs.get(i);
+				if(this.legs.get(i).x1<mapWidth/2){
+					//first set goes off to the left
+					fWriterSvg.write("\t\t<line"
+							+" id=\""+id+"-l\""
+							+" x1=\""+leg.x1+"\""
+							+" y1=\""+leg.y1+"\""
+							+" x2=\""+0+"\""
+							+" y2=\""+(int)calcIntercept(leg.x1,leg.y1,leg.x2-mapWidth,leg.y2,0)+"\""
+							+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
+							+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+					fWriterSvg.write("\t\t<line"
+							+" id=\""+id+"-r\""
+							+" x1=\""+mapWidth+"\""
+							+" y1=\""+(int)calcIntercept(leg.x1,leg.y1,leg.x2-mapWidth,leg.y2,mapWidth)+"\""
+							+" x2=\""+leg.x2+"\""
+							+" y2=\""+leg.y2+"\""
+							+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
+							+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+				}else{
+					//first set goes off to the right
+					fWriterSvg.write("\t\t<line"
+							+" id=\""+id+"-r\""
+							+" x1=\""+leg.x1+"\""
+							+" y1=\""+leg.y1+"\""
+							+" x2=\""+mapWidth+"\""
+							+" y2=\""+(int)calcIntercept(leg.x1,leg.y1,leg.x2,leg.y2,mapWidth)+"\""
+							+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
+							+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+					fWriterSvg.write("\t\t<line"
+							+" id=\""+id+"-l\""
+							+" x1=\""+0+"\""
+							+" y1=\""+(int)calcIntercept(leg.x1,leg.y1,leg.x2,leg.y2,0)+"\""
+							+" x2=\""+leg.x2+"\""
+							+" y2=\""+leg.y2+"\""
+							+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
+							+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+				}
+			}else{
+				fWriterSvg.write("\t\t<line"
+						+" id=\""+this.legs.get(i).id+"\""
+						+" x1=\""+this.legs.get(i).x1+"\""
+						+" y1=\""+(this.legs.get(i).y1 < 0 ? 5 : this.legs.get(i).y1)+"\""
+						+" x2=\""+this.legs.get(i).x2+"\""
+						+" y2=\""+(this.legs.get(i).y2 < 0 ? 5 : this.legs.get(i).y2)+"\""
+						+" stroke-width=\""+this.legs.get(i).strokeWidth+"\""
+						+" stroke=\""+this.legs.get(i).color+"\"/>\n");
+			}
 		}
 		fWriterSvg.write("\t</g>\n");
 		// /legs
@@ -237,11 +282,18 @@ public class View {
         }
         return fw;
 	}
-	public static void main(String[] args) {
-		View v = new View("Custom Titles!",15454,"mn","fname");
-		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start & test","end");
-		System.out.println("start & test".replaceAll("\\s+", ""));
-		
-		System.out.println("DONE");
+	
+	private double calcIntercept(int x1, int y1, int x2, int y2, int xn){
+		double slope = (y2-y1)/(x2-x1);
+		double inter = y1 - slope*(x1);
+		return slope*xn + inter;
 	}
+	
+//	public static void main(String[] args) {
+//		View v = new View("Custom Titles!",15454,"mn","fname");
+//		v.addLeg(37.094,-102.252,40.879,-108.948,909,"start & test","end");
+//		System.out.println("start & test".replaceAll("\\s+", ""));
+//		
+//		System.out.println("DONE");
+//	}
 }

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Optimizer {
+	private String units = "m";
 	//	TODO: Refactor
 	ArrayList<Leg> nearestNeighbor(ArrayList<Leg> route){
 		return route;
 	}
 	// Convert and arraylist of legs to an arraylist of locations
 	ArrayList<Location> legsToLocs(ArrayList<Leg> legs){
+		this.units = legs.get(0).units;
 		ArrayList<Location> locs = new ArrayList<Location>();
 		for(int i=0;i<legs.size();i++){
 			locs.add(legs.get(i).locA);
@@ -21,9 +23,9 @@ public class Optimizer {
 	ArrayList<Leg> locsToLegs(ArrayList<Location> locs){
 		ArrayList<Leg> newRoute = new ArrayList<Leg>();
 		for(int i=0;i<locs.size()-1;i++){
-			newRoute.add(new Leg(locs.get(i),locs.get(i+1), "M"));
+			newRoute.add(new Leg(locs.get(i),locs.get(i+1),this.units));
 		}
-		newRoute.add(new Leg(locs.get(locs.size()-1),locs.get(0)));
+		newRoute.add(new Leg(locs.get(locs.size()-1),locs.get(0), this.units));
 		return newRoute;
 	}
 

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 public class Leg {
 	Location locA = null;
 	Location locB = null;
+	String units = null;
 	private int distance;
 	
 	public Leg(Location A, Location B, String units){
 		this.locA = A;
 		this.locB = B;
+		this.units = units;
 		this.distance = greatCircleDistance( A, B, units);
 		//System.out.println("start: " + locA.getName() + "\nfinish: " + locB.getName() + "\ndis: " + distance) ;
 		

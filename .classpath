@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="batik-all-1.7.jar"/>
 	<classpathentry kind="lib" path="xml-apis-2.0.2.jar"/>
 	<classpathentry kind="lib" path="xml-apis-ext-1.3.04.jar"/>
-	<classpathentry kind="lib" path="/s/bach/n/under/gtjohnso/cs314/com.mysql.jdbc_5.1.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dlenn/Documents/GitHub/dtr-27/com.mysql.jdbc_5.1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
