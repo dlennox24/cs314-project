@@ -577,6 +577,17 @@ public class Model {
 				String id = lineArray[idIndex];
 				String name = lineArray[nameIndex];
 				
+				double longitude = Double.parseDouble(lineArray[longIndex]);
+				System.out.println(lineArray[latIndex]);
+				double latitude = 0;
+				try{
+				latitude = Double.parseDouble(lineArray[latIndex]); 
+				}catch(Exception e){
+					
+				}
+
+				Location l = new Location(id, name, longitude, latitude);
+
 				String elevation;
 				try{
 					 elevation = lineArray[elevationIndex];
