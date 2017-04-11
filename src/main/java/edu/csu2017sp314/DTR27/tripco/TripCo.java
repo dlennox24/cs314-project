@@ -64,10 +64,12 @@ public class TripCo {
       System.out.println(filename);
       SQLreader sql = new SQLreader();
       sql.run("gtjohnso", "830103947");
-      Model mo = new Model("output.csv", "", units);
+     
       
 	try {
+		Model mo = new Model("output.csv", "", units);
 		OptionsGUI gui = new OptionsGUI(op,mo, selectionFilename);
+		//Model mod = new Model("output.csv", "", units);
 		gui.run(op, mo, selectionFilename);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -201,21 +203,12 @@ public class TripCo {
       writer = new BufferedWriter( new FileWriter(tempSelectionsCSVfilename));
       writer.write(headerLine);
       writer.newLine();
-      for(String s : csvStrings){
-        String[] stringTempArray = s.split(",");
-        String id = (stringTempArray[idIndex]);
-        id = id.replaceAll("\\s", "");
-        System.out.println("id = " + id + selectedIDs);
-        if(selectedIDs.contains(id)){
-        	System.out.println(s);
-          System.out.println("writing: " + s + "\tid: " + id);
-          writer.write(s);
-          writer.newLine();
-
-        }
-
+      for(int i = 1; i < selectedIDs.size(); i++){
+    	 if(!(selectedIDs.get(i).matches("\\d+"))){
+    		 writer.write(selectedIDs.get(i)+"\n");  
+    	 }
+       
       }
-
       writer.close();
 
 

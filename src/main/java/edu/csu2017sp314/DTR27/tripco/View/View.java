@@ -33,11 +33,11 @@ public class View {
 	}
 
 	// Has labels
-	public void addLeg(double x1, double y1, double x2, double y2, int dist, String name1, String name2){
+	public void addLeg(double x1, double y1, double x2, double y2, int dist, String name1, String name2, String ID1, String LAT1, String LONG1, String ELEVATION1, String MUNICIPALITY1, String REGION1, String COUNTRY1, String CONTINENT1, String AIRPORTURL1, String REGIONURL1, String COUNTRYURL1, String ID2, String LAT2, String LONG2,String ELEVATION2, String MUNICIPALITY2, String REGION2, String COUNTRY2, String CONTINENT2, String AIRPORTURL2, String REGIONURL2, String COUNTRYURL2, String units){
 		// add leg data to the correct arraylists
 		int[] coord1 = coord2Pixel(x1,y1);
 		int[] coord2 = coord2Pixel(x2,y2);
-		this.legsData.add(new Leg(name1.replaceAll("&", "and"),name2.replaceAll("&", "and"), dist));
+		this.legsData.add(new Leg(name1.replaceAll("&", "and"),name2.replaceAll("&", "and"), dist, ID1, LAT1, LONG1,ELEVATION1, MUNICIPALITY1, REGION1, COUNTRY1, CONTINENT1, AIRPORTURL1, REGIONURL1, COUNTRYURL1, ID2, LAT2, LONG2, ELEVATION2, MUNICIPALITY2, REGION2, COUNTRY2, CONTINENT2, AIRPORTURL2, REGIONURL2,  COUNTRYURL2, units));
 		this.legs.add(new Stroke("leg"+this.legs.size(),2,coord1[0],coord1[1],coord2[0],coord2[1],"#333"));
 		this.locations.add(new Label("label"+name1.replaceAll("\\s+","").replaceAll("&","and"),name1.replaceAll("&","and"),coord1[0],coord1[1],"middle",16));
 		this.locations.add(new Label("label"+name2.replaceAll("\\s+","").replaceAll("&","and"),name2.replaceAll("&","and"),coord2[0],coord2[1],"middle",16));
@@ -214,9 +214,37 @@ public class View {
 		for(int i=0;i<this.legsData.size();i++){
 			fWriterXml.write("\t<leg>\n"
 					+"\t\t<sequence>"+(i+1)+"</sequence>\n"
-					+"\t\t<start>"+this.legsData.get(i).startCityName.replaceAll("&", "and")+"</start>\n"
-					+"\t\t<finish>"+this.legsData.get(i).endCityName.replaceAll("&", "and")+"</finish>\n"
-					+"\t\t<mileage>"+this.legsData.get(i).dist+"</mileage>\n"
+					+"\t\t<start>\n"
+						+"\t\t\t<id>"+this.legsData.get(i).ID1+"</id>\n"
+						+"\t\t\t<name>"+this.legsData.get(i).startCityName.replaceAll("&", "and")+"</name>\n"
+						+"\t\t\t<latitude>"+this.legsData.get(i).LAT1 + "</latitude>\n"
+						+"\t\t\t<longitude>"+this.legsData.get(i).LONG1 + "</longitude>\n"
+						+"\t\t\t<elevation>"+this.legsData.get(i).ELEVATION1 + "</elevation>\n"
+						+"\t\t\t<municipality>"+this.legsData.get(i).MUNICIPALITY1 + "</municipality>\n"
+						+"\t\t\t<region>"+this.legsData.get(i).REGION1 + "</region>\n"
+						+"\t\t\t<country>"+this.legsData.get(i).COUNTRY1 + "</country>\n"
+						+"\t\t\t<continent>"+this.legsData.get(i).CONTINENT1 + "</continent>\n"
+						+"\t\t\t<airportURL>"+this.legsData.get(i).AIRPORTURL1 + "</airportURL>\n"
+						+"\t\t\t<regionURL>"+this.legsData.get(i).REGIONURL1 + "</regionURL>\n"
+						+"\t\t\t<countryURL>"+this.legsData.get(i).COUNTRYURL1 + "</countryURL>\n"
+					+"\t\t</start>\n"
+					+"\t\t<finish>\n"
+						+"\t\t\t<id>"+this.legsData.get(i).ID2+"</id>\n"
+						+"\t\t\t<name>"+this.legsData.get(i).endCityName.replaceAll("&", "and")+"</name>\n"
+						+"\t\t\t<latitude>"+this.legsData.get(i).LAT2 + "</latitude>\n"
+						+"\t\t\t<longitude>"+this.legsData.get(i).LONG2 + "</longitude>\n"
+						+"\t\t\t<elevation>"+this.legsData.get(i).ELEVATION2 + "</elevation>\n"
+						+"\t\t\t<municipality>"+this.legsData.get(i).MUNICIPALITY2 + "</municipality>\n"
+						+"\t\t\t<region>"+this.legsData.get(i).REGION2 + "</region>\n"
+						+"\t\t\t<country>"+this.legsData.get(i).COUNTRY2 + "</country>\n"
+						+"\t\t\t<continent>"+this.legsData.get(i).CONTINENT2 + "</continent>\n"
+						+"\t\t\t<airportURL>"+this.legsData.get(i).AIRPORTURL2 + "</airportURL>\n"
+						+"\t\t\t<regionURL>"+this.legsData.get(i).REGIONURL2 + "</regionURL>\n"
+						+"\t\t\t<countryURL>"+this.legsData.get(i).COUNTRYURL2 + "</countryURL>\n"
+					+"\t\t</finish>\n"
+					+"\t\t<distance>"+this.legsData.get(i).dist+"</distance>\n"
+					+"\t\t<units>"+this.legsData.get(i).units+"</units>\n"
+
 					+"\t</leg>\n");
 		}
 		fWriterXml.write("</trip>");

@@ -15,7 +15,7 @@ public class SQLreader {
         final static String myDriver = "com.mysql.jdbc.Driver";
         final static String myUrl = "jdbc:mysql://faure.cs.colostate.edu/cs314";
         final static String count = "SELECT COUNT(1) ";
-        final static String columns = "SELECT airports.id,airports.name,latitude,longitude,municipality,regions.name,countries.name,continents.name ";
+        final static String columns = "SELECT airports.id,airports.name,latitude,longitude,municipality,regions.name,countries.name,continents.name, airports.elevation_ft, airports.wikipedia_link, countries.wikipedia_link, regions.wikipedia_link ";
         final static String airports = "FROM airports ";
         final static String continents = "FROM continents ";
         final static String where =  "WHERE type='large_airport'";
@@ -93,15 +93,15 @@ public class SQLreader {
 	                        			System.out.println("id,name,latitude,longitude,municipality,region,country,continent");
 	                        			File file = new File("output.csv");
 	                        			 BufferedWriter writer = new BufferedWriter( new FileWriter(file));
-	                        		      writer.write("id,name,latitude,longitude,municipality,region,country,continent\n");
+	                        		      writer.write("id,name,latitude,longitude,municipality,region,country,continent,elevation,airportwiki,countrywiki,regionwiki\n");
 	                        			
 							while (rs.next()) {
-	                           				for (int i = 1; i <= 7; i++){ 
+	                           				for (int i = 1; i <=11; i++){ 
 	                                				System.out.printf("%s,", rs.getString(i));
 	                                				writer.write(String.format("%s,", rs.getString(i)));
 	                           				}
-	                            				System.out.printf("%s\n", rs.getString(8));
-	                            				writer.write(String.format("%s\n", rs.getString(8)));
+	                            				System.out.printf("%s\n", rs.getString(12));
+	                            				writer.write(String.format("%s\n", rs.getString(12)));
 	                         			}
 							writer.close();
 						} finally { rs.close(); }
@@ -114,8 +114,7 @@ public class SQLreader {
 		
 		return null;
 	}
-	public ArrayList<String> getContinents(String name, String pass, String[] continents2, int[] ids){
-		String newWhere = buildQuery(continents2, ids);
+	public ArrayList<String> getContinents(String name, String pass,String query, BufferedWriter writer){
 		ArrayList<String> idArray = new ArrayList();
 		  try	{ // connect to the database 
 	            Class.forName(myDriver); 
@@ -125,7 +124,7 @@ public class SQLreader {
 					Statement st = conn.createStatement();
 
 					try { // submit a query to count the results
-						ResultSet rs = st.executeQuery(count+continents+join+newWhere+limit);
+						ResultSet rs = st.executeQuery(count+continents+join+query+limit);
 
 						try { // print the number of rows
 							rs.next();
@@ -134,21 +133,26 @@ public class SQLreader {
 						} finally { rs.close(); }
 
 						// submit a query to list all large airports
-						 rs = st.executeQuery(columns+continents+join+newWhere+limit);
+						 rs = st.executeQuery(columns+continents+join+query+limit);
 
-						try { // iterate through query results and print using column numbers
-	                        			System.out.println("id,name,latitude,longitude,municipality,region,country,continent");
-	                        			
-	                        			
-							while (rs.next()) {
-	                           				for (int i = 1; i <= 7; i++){ 
-	                                				System.out.printf("%s,", rs.getString(i));
-	                                				idArray.add(rs.getString(i));
-	                                				
-	                           				}
-	                            				System.out.printf("%s\n", rs.getString(8));
-	                            				
-	                         			}
+						 try { // iterate through query results and print using column numbers
+                 			System.out.println("id,name,latitude,longitude,municipality,region,country,continent");
+                 			
+                 			
+					while (rs.next()) {
+								String line = "";
+                    				for (int i = 1; i <= 7; i++){ 
+                         				System.out.printf("%s,", rs.getString(i));
+                         				writer.write(String.format("%s,", rs.getString(i)));
+                         				line += String.format("%s,", rs.getString(i));
+                         				
+                    				}
+                     				System.out.printf("%s\n", rs.getString(8));
+                     				writer.write(String.format("%s\n", rs.getString(8)));
+                     				line+= String.format("%s\n", rs.getString(8));
+                     				idArray.add(line);
+                  			}
+							
 							return idArray;
 							
 						} finally { rs.close(); }
@@ -162,14 +166,106 @@ public class SQLreader {
 		
 		
 	}
-	public String buildQuery(String[] selected, int[] ids){
-		String newQ = "where type = '";
-		newQ+= selected[ids[0]];
-		for(int i =1; i < ids.length; i++){
-			newQ += "OR" + selected[ids[i]];
+	public String buildQueryType(String[] selected, int[] ids, String query, boolean isSelected){
+		if(ids.length == 0){
+			return query;
 		}
-		newQ+="'";
-		System.out.println(newQ);
-		return newQ;
+		if(isSelected == true){
+			query += " AND ";
+		}
+		query += "type = '";
+		query+= selected[ids[0]];
+		for(int i =1; i < ids.length; i++){
+			query += "OR" + selected[ids[i]];
+		}
+		query+="'";
+		System.out.println(query);
+		return query;
 	}
-}
+	public String buildQueryContinent(String[] selected, int[] ids, String query, boolean isSelected){
+		if(ids.length == 0){
+			return query;
+		}
+		if(isSelected == true){
+			query += " AND ";
+		}
+		query += "continents.name = '";
+		query+= selected[ids[0]];
+		for(int i =1; i < ids.length; i++){
+			query += "' OR '" + selected[ids[i]];
+		}
+		query+="'";
+		System.out.println(query);
+		return query;
+	}
+	public String buildQueryRegion(String input, String query, boolean isSelected){
+		if(input.isEmpty()){
+			return query;
+		}
+		if(isSelected == true){
+			query += " OR ";
+		}
+		query += "regions.name LIKE '";
+		query+= "%"+input+"%";
+		
+		query+="'";
+		System.out.println(query);
+		return query;
+	}
+	public String buildQueryMunicipality(String input, String query, boolean isSelected){
+		if(input.isEmpty()){
+			return query;
+		}
+		if(isSelected == true){
+			query += " OR ";
+		}
+		query += "airports.municipality LIKE '";
+		query+= "%"+input+"%";
+		
+		query+="'";
+		System.out.println(query);
+		return query;
+	}
+	public String buildQueryCountry(String input, String query, boolean isSelected){
+		if(input.isEmpty()){
+			return query;
+		}
+		if(isSelected == true){
+			query += " OR ";
+		}
+		query += "countries.name LIKE '";
+		query+= "%"+input+"%";
+		
+		query+="'";
+		System.out.println(query);
+		return query;
+	}
+	public String buildQueryAirport(String input, String query, boolean isSelected){
+		if(input.isEmpty()){
+			return query;
+		}
+		if(isSelected == true){
+			query += " OR ";
+		}
+		query += "airports.name LIKE '";
+		query+= "%"+input+"%";
+		
+		query+="'";
+		System.out.println(query);
+		return query;
+	}
+	public String buildQuerySelections(ArrayList<String> selected, String query){
+		
+		query += "airports.id = '";
+		query+= selected.get(0);
+		for(int i = 0; i < selected.size()-1; i++){
+			query += "' OR airports.id = '"+selected.get(i);
+			
+		}
+		query+="' OR ";
+		query += " airports.id = '"+selected.get(selected.size()-1);
+		query+="'";
+		System.out.println(query);
+		return query;
+	}
+	}
