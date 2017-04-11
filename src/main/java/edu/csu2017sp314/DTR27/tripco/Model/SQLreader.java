@@ -114,7 +114,7 @@ public class SQLreader {
 		
 		return null;
 	}
-	public ArrayList<String> getContinents(String name, String pass,String query, BufferedWriter writer){
+	public ArrayList<String> getContinents(String name, String pass,String query){
 		ArrayList<String> idArray = new ArrayList();
 		  try	{ // connect to the database 
 	            Class.forName(myDriver); 
@@ -143,12 +143,12 @@ public class SQLreader {
 								String line = "";
                     				for (int i = 1; i <= 11; i++){ 
                          				System.out.printf("%s,", rs.getString(i));
-                         				writer.write(String.format("%s,", rs.getString(i)));
+                         				//writer.write(String.format("%s,", rs.getString(i)));
                          				line += String.format("%s,", rs.getString(i));
                          				
                     				}
                      				System.out.printf("%s\n", rs.getString(12));
-                     				writer.write(String.format("%s\n", rs.getString(12)));
+                     				//writer.write(String.format("%s\n", rs.getString(12)));
                      				line+= String.format("%s\n", rs.getString(12));
                      				idArray.add(line);
                   			}

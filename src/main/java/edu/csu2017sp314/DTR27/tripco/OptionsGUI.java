@@ -183,7 +183,20 @@ public class OptionsGUI extends JFrame implements Runnable{
 				if(cmd.equals("Load")){
 					//Model mo = new Model("output.csv", "", "M");
 					SQLreader sql = new SQLreader();
-			    	
+					if(selectionFileName != null){
+			    		try {
+							runSelectedXML(selectionFileName);
+						} catch (ParserConfigurationException | SAXException | IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			    		String newq = "where ";
+			    		newq = sql.buildQuerySelections(idsFromSelections, newq);
+			    		idsFromSelections = sql.getContinents("gtjohnso", "830103947", newq);
+			    		
+			    	}else{
+			    		//idsFromSelections.add("");
+			    	}
 					Populate(list,op.id, out, idsFromSelections);
 			      			
 				}
@@ -199,9 +212,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 			final FileWriter fWriter = new FileWriter(xmlOutput);
 			startOutput(fWriter);
 		
-			 File file = new File("output.csv");
-  			 BufferedWriter writer = new BufferedWriter( new FileWriter(file));
-  		      writer.write("id,name,latitude,longitude,municipality,region,country,continent,elevation,airportwiki,countrywiki,regionwiki\n");
+			
 		selectButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -212,18 +223,11 @@ public class OptionsGUI extends JFrame implements Runnable{
 			      try {
 			    	  SQLreader sql = new SQLreader();
 			    	 
-			    	out = sql.getContinents("gtjohnso", "830103947", query, writer);
-			    	if(selectionFileName != null){
-			    		runSelectedXML(selectionFileName);
-			    		String newq = "where ";
-			    		newq = sql.buildQuerySelections(idsFromSelections, newq);
-			    		idsFromSelections = sql.getContinents("gtjohnso", "830103947", newq, writer);
-			    	}else{
-			    		//idsFromSelections.add("");
-			    	}
+			    	out = sql.getContinents("gtjohnso", "830103947", query);
+			    	
 			    	//writer.write(out.get(0));
-			    	System.out.println(out.get(0));
-			    	writer.close();
+			    	//System.out.println(out.get(0));
+			    	//writer.close();
 			    	//Model mo = new Model("output.csv", "", "M");
 					addSelections(selectionFileName, op, fWriter, out);
 					query = "where ";
@@ -362,7 +366,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 				System.out.println(cmd);
-				if(cmd.equals("Send")){
+				if(cmd.equals("Add filter")){
 					
 					String input = editTextArea.getText();
 					System.out.println(input);
@@ -384,7 +388,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 				System.out.println(cmd);
-				if(cmd.equals("Send")){
+				if(cmd.equals("Add filter")){
 					
 					String input = editTextArea2.getText();
 					System.out.println(input);
@@ -406,7 +410,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 				System.out.println(cmd);
-				if(cmd.equals("Send")){
+				if(cmd.equals("Add filter")){
 					
 					String input = editTextArea3.getText();
 					System.out.println(input);
@@ -428,7 +432,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 				System.out.println(cmd);
-				if(cmd.equals("Send")){
+				if(cmd.equals("Add filter")){
 					
 					String input = editTextArea4.getText();
 					System.out.println(input);
@@ -450,7 +454,7 @@ public class OptionsGUI extends JFrame implements Runnable{
 				if(cmd.equals("Finish")){
 					try {
 						endOutput(fWriter);
-						
+						writeOutputCSV(out, idsFromSelections, op.id);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -483,11 +487,13 @@ public class OptionsGUI extends JFrame implements Runnable{
 		return LocationArray;
 	}
 	public void Populate(TextArea textArea, int[] ids, ArrayList<String> out2, ArrayList<String> out1){
+		if(ids != null){
 		for(int i=0;i<ids.length;i++){
 			textArea.append("Selected Destination: "+ out2.get(ids[i]-1)+"\n");
 			System.out.println(out2.get(ids[i]-1));
 			selectedID = ids;
 					
+		}
 		}
 		for(int i=0;i<out1.size();i++){
 			textArea.append("Selected Destination: "+ out1.get(i)+"\n");
@@ -495,6 +501,16 @@ public class OptionsGUI extends JFrame implements Runnable{
 			//selectedID = ids;
 					
 		}
+	}
+public void PopulateNoSel(TextArea textArea, int[] ids, ArrayList<String> out2){
+		
+		for(int i=0;i<ids.length;i++){
+			textArea.append("Selected Destination: "+ out2.get(ids[i]-1)+"\n");
+			System.out.println(out2.get(ids[i]-1));
+			selectedID = ids;
+					
+		}
+		
 	}
 	public void addSelections(String selectionFile, Options op, FileWriter fWriter, ArrayList<String>selections) throws IOException, SAXException, ParserConfigurationException{
 		String[] LocationTitles = new String[selections.size()];
@@ -571,6 +587,20 @@ public class OptionsGUI extends JFrame implements Runnable{
 		
 		}
 		return idsFromSelections;
+	}
+	public void writeOutputCSV(ArrayList<String> out1, ArrayList<String> out2, int[] ids) throws IOException{
+		 File file = new File("output.csv");
+			 BufferedWriter writer = new BufferedWriter( new FileWriter(file));
+		      writer.write("id,name,latitude,longitude,municipality,region,country,continent,elevation,airportwiki,countrywiki,regionwiki\n");
+		if(out1 != null){
+		 for(int i = 0; i<ids.length; i++){
+			 writer.write(out1.get(ids[i]-1));
+		 }
+		}
+		 for(int i = 0; i<out2.size(); i++){
+			 writer.write(out2.get(i));
+		 }
+		 writer.close();
 	}
 	public FileWriter startOutput(FileWriter fWriter) throws IOException{
 		File xmlOutput = new File("selections.xml");

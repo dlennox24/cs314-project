@@ -118,17 +118,8 @@ public class TripCo {
     }
 
     Model model = null;
-    selectionFilename = op.selectionFile;
-    if(selectionFilename != null){
-      try {
-    	String tempSelectionsCSVfilename = "tempSELECTIONS.csv";
-        makeSelectionCSV("output.csv", tempSelectionsCSVfilename, op.intArray, selectionFilename);
-        model = new Model(tempSelectionsCSVfilename,opt, units);
-        //Files.delete(tempSelectionsCSVfilename);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-	}
+    selectionFilename = "selections.xml";
+    model = new Model("output.csv", opt, units);
 
   
 
@@ -143,7 +134,7 @@ public class TripCo {
     for(int i = 0; i < model.getLegsLength(); i++){
       finalDistance += model.getLeg(i).getDistance();
     }
-    Presenter P = new Presenter(model,new View("Colorado",finalDistance,finalOptions,newOutPutFile.substring(0, newOutPutFile.length()-4)),option,svgFilename);
+    Presenter P = new Presenter(model,new View(units,finalDistance,finalOptions,newOutPutFile.substring(0, newOutPutFile.length()-4)),option,svgFilename);
 
     P.getTrip(P,option);
     P.finalView(svgFilename);

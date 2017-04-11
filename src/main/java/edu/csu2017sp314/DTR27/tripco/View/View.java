@@ -29,7 +29,7 @@ public class View {
 
 	
 		this.titles.add(new Label("DTR-27","DTR-27",512,485,"middle",20));
-		this.titles.add(new Label("distance",totalDist+"Miles",512,505,"middle",20));
+		this.titles.add(new Label("distance",totalDist+" "+title,512,505,"middle",20));
 		this.status = "OK";
 	}
 
