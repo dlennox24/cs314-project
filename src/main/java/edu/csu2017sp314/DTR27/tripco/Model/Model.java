@@ -586,7 +586,7 @@ public class Model {
 					
 				}
 
-				Location l = new Location(id, name, longitude, latitude);
+				//Location l = new Location(id, name, longitude, latitude);
 
 				String elevation;
 				try{
@@ -644,9 +644,7 @@ public class Model {
 						countryURL = "";
 					};
 
-				double longitude = Double.parseDouble(lineArray[longIndex]); 
-				System.out.println(lineArray[latIndex]);
-				double latitude = Double.parseDouble(lineArray[latIndex]); 
+				
 
 				System.out.println(id + " "  + name + " "  + longitude + " " + latitude + " " + elevation + " " + municipality +  " " + region + " " + country + " " + continent + " " + airportURL + " " + regionURL + " " + " " + countryURL);
 				Location l = new Location(id, name, longitude, latitude, elevation, municipality, region, country, continent, airportURL, regionURL, countryURL);
