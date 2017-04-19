@@ -247,6 +247,9 @@ img {
   .comment-block .panel .panel-heading {
     cursor: pointer; }
 
+#map-container {
+  padding: 0px; }
+
 .nav-sidebar .badge,
 .navbar .badge {
   float: right;

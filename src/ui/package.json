@@ -31,5 +31,6 @@
   "homepage": "https://github.com/csu2017sp314/DTR-27#readme",
   "eslintConfig": {
     "extends": "react-app"
-  }
+  },
+  "homepage":"/"
 }

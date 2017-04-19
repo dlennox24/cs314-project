@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import Layout, {Sidebar} from './Layout';
+import Layout, {Sidebar, ItineraryObj} from './Layout';
+import GoogleMap from 'google-map-react';
+import config from '../json/config.json';
 
 class Map extends Component {
   render() {
     return (
-      <div/>
+      <GoogleMap
+        center={config.map.defaultLocation}
+        zoom={config.map.defaultZoom}>
+      </GoogleMap>
     );
   }
 }
@@ -14,10 +19,18 @@ class Itinerary extends Component{
     return (
       <div>
         <h3>Itinerary
-        <a type="button" className="pull-right" data-toggle="modal" data-target="#myModal">
-          <i className="fa fa-sliders"></i>
+          <a type="button" className="pull-right" data-toggle="modal" data-target="#myModal">
+            <i className="fa fa-sliders"></i>
           </a>
         </h3>
+        <hr/>
+        <div className='loc-container'>
+          <ItineraryObj/>
+          <ItineraryObj/>
+          <ItineraryObj/>
+          <ItineraryObj/>
+          <ItineraryObj/>
+        </div>
       </div>
     );
   }
@@ -26,7 +39,7 @@ class Itinerary extends Component{
 class Settings extends Component{
   render() {
     return (
-      <div className="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div className="modal fade" id="myModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -52,12 +65,12 @@ export default class App extends Component{
     return (
       <Layout>
         <div className='row'>
-          <div className='white-grey-bg-color col-md-3'>
+          <div className='col-md-3'>
             <Sidebar>
               <Itinerary />
             </Sidebar>
           </div>
-          <div className='col-md-9'>
+          <div id='map-container' className='col-md-9'>
             <Map />
           </div>
         </div>
