@@ -1,0 +1,64 @@
+//----------------------------------------------------
+// Bootstrap Overrides
+@media (min-width: 1200px){
+  .container {
+    width: $site-width;
+    max-width: $page-max-width;
+    padding-left: 0;
+  }
+}
+
+// Buttons
+.btn {
+  // border: solid 2px transparent;
+  border-radius: 1px;
+  &-csu{
+    color: $white;
+    background-color: $csu-green;
+    // border-color: $csu-gold;
+    &:hover{
+      border-color: $csu-green;
+      background-color: $csu-gold;
+      color: $black-80;
+    }
+    &:focus{
+      color: $white;
+    }
+  }
+}
+
+.font-bold{
+  font-weight: bold;
+}
+
+.nav{
+  font-family: 'prox-regular';
+  font-size: 1.1em;
+}
+
+.label-{
+  &excon{
+    color: $white;
+    background-color: $excon-color;
+  }
+  &iacuc{
+    color: $white;
+    background-color: $iacuc-color;
+  }
+  &ibc{
+    color: $white;
+    background-color: $ibc-color;
+  }
+  &irb{
+    color: $white;
+    background-color: $irb-color;
+  }
+  &qa{
+    color: $white;
+    background-color: $qa-color;
+  }
+  &rcr{
+    color: $white;
+    background-color: $rcr-color;
+  }
+}

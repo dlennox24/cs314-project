@@ -1,0 +1,53 @@
+.dropdown-menu>.active>a,
+.dropdown-menu>.active>a:focus,
+.dropdown-menu>.active>a:hover{
+  background: $white-grey;
+  color: $csu-green;
+}
+
+.display-none{
+  display: none;
+}
+.display-initial{
+  display: initial;
+}
+
+.dropdown .active a{
+  border-left: 4px solid $aggie-orange;
+  font-weight: bold;
+}
+
+.disclaimer{
+  font-size: 85%;
+  font-style: italic;
+}
+
+.box-shadow{
+  @include box-shadow();
+}
+
+.row-table{
+  .row{
+    border-bottom: 1px solid $white-grey;
+    .header *{
+      text-align: right;
+      font-weight: bold;
+    }
+    .body{
+      text-align: left;
+    }
+  }
+}
+
+.comment-block{
+  .icon{
+    float: left;
+    text-align: center;
+  }
+  .panel{
+    margin-left: 45px;
+    .panel-heading{
+      cursor: pointer;
+    }
+  }
+}

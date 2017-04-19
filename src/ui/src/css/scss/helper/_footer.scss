@@ -1,0 +1,43 @@
+//----------------------------------------------------
+// Footer
+#site-footer {
+  font-size: .9em;
+  background: $csu-green;
+  width: 100%;
+  padding: 14px 0px;
+  margin-top: 25px;
+  .container{
+    a, p.copyright{
+      color: $white;
+    }
+    ul{
+      padding: 0;
+      display: block;
+      li:first-child {
+        padding-left: 0;
+      }
+      li{
+        font-size: inherit;
+        padding: 0 10px 0 10px;
+        display: inline-block;
+        border-right: 1px solid $white;
+      }
+      li:last-child {
+        border-right: 0;
+      }
+    }
+  }
+  .bottom-logo img{
+    max-height: 50px;
+  }
+}
+
+@media(max-width: 992px){
+  #site-footer{
+    text-align: center;
+    .container ul li{
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "appRoot":"/",
+  "apiUrl":"http://127.0.0.1/api",
+  "unitTitle":"TripCo",
+  "unitUrl":"http://www.cs.colostate.edu/~cs314/yr2017sp/",
+  "gMapsApiKey":"null"
+}

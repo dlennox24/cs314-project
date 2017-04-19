@@ -3,21 +3,33 @@
   "version": "4.0.0",
   "private": true,
   "dependencies": {
+    "boostrap": "^1.0.0",
+    "bootstrap-material-design": "^0.5.10",
+    "font-awesome": "^4.7.0",
+    "google-map-react": "^0.24.0",
+    "jquery": "^3.2.1",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
   },
   "scripts": {
+    "dev": "start npm start && start npm test && npm run sass-w",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sass-w": "sass --watch src/css/scss/main.scss:src/css/main.css"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/csu2017sp314/DTR-27/issues"
   },
-  "homepage": "https://github.com/csu2017sp314/DTR-27#readme"
+  "homepage": "https://github.com/csu2017sp314/DTR-27#readme",
+  "eslintConfig": {
+    "extends": "react-app"
+  }
 }

@@ -1,0 +1,44 @@
+//----------------------------------------------------
+// Mobile
+@media(max-width:768px){
+  .navbar-brand{
+    padding-left: 0;
+  }
+  .navbar-nav .active, .nav-sidebar .active{
+    border-left: 4px solid $aggie-orange;
+  }
+  .full-width .topbar .bottom-header{
+    padding-left: 0;
+  }
+  .single-column{
+    .navbar{
+      .container{
+        margin-left: inherit;
+        margin-right: inherit;
+      }
+      &-header {
+        float: inherit;
+      }
+      &-collapse{
+        padding: inherit;
+      }
+    }
+  }
+  .row-table{
+    .row{
+      .header *{
+        text-align: left;
+      }
+    }
+  }
+}
+
+@media(min-width: 992px){
+  .flex{
+    display: flex;
+    &-row,&-row-reverse,&-column,&-column-reverse{
+      display: flex;
+      flex: 1;
+    }
+  }
+}
