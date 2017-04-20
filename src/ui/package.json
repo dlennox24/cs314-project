@@ -8,10 +8,13 @@
     "font-awesome": "^4.7.0",
     "google-map-react": "^0.24.0",
     "jquery": "^3.2.1",
+    "rc-slider": "^7.0.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-router": "^4.1.1",
-    "react-router-dom": "^4.1.1"
+    "react-router-dom": "^4.1.1",
+    "react-select2": "^4.0.3",
+    "select2": "^4.0.3"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
@@ -28,9 +31,8 @@
   "bugs": {
     "url": "https://github.com/csu2017sp314/DTR-27/issues"
   },
-  "homepage": "https://github.com/csu2017sp314/DTR-27#readme",
+  "homepage": "/",
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "homepage":"/"
+  }
 }
