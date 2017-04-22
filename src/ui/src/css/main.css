@@ -206,6 +206,9 @@ img {
   padding-right: 5px;
   font-weight: normal; }
 
+.rc-slider-marks-container {
+  margin-bottom: 50px; }
+
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:focus,
 .dropdown-menu > .active > a:hover {
@@ -249,6 +252,12 @@ img {
 
 #map-container {
   padding: 0px; }
+
+#itinerary-container {
+  position: absolute;
+  z-index: 1;
+  width: 25%;
+  margin-left: -15px; }
 
 .nav-sidebar .badge,
 .navbar .badge {
@@ -594,7 +603,10 @@ img {
     padding: inherit; }
 
   .row-table .row .header * {
-    text-align: left; } }
+    text-align: left; }
+
+  #itinerary-container {
+    width: 100%; } }
 @media (min-width: 992px) {
   .flex {
     display: flex; }

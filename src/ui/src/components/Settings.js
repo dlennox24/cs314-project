@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
-import config from '../json/config.json';
 import Slider from 'rc-slider';
 
 export class UseKm extends Component{
@@ -9,8 +7,21 @@ export class UseKm extends Component{
       <div className='togglebutton'>
         <span><strong>Use Kilometers</strong></span>
         <label className='pull-right'>
-          <input id='use=km' type='checkbox'/>
+          <input id='use-km' type='checkbox'/>
         </label>
+        <hr className='visible-xs-block'/>
+      </div>
+    );
+  }
+}
+
+export class SearchResults extends Component{
+  render() {
+    return (
+      <div className='list-group'>
+        <div className='well'>test</div>
+        <div className='well'>test</div>
+        <div className='well'>test</div>
       </div>
     );
   }
@@ -26,8 +37,11 @@ export class TripOptimizations extends Component{
     };
     return (
       <div>
-        <p className='text-center'><strong>Trip Optimization</strong></p>
-        <Slider dots min={0} max={99} marks={optMarks} step={33} defaultValue={66} />
+        <p><strong>Trip Optimization</strong></p>
+        <div className='rc-slider-marks-container'>
+          <Slider dots min={0} max={99} marks={optMarks} step={33} defaultValue={66} />
+        </div>
+        <hr className='visible-xs-block'/>
       </div>
     );
   }
@@ -65,6 +79,7 @@ export class AirportSizes extends Component{
             </label>
           </div>
         </div>
+        <hr className='visible-xs-block'/>
       </div>
     );
   }

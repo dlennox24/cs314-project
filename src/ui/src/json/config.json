@@ -5,7 +5,7 @@
   "unitUrl":"http://www.cs.colostate.edu/~cs314/yr2017sp/",
   "gMapsApiKey":"null",
   "map":{
-    "defaultLocation": [50.113643, 8.685997],
+    "defaultLocation": [48.136105, 11.584063],
     "defaultZoom": 5
   }
 }

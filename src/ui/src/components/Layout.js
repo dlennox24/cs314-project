@@ -53,11 +53,8 @@ export class Sidebar extends Component{
 export class ItineraryObj extends Component{
   render() {
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">Panel heading</div>
-        <div className="panel-body">
-          Panel content
-        </div>
+      <div className='well'>
+        location
       </div>
     );
   }
