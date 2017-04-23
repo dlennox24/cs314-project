@@ -7,15 +7,5 @@
   "map":{
     "defaultLocation": [48.136105, 11.584063],
     "defaultZoom": 5
-  },
-  "muiTheme": {
-    "palette": {
-      "primary1Color": "#1E4D2B",
-      "primary2Color": "#C8C372",
-      "primary3Color": "#59595B",
-      "accent1Color": "#D9782D",
-      "accent2Color": "#FFFFFF",
-      "accent3Color": "#105456"
-    }
   }
 }
