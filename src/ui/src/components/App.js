@@ -14,31 +14,40 @@ import '../../node_modules/rc-slider/dist/rc-slider.min.css';
 import './App.css';
 
 
-const Map = () =>{
+const Map = () => {
   return (
     <GoogleMap
+      apiKey={config.gMapsApiKey}
       center={config.map.defaultLocation}
       zoom={config.map.defaultZoom}>
     </GoogleMap>
   );
 }
 
-const App = () => {
-  return (
-    <MuiThemeProvider muiTheme={getMuiTheme(config.muiTheme)}>
-      <section>
-        <AppBar
-          iconElementRight={<CsuSvgLogo />}
-          iconElementLeft={<Itinerary />}
-          />
-        <div id='main-content'>
-          <div id='map-container'>
-            <Map />
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpenItnerary: false,
+      isOpenSettings: false,
+      isOpenFilters: false
+    };
+  }
+  render() {
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme(config.muiTheme)}>
+        <section>
+          <AppBar
+            iconElementRight={<CsuSvgLogo />}
+            iconElementLeft={<Itinerary />}
+            />
+          <div id='main-content'>
+            <div id='map-container'>
+              <Map />
+            </div>
           </div>
-        </div>
-      </section>
-    </MuiThemeProvider>
-  );
+        </section>
+      </MuiThemeProvider>
+    );
+  }
 }
-
-export default App;

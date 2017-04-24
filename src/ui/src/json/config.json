@@ -3,10 +3,13 @@
   "apiUrl":"http://127.0.0.1/api",
   "unitTitle":"TripCo",
   "unitUrl":"http://www.cs.colostate.edu/~cs314/yr2017sp/",
-  "gMapsApiKey":"null",
+  "gMapsApiKey":"AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
   "map":{
     "defaultLocation": [48.136105, 11.584063],
     "defaultZoom": 5
+  },
+  "glassfish":{
+    "host": "129.82.44.140:8080"
   },
   "muiTheme": {
     "palette": {
@@ -16,6 +19,14 @@
       "accent1Color": "#D9782D",
       "accent2Color": "#FFFFFF",
       "accent3Color": "#105456"
+    }
+  },
+  "tripSettings":{
+    "defaults":{
+      "optimzation": 33,
+      "filters":{
+        "airportSize": ["small","medium","large","heliport"]
+      }
     }
   }
 }
