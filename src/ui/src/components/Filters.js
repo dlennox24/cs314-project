@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
 import AutoComplete from 'material-ui/AutoComplete'
 import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
@@ -14,6 +13,7 @@ import Snackbar from 'material-ui/Snackbar';
 import {CloseButton} from './Utils';
 
 import config from '../json/config.json';
+import './Filters.css';
 
 export default class Filters extends Component{
   constructor(props) {
@@ -29,13 +29,18 @@ export default class Filters extends Component{
   }
   handleOpenToggle = () => this.setState({isOpen: !this.state.isOpen});
   handleClearFilters = () => {
-    console.log('filters cleared');
     this.setState({
       filters: []
     });
   }
+  handleRemoveFilter = (filterId) => {
+    let filters = this.state.filters;
+    filters.splice(filterId, 1);
+    this.setState({
+      filters: filters
+    });
+  }
   handleNewRequest = (value) => {
-    console.log(this.state);
     if(this.state.filters.includes(value)){
       this.setState({
         searchText: '',
@@ -52,10 +57,8 @@ export default class Filters extends Component{
         filters: [...this.state.filters, value]
       });
     }
-    console.log(this.state);
   }
   handleUpdateInput = (searchText) => {
-    console.log(searchText);
     this.setState({
       searchText: searchText
     });
@@ -73,8 +76,23 @@ export default class Filters extends Component{
         </Subheader>
       );
     }
-    return this.state.filters.map((text, i) => (
-      <Filter key={i} primaryText={text}/>
+    let filtersSorted = this.state.filters;
+    filtersSorted.sort();
+    return filtersSorted.map((text, i) => (
+      <ListItem
+        key={i}
+        primaryText={text}
+        rightIcon={
+          <IconButton
+            iconClassName='material-icons'
+            className='remove-filter-btn'
+            onTouchTap={this.handleRemoveFilter.bind(this, i)}
+            >
+              remove_circle_outline
+          </IconButton>
+        }
+        style={{textTransform:'capitalize'}}
+        />
     ))
   }
   render() {
@@ -101,7 +119,6 @@ export default class Filters extends Component{
         </Toolbar>
       </div>
     );
-    const numFilters = this.state.filters.length;
     return (
       <div>
         <AutoComplete
@@ -118,7 +135,7 @@ export default class Filters extends Component{
           onTouchTap={this.handleOpenToggle}
           className='pull-right'
           >
-          <Avatar size={32}>{numFilters}</Avatar>
+          <Avatar size={32}>{this.state.filters.length}</Avatar>
           Applied Filters
         </Chip>
         <Dialog
@@ -127,6 +144,7 @@ export default class Filters extends Component{
           onRequestChange={(open) => this.setState({open})}
           titleStyle={{padding:0}}
           autoScrollBodyContent={true}
+          onRequestClose={this.handleOpenToggle}
           >
           <List>
             {this.populateFilterList()}
@@ -145,20 +163,6 @@ export default class Filters extends Component{
           }}
           />
       </div>
-    );
-  }
-}
-
-class Filter extends Component {
-  render() {
-    return (
-      <ListItem
-        primaryText={this.props.primaryText}
-        rightIcon={
-          <FontIcon className='material-icons'>remove_circle_outline</FontIcon>
-        }
-        style={{textTransform:'capitalize'}}
-        />
     );
   }
 }

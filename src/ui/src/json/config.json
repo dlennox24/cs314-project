@@ -41,7 +41,11 @@
     "defaults":{
       "optimzation": 2,
       "filters":{
-        "airportSize": ["small","medium","large","heliport"]
+        "airportSize": ["Medium","Large"],
+        "municipality": [],
+        "region": [],
+        "country": [],
+        "continent": []
       }
     },
     "snackbarAutoHide": 4000

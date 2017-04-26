@@ -18,7 +18,7 @@ export default class Itinerary extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: true
+      isOpen: false
     };
   }
   handleOpenToggle = () => this.setState({isOpen: !this.state.isOpen});
@@ -34,7 +34,12 @@ export default class Itinerary extends Component{
         'padding':'0 15px'
       }
     };
-    const drawerWidth = window.innerWidth > 992 ? 25 : 100;
+    let drawerWidth = window.innerWidth > 992 ? 25 : 100;
+    if(drawerWidth !== 100 && drawerWidth/100*window.innerWidth < 400){
+      while(drawerWidth !== 100 && drawerWidth/100*window.innerWidth < 400){
+        drawerWidth++;
+      }
+    }
     return (
       <div>
         <RaisedButton

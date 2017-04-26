@@ -17,22 +17,20 @@ import testData from '../json/testData.json';
 export default class Settings extends Component {
   constructor(props) {
     super(props);
+    let filters =  config.tripSettings.defaults.filters;
     this.state = {
       isOpen: true,
       filters: {
-        airportSize: config.tripSettings.defaults.filters.airportSize,
-        municipality: null,
-        region: testData.regions,
-        country: testData.countries,
-        continent: testData.continents
+        airportSize: filters.airportSize,
+        municipality: filters.municipality,
+        region: filters.region,
+        country: filters.country,
+        continent: filters.continent
       }
     };
   }
   handleClose = () => this.setState({isOpen: false});
   handleOpen = () => this.setState({isOpen: true});
-  handleRemoveFilter = () => {
-    console.log('removed');
-  };
   render() {
     const dialogTitle = (
       <div>
@@ -69,6 +67,7 @@ export default class Settings extends Component {
           title={dialogTitle}
           open={this.state.isOpen}
           titleStyle={{padding:0}}
+          autoScrollBodyContent={true}
           >
           <div className='row'>
             <div className='col-md-offset-2 col-md-8'>
@@ -81,7 +80,6 @@ export default class Settings extends Component {
                 dataSource={testData.airportSizes}
                 name='Airport Size'
                 filters={this.state.filters.airportSize}
-                onTouchTap={this.handleRemoveFilter}
                 />
             </div>
           </div>
@@ -91,7 +89,6 @@ export default class Settings extends Component {
                   dataSource={testData.municipalities}
                   name='Municipality'
                   filters={this.state.filters.municipality}
-                  onTouchTap={this.handleRemoveFilter}
                   />
             </div>
             <div className='col-md-6'>
@@ -99,7 +96,6 @@ export default class Settings extends Component {
                   dataSource={this.state.filters.region}
                   name='Region'
                   filters={this.state.filters.municipality}
-                  onTouchTap={this.handleRemoveFilter}
                   />
             </div>
           </div>
@@ -109,7 +105,6 @@ export default class Settings extends Component {
                   dataSource={testData.countries}
                   name='Country'
                   filters={this.state.filters.country}
-                  onTouchTap={this.handleRemoveFilter}
                   />
             </div>
             <div className='col-md-6'>
@@ -117,7 +112,6 @@ export default class Settings extends Component {
                   dataSource={testData.continents}
                   name='Continent'
                   filters={this.state.filters.continent}
-                  onTouchTap={this.handleRemoveFilter}
                   />
             </div>
           </div>
@@ -203,7 +197,7 @@ const TripOptimizations = () => {
   };
   const sliderColor = '#D9782D';
   return (
-    <div style={{'margin':'20px 0 50px'}}>
+    <div style={{'margin':'20px 10px 50px'}}>
       <p className='text-center'>Trip Optimization</p>
       <div className='rc-slider-marks-container'>
         <Slider
@@ -218,7 +212,6 @@ const TripOptimizations = () => {
           defaultValue={config.tripSettings.defaults.optimzation}
           />
       </div>
-      <hr className='visible-xs-block'/>
     </div>
   );
 }
