@@ -19,7 +19,7 @@
       "size": 36
     }
   },
-  "glassfish":{
+  "glassfish": {
     "host": "129.82.44.138:8080"
   },
   "muiTheme": {
@@ -32,12 +32,18 @@
       "accent3Color": "#105456"
     }
   },
-  "tripSettings":{
+  "statusTheme": {
+    "warning": "rgba(244, 67, 54, .87)",
+    "success": "rgba(76, 175, 80, .87)",
+    "info": "rgba(3, 169, 244, .87)"
+  },
+  "tripSettings": {
     "defaults":{
       "optimzation": 2,
       "filters":{
         "airportSize": ["small","medium","large","heliport"]
       }
-    }
+    },
+    "snackbarAutoHide": 4000
   }
 }

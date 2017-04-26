@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Slider from 'rc-slider';
-import AutoComplete from 'material-ui/AutoComplete';
 import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
 import FontIcon from 'material-ui/FontIcon';
@@ -19,7 +18,7 @@ export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false,
+      isOpen: true,
       filters: {
         airportSize: config.tripSettings.defaults.filters.airportSize,
         municipality: null,
@@ -78,15 +77,9 @@ export default class Settings extends Component {
           </div>
           <div className='row'>
             <div className='col-md-6 col-md-offset-3'>
-              <AutoComplete
-                dataSource={testData.airportSizes}
-                floatingLabelText='Filter by Airport Size'
-                fullWidth={true}
-                filter={AutoComplete.caseInsensitiveFilter}
-                maxSearchResults={5}
-                />
               <Filters
-                name='Airport Size Filters'
+                dataSource={testData.airportSizes}
+                name='Airport Size'
                 filters={this.state.filters.airportSize}
                 onTouchTap={this.handleRemoveFilter}
                 />
@@ -94,29 +87,17 @@ export default class Settings extends Component {
           </div>
           <div className='row'>
             <div className='col-md-6'>
-              <AutoComplete
-                dataSource={testData.municipalities}
-                floatingLabelText='Filter by Municipality'
-                fullWidth={true}
-                filter={AutoComplete.caseInsensitiveFilter}
-                maxSearchResults={5}
-                />
                 <Filters
-                  name='Municipality Filters'
+                  dataSource={testData.municipalities}
+                  name='Municipality'
                   filters={this.state.filters.municipality}
                   onTouchTap={this.handleRemoveFilter}
                   />
             </div>
             <div className='col-md-6'>
-              <AutoComplete
-                dataSource={this.state.filters.region}
-                floatingLabelText='Filter by Region'
-                fullWidth={true}
-                filter={AutoComplete.caseInsensitiveFilter}
-                maxSearchResults={5}
-                />
                 <Filters
-                  name='Region Filters'
+                  dataSource={this.state.filters.region}
+                  name='Region'
                   filters={this.state.filters.municipality}
                   onTouchTap={this.handleRemoveFilter}
                   />
@@ -124,29 +105,17 @@ export default class Settings extends Component {
           </div>
           <div className='row'>
             <div className='col-md-6'>
-              <AutoComplete
-                dataSource={testData.countries}
-                floatingLabelText='Filter by Country'
-                fullWidth={true}
-                filter={AutoComplete.caseInsensitiveFilter}
-                maxSearchResults={5}
-                />
                 <Filters
-                  name='Country Filters'
+                  dataSource={testData.countries}
+                  name='Country'
                   filters={this.state.filters.country}
                   onTouchTap={this.handleRemoveFilter}
                   />
             </div>
             <div className='col-md-6'>
-              <AutoComplete
-                dataSource={testData.continents}
-                floatingLabelText='Filter by Continent'
-                fullWidth={true}
-                filter={AutoComplete.caseInsensitiveFilter}
-                maxSearchResults={5}
-                />
                 <Filters
-                  name='Continent Filters'
+                  dataSource={testData.continents}
+                  name='Continent'
                   filters={this.state.filters.continent}
                   onTouchTap={this.handleRemoveFilter}
                   />
