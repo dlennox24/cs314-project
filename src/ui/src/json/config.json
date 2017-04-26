@@ -5,11 +5,22 @@
   "unitUrl":"http://www.cs.colostate.edu/~cs314/yr2017sp/",
   "gMapsApiKey":"AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
   "map":{
-    "defaultLocation": [48.136105, 11.584063],
-    "defaultZoom": 5
+    "theme":{
+      "geodesic": true,
+      "strokeOpacity": 1.0,
+      "strokeWeight": 5
+    },
+    "defaultLocation": {
+      "lat": 48.128587,
+      "lng": 11.596151
+      },
+    "defaultZoom": 5,
+    "icons": {
+      "size": 36
+    }
   },
   "glassfish":{
-    "host": "129.82.44.140:8080"
+    "host": "129.82.44.138:8080"
   },
   "muiTheme": {
     "palette": {
@@ -23,7 +34,7 @@
   },
   "tripSettings":{
     "defaults":{
-      "optimzation": 33,
+      "optimzation": 2,
       "filters":{
         "airportSize": ["small","medium","large","heliport"]
       }

@@ -10,6 +10,8 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import Filters from './Filters';
 import {CloseButton} from './Utils';
 
+import './Settings.css';
+
 import config from '../json/config.json';
 import testData from '../json/testData.json';
 
@@ -100,7 +102,7 @@ export default class Settings extends Component {
                 maxSearchResults={5}
                 />
                 <Filters
-                  name='Airport Size Filters'
+                  name='Municipality Filters'
                   filters={this.state.filters.municipality}
                   onTouchTap={this.handleRemoveFilter}
                   />
@@ -114,7 +116,7 @@ export default class Settings extends Component {
                 maxSearchResults={5}
                 />
                 <Filters
-                  name='Airport Size Filters'
+                  name='Region Filters'
                   filters={this.state.filters.municipality}
                   onTouchTap={this.handleRemoveFilter}
                   />
@@ -130,7 +132,7 @@ export default class Settings extends Component {
                 maxSearchResults={5}
                 />
                 <Filters
-                  name='Airport Size Filters'
+                  name='Country Filters'
                   filters={this.state.filters.country}
                   onTouchTap={this.handleRemoveFilter}
                   />
@@ -144,7 +146,7 @@ export default class Settings extends Component {
                 maxSearchResults={5}
                 />
                 <Filters
-                  name='Airport Size Filters'
+                  name='Continent Filters'
                   filters={this.state.filters.continent}
                   onTouchTap={this.handleRemoveFilter}
                   />
@@ -193,13 +195,20 @@ export class UseKm extends Component{
     console.log(message);
     // websocket messages are JSON. The JSON message the server sends is in the data attribute of this message JSON
     // So, parse the JSON message containing the message data
-    let jsonMessage = JSON.parse(message.data);
+    let jsonMessage = message.data;
     console.log(jsonMessage);
   }
   handleUnits(){
     this.setState({useKm: !this.state.useKm});
+    const test = {
+      a1:['reg1','reg2'],
+      a2:['s','m','l']
+    };
+
     let json = {
-      'status': this.state.useKm
+      'string':'test',
+        'size': test.a2.toString(),
+        'region': test.a1.toString()
     };
     this.state.socket.send(JSON.stringify(json));
   }
@@ -219,21 +228,25 @@ export class UseKm extends Component{
 const TripOptimizations = () => {
   const optMarks = {
     0:'None',
-    33:'Nearest Neighbor',
-    66:'2-opt',
-    99:'3-opt',
+    1:'Nearest Neighbor',
+    2:'2-opt',
+    3:'3-opt',
   };
+  const sliderColor = '#D9782D';
   return (
     <div style={{'margin':'20px 0 50px'}}>
       <p className='text-center'>Trip Optimization</p>
       <div className='rc-slider-marks-container'>
         <Slider
+          className='optimzation-slider'
           dots
           min={0}
-          max={99}
+          max={3}
           marks={optMarks}
-          step={config.tripSettings.defaults.optimzation}
-          defaultValue={66}
+          minimumTrackStyle={{backgroundColor: sliderColor}}
+          handleStyle={{borderColor: sliderColor}}
+          step={1}
+          defaultValue={config.tripSettings.defaults.optimzation}
           />
       </div>
       <hr className='visible-xs-block'/>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import GoogleMap from 'google-map-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 
+import Map from './Map';
 import Itinerary from './Itinerary';
 import CsuSvgLogo from './CsuBranding';
 
@@ -13,25 +13,10 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../../node_modules/rc-slider/dist/rc-slider.min.css';
 import './App.css';
 
-
-const Map = () => {
-  return (
-    <GoogleMap
-      apiKey={config.gMapsApiKey}
-      center={config.map.defaultLocation}
-      zoom={config.map.defaultZoom}>
-    </GoogleMap>
-  );
-}
-
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isOpenItnerary: false,
-      isOpenSettings: false,
-      isOpenFilters: false
-    };
+    this.sate={on:'test'}
   }
   render() {
     return (

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
+import Paper from 'material-ui/Paper';
 import Drawer from 'material-ui/Drawer';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
@@ -10,14 +11,14 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Settings, {UseKm} from './Settings';
 import {CloseButton} from './Utils';
 
-import testData from '../json/testData.json';
-import './Itinerary.css';
+import config from '../json/config.json';
+import testData from '../json/testData.json'; //TODO: remove
 
 export default class Itinerary extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: true
     };
   }
   handleOpenToggle = () => this.setState({isOpen: !this.state.isOpen});
@@ -33,6 +34,7 @@ export default class Itinerary extends Component{
         'padding':'0 15px'
       }
     };
+    const drawerWidth = window.innerWidth > 992 ? 25 : 100;
     return (
       <div>
         <RaisedButton
@@ -41,7 +43,11 @@ export default class Itinerary extends Component{
           secondary={true}
           onTouchTap={this.handleOpenToggle}
           />
-        <Drawer width={'25%'} open={this.state.isOpen}>
+        <Drawer
+          width={drawerWidth+'%'}
+          open={this.state.isOpen}
+          className='itinerary-container'
+          >
           <div id='itinerary-header'>
             <Toolbar>
               <ToolbarGroup>
@@ -82,19 +88,41 @@ export default class Itinerary extends Component{
   }
 }
 
-const ItineraryObj = () => (
+const ItineraryObj = (locations) => (
   <Card>
     <CardHeader
-      title='Without Avatar'
-      subtitle='Subtitle'
+      title='El Golea Airport'
+      subtitle='DAUE'
+      avatar={
+        <Paper
+          zDepth={3}
+          circle={true}
+          style={{
+            height: 36,
+            width: 36,
+            textAlign: 'center',
+            display: 'inline-block',
+            backgroundColor: config.muiTheme.palette.primary1Color
+          }}
+          >
+          <FontIcon
+            className='material-icons'
+            style={{
+              padding: (36-24)/2+'px',
+              color: config.muiTheme.palette.accent2Color
+            }}
+            >
+            local_airport
+          </FontIcon>
+        </Paper>}
       actAsExpander={true}
       showExpandableButton={true}
       />
-    <CardActions>
-      <FlatButton label='Action1' />
-      <FlatButton label='Action2' />
-    </CardActions>
     <CardText expandable={true}>
+      <CardActions>
+        <FlatButton label='Action1' />
+        <FlatButton label='Action2' />
+      </CardActions>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
       Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.

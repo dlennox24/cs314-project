@@ -51,7 +51,7 @@ export default class Filters extends Component{
               tooltip='Clear Filters'
               tooltipPosition='bottom-left'
               >
-              <FontIcon className='material-icons'>delete_sweep</FontIcon>
+              <FontIcon className='material-icons'>clear_all</FontIcon>
             </IconButton>
           </ToolbarGroup>
         </Toolbar>
@@ -89,7 +89,7 @@ class Filter extends Component {
       <ListItem
         primaryText={this.props.primaryText}
         rightIcon={
-          <FontIcon className='material-icons'>delete</FontIcon>
+          <FontIcon className='material-icons'>remove_circle_outline</FontIcon>
         }
         style={{textTransform:'capitalize'}}
         />
