@@ -1,92 +1,99 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import AutoComplete from 'material-ui/AutoComplete'
-import {List, ListItem} from 'material-ui/List';
+import {
+  List,
+  ListItem
+} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import Subheader from 'material-ui/Subheader';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarTitle
+} from 'material-ui/Toolbar';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 
-import {CloseButton} from './Utils';
+import {
+  CloseButton
+} from './Utils';
 
 import config from '../json/config.json';
 import './Filters.css';
 
-export default class Filters extends Component{
+export default class Filters extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
       snackBarIsOpen: false,
-      snackBarMessage: 'Filter added to '+this.props.name+' Filters',
+      snackBarMessage: 'Filter added to ' + this.props.name + ' Filters',
       snackBarBg: config.statusTheme.success,
-      searchText: '',
-      filters: this.props.filters || []
+      searchText: ''
     };
+    this.handleAddFilter = this.props.handleAddFilter.bind(this);
+    this.handleRemoveFilter = this.props.handleRemoveFilter.bind(this);
+    this.handleClearFilters = this.props.handleClearFilters.bind(this);
   }
-  handleOpenToggle = () => this.setState({isOpen: !this.state.isOpen});
-  handleClearFilters = () => {
-    this.setState({
-      filters: []
-    });
-  }
-  handleRemoveFilter = (filterId) => {
-    let filters = this.state.filters;
-    filters.splice(filterId, 1);
-    this.setState({
-      filters: filters
-    });
-  }
+
+  handleOpenToggle = () => this.setState({
+    isOpen: !this.state.isOpen
+  });
+
   handleNewRequest = (value) => {
-    if(this.state.filters.includes(value)){
+    if (this.props.filters.includes(value)) {
       this.setState({
         searchText: '',
         snackBarIsOpen: true,
         snackBarBg: config.statusTheme.warning,
-        snackBarMessage: 'Filter already exists in '+this.props.name+'Filter'
+        snackBarMessage: 'Filter already exists in ' + this.props.name + ' Filter'
       })
-    }else{
+    } else {
       this.setState({
         searchText: '',
         snackBarIsOpen: true,
         snackBarBg: config.statusTheme.success,
-        snackBarMessage: 'Filter added to '+this.props.name+' Filters',
-        filters: [...this.state.filters, value]
+        snackBarMessage: 'Filter added to ' + this.props.name + ' Filters'
       });
+      this.handleAddFilter(this.props.filterType, value);
     }
   }
+
   handleUpdateInput = (searchText) => {
     this.setState({
       searchText: searchText
     });
   }
-  handleSnackbarClose = () =>{
+
+  handleSnackbarClose = () => {
     this.setState({
       snackBarIsOpen: false
     });
   }
+
   populateFilterList = () => {
-    if(this.state.filters.length === 0){
-      return (
-        <Subheader style={{textAlign:'center'}}>
+      if (this.props.filters.length === 0) {
+        return (
+          <Subheader style={{textAlign:'center'}}>
           No Filters Applied
         </Subheader>
-      );
-    }
-    let filtersSorted = this.state.filters;
-    filtersSorted.sort();
-    return filtersSorted.map((text, i) => (
-      <ListItem
+        );
+      }
+      return this.props.filters.sort().map((text, i) => (
+            <ListItem
         key={i}
         primaryText={text}
         rightIcon={
           <IconButton
             iconClassName='material-icons'
             className='remove-filter-btn'
-            onTouchTap={this.handleRemoveFilter.bind(this, i)}
+            onTouchTap={this.handleRemoveFilter.bind(this, this.props.filterType, text)}
             >
               remove_circle_outline
           </IconButton>
@@ -95,6 +102,7 @@ export default class Filters extends Component{
         />
     ))
   }
+  
   render() {
     const dialogTitle = (
       <div>
@@ -109,7 +117,7 @@ export default class Filters extends Component{
           </ToolbarGroup>
           <ToolbarGroup lastChild={true}>
             <IconButton
-              onTouchTap={this.handleClearFilters}
+              onTouchTap={this.handleClearFilters.bind(this, this.props.filterType)}
               tooltip='Clear Filters'
               tooltipPosition='bottom-left'
               >
@@ -135,7 +143,7 @@ export default class Filters extends Component{
           onTouchTap={this.handleOpenToggle}
           className='pull-right'
           >
-          <Avatar size={32}>{this.state.filters.length}</Avatar>
+          <Avatar size={32}>{this.props.filters.length}</Avatar>
           Applied Filters
         </Chip>
         <Dialog

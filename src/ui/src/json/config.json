@@ -1,11 +1,11 @@
 {
-  "appRoot":"/",
-  "apiUrl":"http://127.0.0.1/api",
-  "unitTitle":"TripCo",
-  "unitUrl":"http://www.cs.colostate.edu/~cs314/yr2017sp/",
-  "gMapsApiKey":"AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
-  "map":{
-    "theme":{
+  "appRoot": "/",
+  "apiUrl": "http://127.0.0.1/api",
+  "unitTitle": "TripCo",
+  "unitUrl": "http://www.cs.colostate.edu/~cs314/yr2017sp/",
+  "gMapsApiKey": "AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
+  "map": {
+    "theme": {
       "geodesic": true,
       "strokeOpacity": 1.0,
       "strokeWeight": 5
@@ -13,14 +13,14 @@
     "defaultLocation": {
       "lat": 48.128587,
       "lng": 11.596151
-      },
+    },
     "defaultZoom": 5,
     "icons": {
       "size": 36
     }
   },
   "glassfish": {
-    "host": "129.82.44.138:8080"
+    "host": "129.82.44.133:8080"
   },
   "muiTheme": {
     "palette": {
@@ -38,10 +38,13 @@
     "info": "rgba(3, 169, 244, .87)"
   },
   "tripSettings": {
-    "defaults":{
-      "optimzation": 2,
-      "filters":{
-        "airportSize": ["Medium","Large"],
+    "defaults": {
+      "settings": {
+        "useKm": false,
+        "optimization": 2
+      },
+      "filters": {
+        "airportSize": ["Medium", "Large"],
         "municipality": [],
         "region": [],
         "country": [],

@@ -1,27 +1,47 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
 import Drawer from 'material-ui/Drawer';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  CardText
+} from 'material-ui/Card';
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarTitle
+} from 'material-ui/Toolbar';
 import AutoComplete from 'material-ui/AutoComplete';
 
-import Settings, {UseKm} from './Settings';
-import {CloseButton} from './Utils';
+import Settings from '../containers/Settings';
+import {
+  UseKm
+} from './Settings';
+import {
+  CloseButton
+} from './Utils';
 
 import config from '../json/config.json';
 import testData from '../json/testData.json'; //TODO: remove
 
-export default class Itinerary extends Component{
+
+export default class Itinerary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: true
     };
   }
-  handleOpenToggle = () => this.setState({isOpen: !this.state.isOpen});
+  handleOpenToggle = () => this.setState({
+    isOpen: !this.state.isOpen
+  });
   render() {
     const style = {
       'navBtn': {
@@ -30,37 +50,41 @@ export default class Itinerary extends Component{
       'itinerary': {
         'width': '25%'
       },
-      'addDest':{
-        'padding':'0 15px'
+      'addDest': {
+        'padding': '0 15px'
       }
     };
-    let drawerWidth = window.innerWidth > 992 ? 25 : 100;
-    if(drawerWidth !== 100 && drawerWidth/100*window.innerWidth < 400){
-      while(drawerWidth !== 100 && drawerWidth/100*window.innerWidth < 400){
+    let drawerWidth = window.innerWidth > 992 ?
+      25 :
+      100;
+    if (drawerWidth !== 100 && drawerWidth / 100 * window.innerWidth < 400) {
+      while (drawerWidth !== 100 && drawerWidth / 100 * window.innerWidth < 400) {
         drawerWidth++;
       }
     }
     return (
       <div>
-        <RaisedButton
-          icon={(<FontIcon className='material-icons'>flight_takeoff</FontIcon>)}
-          style={style.navBtn}
-          secondary={true}
-          onTouchTap={this.handleOpenToggle}
-          />
+        <RaisedButton icon={(
+          <FontIcon className='material-icons'>flight_takeoff</FontIcon>
+        )}
+        style={style.navBtn}
+        secondary={true}
+        onTouchTap={this.handleOpenToggle}
+        />
         <Drawer
-          width={drawerWidth+'%'}
+          width={drawerWidth + '%'}
           open={this.state.isOpen}
-          className='itinerary-container'
-          >
+          className='itinerary-container'>
           <div id='itinerary-header'>
             <Toolbar>
               <ToolbarGroup>
-                <ToolbarTitle text='Itinerary' />
+                <ToolbarTitle text='Itinerary'/>
               </ToolbarGroup>
               <ToolbarGroup lastChild={true}>
-                <Settings />
-                <ToolbarSeparator style={{'marginLeft':'0'}} />
+                <Settings/>
+                <ToolbarSeparator style={{
+                  'marginLeft': '0'
+                }}/>
                 <CloseButton
                   onTouchTap={this.handleOpenToggle}
                   tooltipPosition='bottom-left'
@@ -74,18 +98,19 @@ export default class Itinerary extends Component{
                 fullWidth={true}
                 filter={AutoComplete.caseInsensitiveFilter}
                 maxSearchResults={10}
-                dataSourceConfig={{'text':'name','value':'code'}}
-                style={style.addDest}
-                />
-              <UseKm />
+                dataSourceConfig={{
+                'text': 'name',
+                'value': 'code'
+              }}
+              style={style.addDest}
+              />
+              <UseKm/>
             </div>
           </div>
           <div id='itinerary-body'>
-            <ItineraryObj />
-            <ItineraryObj />
-            <ItineraryObj />
-            <ItineraryObj />
-            <ItineraryObj />
+            {testData.locations.map((destination, i) => (
+              <ItineraryObj destination={destination} key={i}/>
+            ))}
           </div>
         </Drawer>
       </div>
@@ -93,45 +118,42 @@ export default class Itinerary extends Component{
   }
 }
 
-const ItineraryObj = (locations) => (
-  <Card>
+
+const ItineraryObj = (props) => {
+  const icon = (
+    <Paper
+    zDepth={3} circle={true}
+    style={{
+      height: 36,
+      width: 36,
+      textAlign: 'center',
+      display: 'inline-block',
+      backgroundColor: config.muiTheme.palette.primary1Color
+    }}>
+    <FontIcon className='material-icons' style={{
+        padding: (36 - 24) / 2 + 'px',
+        color: config.muiTheme.palette.accent2Color
+      }}>
+      local_airport
+    </FontIcon>
+  </Paper>
+  );
+  return (
+    <Card>
     <CardHeader
-      title='El Golea Airport'
-      subtitle='DAUE'
-      avatar={
-        <Paper
-          zDepth={3}
-          circle={true}
-          style={{
-            height: 36,
-            width: 36,
-            textAlign: 'center',
-            display: 'inline-block',
-            backgroundColor: config.muiTheme.palette.primary1Color
-          }}
-          >
-          <FontIcon
-            className='material-icons'
-            style={{
-              padding: (36-24)/2+'px',
-              color: config.muiTheme.palette.accent2Color
-            }}
-            >
-            local_airport
-          </FontIcon>
-        </Paper>}
+      title={props.destination.name}
+      subtitle='AIRPORT_CODE'
+      avatar={icon}
       actAsExpander={true}
       showExpandableButton={true}
       />
     <CardText expandable={true}>
       <CardActions>
-        <FlatButton label='Action1' />
-        <FlatButton label='Action2' />
+        <FlatButton label='Action1'/>
+        <FlatButton label='Action2'/>
       </CardActions>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-      Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi. Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque. Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
     </CardText>
   </Card>
-);
+  );
+}
