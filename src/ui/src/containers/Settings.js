@@ -2,18 +2,19 @@ import {
   connect
 } from 'react-redux';
 import {
-  setOptimization
-} from '../actions';
-import * as SettingsComp from '../components/Settings';
+  setOptimization,
+  toggleUnits
+} from '../actions/settings';
+import * as SettingsComponent from '../components/Settings';
 
-const mapStateToProps = (state) => {
+const mapStateToSettingsProps = (state) => {
   return {
     filters: state.filters,
     optimization: state.settings.optimization
   }
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToSettingsProps = (dispatch) => {
   return {
     handleOptimizationChange: (optimization) => {
       dispatch(setOptimization(optimization));
@@ -21,9 +22,28 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
+const mapStateToUseKmProps = (state) => {
+  return {
+    useKm: state.settings.useKm
+  }
+};
+
+const mapDispatchToUseKmProps = (dispatch) => {
+  return {
+    handleToggleUnits: () => {
+      dispatch(toggleUnits());
+    }
+  }
+};
+
 const Settings = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsComp.default);
+  mapStateToSettingsProps,
+  mapDispatchToSettingsProps
+)(SettingsComponent.default);
+
+export const UseKm = connect(
+  mapStateToUseKmProps,
+  mapDispatchToUseKmProps
+)(SettingsComponent.UseKm);
 
 export default Settings;

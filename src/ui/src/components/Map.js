@@ -1,31 +1,64 @@
-import React, { Component } from 'react';
+/* global google */
+import React, {
+  Component
+} from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
 import GoogleMap from 'google-map-react';
 
 import config from '../json/config.json';
-import testData from '../json/testData.json'; //TODO: remove
+// import testData from '../json/testData.json'; //TODO: remove
+var flightPath, map;
+
 
 export default class Map extends Component {
-  componentDidMount(){
+  clearPolylines = (polylines) => {
+    if (polylines.length > 0) {
+      for (let i = polylines.length; i >= 0; i--) {
+        polylines.removeAt(i);
+      }
+    }
   }
-  addRoutes(map){
-    testData.locations.push(testData.locations[0]);
-    var flightPlanCoordinates = testData.locations;
-    /* global google */
-    var flightPath = new google.maps.Polyline({
-      path: flightPlanCoordinates,
-      geodesic: config.map.theme.geodesic,
-      strokeColor: config.muiTheme.palette.accent1Color,
-      strokeOpacity: config.map.theme.strokeOpacity,
-      strokeWeight: config.map.theme.strokeWeight
-    });
-    flightPath.setMap(map);
+  setMap(mapObj) {
+    map = mapObj;
+    this.updateMap();
+  }
+  updateMap() {
+    if (map != null) {
+      console.log('updateMap');
+      if (flightPath != null) {
+        this.clearPolylines(flightPath.getPath());
+      }
+
+      let destinationList = this.props.destinations;
+      if (destinationList.length > 2) {
+        destinationList = [...this.props.destinations, this.props.destinations[0]];
+      } else if (destinationList.length === 0) {
+        destinationList = [];
+      }
+
+      flightPath = new google.maps.Polyline({
+        path: destinationList,
+        geodesic: config.map.theme.geodesic,
+        strokeColor: config.muiTheme.palette.accent1Color,
+        strokeOpacity: config.map.theme.strokeOpacity,
+        strokeWeight: config.map.theme.strokeWeight
+      });
+
+      flightPath.setMap(map);
+    }
+    return this.props.destinations.map((loc, i) => (
+      <AirportMapIcon
+          key={i}
+          lat={loc.lat}
+          lng={loc.lng}
+          />
+    ));
   }
   render() {
     return (
       <GoogleMap
-        onGoogleApiLoaded={({map, maps}) => this.addRoutes(map)}
+        onGoogleApiLoaded={({map, maps}) => this.setMap(map)}
         yesIWantToUseGoogleMapApiInternals
         bootstrapURLKeys={{
           key: config.gMapsApiKey,
@@ -33,13 +66,7 @@ export default class Map extends Component {
         }}
         center={[config.map.defaultLocation.lat,config.map.defaultLocation.lng]}
         zoom={config.map.defaultZoom}>
-        {testData.locations.map((loc,i) => (
-            <AirportMapIcon
-              key={i}
-              lat={loc.lat}
-              lng={loc.lng}
-              />
-          ))}
+        {this.updateMap()}
       </GoogleMap>
     );
   }
@@ -49,7 +76,7 @@ class AirportMapIcon extends Component {
   render() {
     const paperSize = this.props.paperSize || config.map.icons.size;
     return (
-        <Paper
+      <Paper
           zDepth={3}
           circle={true}
           style={{

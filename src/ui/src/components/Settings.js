@@ -20,14 +20,13 @@ import {
 
 import './Settings.css';
 
-import config from '../json/config.json';
 import testData from '../json/testData.json';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: true
+      isOpen: false
     };
     this.handleOptimizationChange = this.props.handleOptimizationChange.bind(this);
   }
@@ -152,70 +151,19 @@ export default class Settings extends Component {
 
 export class UseKm extends Component {
   constructor(props) {
-    // always call super(props) to call React.Component constructor
     super(props);
-    var loc = window.location,
-      new_uri;
-    // If page is using securte HTTP, use secure WebSocket, otherwise use plain WebSocket
-    if (loc.protocol === "https:") {
-      new_uri = "wss:";
-    } else {
-      new_uri = "ws:";
-    }
-    // add hostname and server file path to URI
-    new_uri += "//" + config.glassfish.host + document.location.pathname;
-    // set the websocket path to the endpoint of the java server, linked to @ServerEndpoint in java
-    let ws = new WebSocket(new_uri + 'websocket');
-    // when the websocket gets a message, call the messageHandler function
-    ws.onmessage = e => {
-      this.messageHandler(e)
-    };
-    // Write an error to the error class variable
-    ws.onerror = e => this.setState({
-      error: 'WebSocket error'
-    });
-    // if the websocket does not close cleanly, set an error to the error class variable
-    ws.onclose = e => !e.wasClean && this.setState({
-      error: `WebSocket error: ${e.code} ${e.reason}`
-    });
-    // declare class state variables
-    // state is anything of the React component that will update at some point
-    this.state = {
-      error: null,
-      image: null,
-      xml: null,
-      useKm: false,
-      socket: ws
-    };
-    // bind functions to this component so they can be passed to other methods
-    this.handleUnits = this.handleUnits.bind(this);
-  }
-  messageHandler(message) {
-    // console.log(message);
-    // websocket messages are JSON. The JSON message the server sends is in the data attribute of this message JSON
-    // So, parse the JSON message containing the message data
-    let jsonMessage = message.data;
-    console.log(JSON.parse(jsonMessage));
-  }
-  handleUnits() {
-    this.setState({
-      useKm: !this.state.useKm
-    });
-    const test = {
-      endpoint: 'sql',
-      data: 'Denver'
-    };
-
-    // let json = {
-    //   'string': 'test',
-    //   'size': test.a2.toString(),
-    //   'region': test.a1.toString()
-    // };
-    this.state.socket.send(JSON.stringify(test));
+    this.handleToggleUnits = this.props.handleToggleUnits.bind(this);
   }
   render() {
-    return (<Toggle label="Use Kilometers" labelPosition='left' style={{
-      'textAlign': 'right'
-    }} onToggle={this.handleUnits.bind(this)} toggled={this.state.useKm}/>);
+    return (
+      <Toggle
+        label="Use Kilometers"
+        labelPosition='left'
+        style={{
+          'textAlign': 'right'
+        }}
+        onToggle={this.handleToggleUnits}
+        toggled={this.props.useKm} />
+    );
   }
 }

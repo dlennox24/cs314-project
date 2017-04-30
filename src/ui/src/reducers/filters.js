@@ -6,7 +6,7 @@ const filters = (state = {}, action) => {
         [action.filterType]: [...state[action.filterType], action.filter]
       }
     case 'REMOVE_FILTER':
-      state[action.filterType].splice(action.filter, 1);
+      state[action.filterType].splice(action.filter, 1); // TODO: Bug when adding custom filter
       return {
         ...state,
         [action.filterType]: [...state[action.filterType]]

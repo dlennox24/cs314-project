@@ -5,7 +5,7 @@ import {
   addFilter,
   removeFilter,
   clearFilters
-} from '../actions';
+} from '../actions/filters';
 import * as FiltersComp from '../components/Filters';
 
 const mapStateToProps = (state, ownProps) => {

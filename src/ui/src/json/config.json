@@ -1,6 +1,5 @@
 {
   "appRoot": "/",
-  "apiUrl": "http://127.0.0.1/api",
   "unitTitle": "TripCo",
   "unitUrl": "http://www.cs.colostate.edu/~cs314/yr2017sp/",
   "gMapsApiKey": "AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
@@ -11,8 +10,8 @@
       "strokeWeight": 5
     },
     "defaultLocation": {
-      "lat": 48.128587,
-      "lng": 11.596151
+      "lat": 47.892054,
+      "lng": -0.532521
     },
     "defaultZoom": 5,
     "icons": {
@@ -37,6 +36,7 @@
     "success": "rgba(76, 175, 80, .87)",
     "info": "rgba(3, 169, 244, .87)"
   },
+  "snackbarAutoHide": 3000,
   "tripSettings": {
     "defaults": {
       "settings": {
@@ -49,8 +49,50 @@
         "region": [],
         "country": [],
         "continent": []
-      }
-    },
-    "snackbarAutoHide": 4000
+      },
+      "destinations": [{
+          "id": "DES2",
+          "name": "London",
+          "lat": 51.472346,
+          "lng": -0.453100,
+          "elevation": "14",
+          "municipality": "Wake Island",
+          "region": "Wake Island",
+          "country": "United States Minor Outlying Islands",
+          "continent": "Oceania",
+          "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
+          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island",
+          "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
+        },
+        {
+          "id": "DES0",
+          "name": "Warsaw",
+          "lat": 52.172992,
+          "lng": 20.979097,
+          "elevation": "14",
+          "municipality": "Wake Island",
+          "region": "Wake Island",
+          "country": "United States Minor Outlying Islands",
+          "continent": "Oceania",
+          "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
+          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island",
+          "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
+        },
+        {
+          "id": "DES1",
+          "name": "Munich",
+          "lat": 48.128587,
+          "lng": 11.596151,
+          "elevation": "14",
+          "municipality": "Wake Island",
+          "region": "Wake Island",
+          "country": "United States Minor Outlying Islands",
+          "continent": "Oceania",
+          "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
+          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island",
+          "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
+        }
+      ]
+    }
   }
 }

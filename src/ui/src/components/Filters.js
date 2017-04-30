@@ -37,9 +37,6 @@ export default class Filters extends Component {
       snackBarBg: config.statusTheme.success,
       searchText: ''
     };
-    this.handleAddFilter = this.props.handleAddFilter.bind(this);
-    this.handleRemoveFilter = this.props.handleRemoveFilter.bind(this);
-    this.handleClearFilters = this.props.handleClearFilters.bind(this);
   }
 
   handleOpenToggle = () => this.setState({
@@ -61,7 +58,7 @@ export default class Filters extends Component {
         snackBarBg: config.statusTheme.success,
         snackBarMessage: 'Filter added to ' + this.props.name + ' Filters'
       });
-      this.handleAddFilter(this.props.filterType, value);
+      this.props.handleAddFilter(this.props.filterType, value);
     }
   }
 
@@ -93,7 +90,7 @@ export default class Filters extends Component {
           <IconButton
             iconClassName='material-icons'
             className='remove-filter-btn'
-            onTouchTap={this.handleRemoveFilter.bind(this, this.props.filterType, text)}
+            onTouchTap={this.props.handleRemoveFilter.bind(this, this.props.filterType, text)}
             >
               remove_circle_outline
           </IconButton>
@@ -102,7 +99,7 @@ export default class Filters extends Component {
         />
     ))
   }
-  
+
   render() {
     const dialogTitle = (
       <div>
@@ -117,7 +114,7 @@ export default class Filters extends Component {
           </ToolbarGroup>
           <ToolbarGroup lastChild={true}>
             <IconButton
-              onTouchTap={this.handleClearFilters.bind(this, this.props.filterType)}
+              onTouchTap={this.props.handleClearFilters.bind(this, this.props.filterType)}
               tooltip='Clear Filters'
               tooltipPosition='bottom-left'
               >
@@ -161,7 +158,7 @@ export default class Filters extends Component {
         <Snackbar
           open={this.state.snackBarIsOpen}
           message={this.state.snackBarMessage}
-          autoHideDuration={config.tripSettings.snackbarAutoHide}
+          autoHideDuration={config.snackbarAutoHide}
           onRequestClose={this.handleSnackbarClose}
           bodyStyle={{
             backgroundColor: 'rgba(0,0,0,.5)'
