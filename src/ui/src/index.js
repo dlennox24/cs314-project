@@ -12,7 +12,7 @@ import {
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-import App from './components/App';
+import App from './containers/App';
 import reducer from './reducers';
 
 import config from './json/config.json';

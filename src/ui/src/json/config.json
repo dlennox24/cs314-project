@@ -1,5 +1,5 @@
 {
-  "appRoot": "/",
+  "websocketUrl": "//129.82.44.133:8080/websocket",
   "unitTitle": "TripCo",
   "unitUrl": "http://www.cs.colostate.edu/~cs314/yr2017sp/",
   "gMapsApiKey": "AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
@@ -18,9 +18,6 @@
       "size": 36
     }
   },
-  "glassfish": {
-    "host": "129.82.44.133:8080"
-  },
   "muiTheme": {
     "palette": {
       "primary1Color": "#1E4D2B",
@@ -36,7 +33,7 @@
     "success": "rgba(76, 175, 80, .87)",
     "info": "rgba(3, 169, 244, .87)"
   },
-  "snackbarAutoHide": 3000,
+  "snackbarAutoHide": 4000,
   "tripSettings": {
     "defaults": {
       "settings": {
@@ -59,9 +56,7 @@
           "municipality": "Wake Island",
           "region": "Wake Island",
           "country": "United States Minor Outlying Islands",
-          "continent": "Oceania",
           "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
-          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island",
           "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
         },
         {
@@ -75,8 +70,7 @@
           "country": "United States Minor Outlying Islands",
           "continent": "Oceania",
           "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
-          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island",
-          "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
+          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island"
         },
         {
           "id": "DES1",

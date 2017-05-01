@@ -28,7 +28,6 @@ export default class Settings extends Component {
     this.state = {
       isOpen: false
     };
-    this.handleOptimizationChange = this.props.handleOptimizationChange.bind(this);
   }
   handleClose = () => this.setState({
     isOpen: false
@@ -97,7 +96,7 @@ export default class Settings extends Component {
                     }}
                     step={1}
                     defaultValue={this.props.optimization}
-                    onAfterChange={this.handleOptimizationChange}/>
+                    onAfterChange={this.props.handleOptimizationChange.bind(this)}/>
                 </div>
               </div>
             </div>
@@ -150,10 +149,6 @@ export default class Settings extends Component {
 }
 
 export class UseKm extends Component {
-  constructor(props) {
-    super(props);
-    this.handleToggleUnits = this.props.handleToggleUnits.bind(this);
-  }
   render() {
     return (
       <Toggle
@@ -162,7 +157,7 @@ export class UseKm extends Component {
         style={{
           'textAlign': 'right'
         }}
-        onToggle={this.handleToggleUnits}
+        onToggle={this.props.handleToggleUnits.bind(this)}
         toggled={this.props.useKm} />
     );
   }

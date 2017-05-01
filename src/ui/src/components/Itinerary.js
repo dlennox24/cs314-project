@@ -236,7 +236,7 @@ export class ItineraryObj extends Component {
             {destinationDetails('Municipality',this.props.destination.municipality)}
             {destinationDetails('Region',this.props.destination.municipality,this.props.destination.regionUrl)}
             {destinationDetails('Country',this.props.destination.country,this.props.destination.countryUrl)}
-            {destinationDetails('Continent',this.props.destination.country)}
+            {destinationDetails('Continent',this.props.destination.continent)}
           </List>
           <CardActions>
             <RaisedButton

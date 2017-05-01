@@ -25,7 +25,6 @@ export default class Map extends Component {
   }
   updateMap() {
     if (map != null) {
-      console.log('updateMap');
       if (flightPath != null) {
         this.clearPolylines(flightPath.getPath());
       }
