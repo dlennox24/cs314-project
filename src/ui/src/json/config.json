@@ -1,0 +1,55 @@
+{
+  "websocketUrl": "//129.82.44.154:3000/websocket",
+  "unitTitle": "TripCo",
+  "unitUrl": "http://www.cs.colostate.edu/~cs314/yr2017sp/",
+  "gMapsApiKey": "AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
+  "map": {
+    "theme": {
+      "geodesic": true,
+      "strokeOpacity": 1.0,
+      "strokeWeight": 5,
+      "mapTypeId": "satellite",
+      "optimization": true
+    },
+    "defaultLocation": {
+      "lat": 47.892054,
+      "lng": -0.532521
+    },
+    "minZoom": 0,
+    "defaultZoom": 1,
+    "icons": {
+      "size": 36
+    }
+  },
+  "muiTheme": {
+    "palette": {
+      "primary1Color": "#1E4D2B",
+      "primary2Color": "#C8C372",
+      "primary3Color": "#59595B",
+      "accent1Color": "#D9782D",
+      "accent2Color": "#FFFFFF",
+      "accent3Color": "#105456"
+    }
+  },
+  "statusTheme": {
+    "warning": "rgba(244, 67, 54, .87)",
+    "success": "rgba(76, 175, 80, .87)",
+    "info": "rgba(3, 169, 244, .87)"
+  },
+  "snackbarAutoHide": 4000,
+  "tripSettings": {
+    "defaults": {
+      "settings": {
+        "useMetric": false
+      },
+      "filters": {
+        "airportSize": [],
+        "municipality": [],
+        "region": [],
+        "country": [],
+        "continent": []
+      },
+      "destinations": []
+    }
+  }
+}
