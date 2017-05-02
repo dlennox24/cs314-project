@@ -3,13 +3,8 @@ const settings = (state = {}, action) => {
     case 'TOGGLE_UNITS':
       return {
         ...state,
-        useKm: !state.useKm
-      }
-    case 'SET_OPTIMIZATION':
-      return {
-        ...state,
-        optimization: action.optimization
-      }
+        useMetric: !state.useMetric
+      };
     default:
       return state;
   }

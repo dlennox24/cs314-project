@@ -15,18 +15,22 @@ import CsuSvgLogo from './CsuBranding';
 import config from '../json/config.json';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import '../../node_modules/rc-slider/dist/rc-slider.min.css';
 import './App.css';
 
 export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.props.handleCreateWebsocket(this.props.handleSetWebsocketError.bind(this));
-  }
   render() {
-    const connected = this.props.websocket.error == null ?
-      null :
-      !this.props.websocket.error;
+    /* global websocket */
+    let waitForServer = setInterval(() => {
+      this.props.handleUpdateConnectStatus(websocket.readyState)
+      if (websocket.readyState !== 0) {
+        clearInterval(waitForServer);
+      }
+    }, 1000);
+
+    let connected = null;
+    if (this.props.connected != null) {
+      connected = this.props.connected;
+    }
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(config.muiTheme)}>
         <section>
@@ -60,8 +64,8 @@ export default class App extends Component {
           <Snackbar
               open={connected == null ? false : true}
               message={connected ?
-                'Connected to server' :
-                'Failed to connect to server'
+                'Connected to server!' :
+                'Failed to connect to server!'
               }
               autoHideDuration={config.snackbarAutoHide}
               bodyStyle={{

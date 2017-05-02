@@ -1,5 +1,5 @@
 {
-  "websocketUrl": "//129.82.44.133:8080/websocket",
+  "websocketUrl": "//129.82.44.168:8080/websocket",
   "unitTitle": "TripCo",
   "unitUrl": "http://www.cs.colostate.edu/~cs314/yr2017sp/",
   "gMapsApiKey": "AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",
@@ -7,13 +7,16 @@
     "theme": {
       "geodesic": true,
       "strokeOpacity": 1.0,
-      "strokeWeight": 5
+      "strokeWeight": 5,
+      "mapTypeId": "satellite",
+      "optimization": true
     },
     "defaultLocation": {
       "lat": 47.892054,
       "lng": -0.532521
     },
-    "defaultZoom": 5,
+    "minZoom": 0,
+    "defaultZoom": 1,
     "icons": {
       "size": 36
     }
@@ -37,56 +40,16 @@
   "tripSettings": {
     "defaults": {
       "settings": {
-        "useKm": false,
-        "optimization": 2
+        "useMetric": false
       },
       "filters": {
-        "airportSize": ["Medium", "Large"],
+        "airportSize": [],
         "municipality": [],
         "region": [],
         "country": [],
         "continent": []
       },
-      "destinations": [{
-          "id": "DES2",
-          "name": "London",
-          "lat": 51.472346,
-          "lng": -0.453100,
-          "elevation": "14",
-          "municipality": "Wake Island",
-          "region": "Wake Island",
-          "country": "United States Minor Outlying Islands",
-          "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
-          "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
-        },
-        {
-          "id": "DES0",
-          "name": "Warsaw",
-          "lat": 52.172992,
-          "lng": 20.979097,
-          "elevation": "14",
-          "municipality": "Wake Island",
-          "region": "Wake Island",
-          "country": "United States Minor Outlying Islands",
-          "continent": "Oceania",
-          "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
-          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island"
-        },
-        {
-          "id": "DES1",
-          "name": "Munich",
-          "lat": 48.128587,
-          "lng": 11.596151,
-          "elevation": "14",
-          "municipality": "Wake Island",
-          "region": "Wake Island",
-          "country": "United States Minor Outlying Islands",
-          "continent": "Oceania",
-          "airportUrl": "http://en.wikipedia.org/wiki/Wake_Island_Airfield",
-          "regionUrl": "http://en.wikipedia.org/wiki/Wake_Island",
-          "countryUrl": "http://en.wikipedia.org/wiki/United_States_Minor_Outlying_Islands"
-        }
-      ]
+      "destinations": []
     }
   }
 }

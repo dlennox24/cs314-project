@@ -4,10 +4,10 @@ import {
 import settings from './Settings';
 import filters from './Filters';
 import destinations from './Itinerary';
-import websocket from './App';
+import connected from './connected';
 
 const reducers = combineReducers({
-  websocket,
+  connected,
   filters,
   settings,
   destinations

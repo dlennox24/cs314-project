@@ -4,14 +4,16 @@ import {
 import {
   addDestination,
   removeDestination,
-  clearDestinations
+  clearDestinations,
+  importTrip
 } from '../actions/itinerary';
 import * as ItineraryComponent from '../components/Itinerary';
 
 const mapStateToItineraryProps = (state) => {
   return {
     destinations: state.destinations,
-    useKm: state.settings.useKm
+    useMetric: state.settings.useMetric,
+    filters: state.filters
   }
 };
 
@@ -22,13 +24,16 @@ const mapDispatchToItineraryProps = (dispatch) => {
     },
     handleClearDestinations: () => {
       dispatch(clearDestinations());
+    },
+    handleImportTrip: (destinations) => {
+      dispatch(importTrip(destinations));
     }
   }
 };
 
 const mapStateToItineraryObjProps = (state) => {
   return {
-    useKm: state.settings.useKm
+    useMetric: state.settings.useMetric
   }
 };
 

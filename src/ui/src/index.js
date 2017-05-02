@@ -16,6 +16,8 @@ import App from './containers/App';
 import reducer from './reducers';
 
 import config from './json/config.json';
+/* global websocketInit */
+websocketInit(config.websocketUrl);
 
 const store = createStore(
   reducer,

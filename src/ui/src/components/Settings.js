@@ -1,8 +1,7 @@
 import React, {
   Component
 } from 'react';
-import Slider from 'rc-slider';
-import Toggle from 'material-ui/Toggle';
+import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
@@ -20,8 +19,6 @@ import {
 
 import './Settings.css';
 
-import testData from '../json/testData.json';
-
 export default class Settings extends Component {
   constructor(props) {
     super(props);
@@ -36,13 +33,6 @@ export default class Settings extends Component {
     isOpen: true
   });
   render() {
-    const optMarks = {
-      0: 'None',
-      1: 'Nearest Neighbor',
-      2: '2-opt',
-      3: '3-opt'
-    };
-    const sliderColor = '#D9782D';
     const dialogTitle = (
       <div>
         <Toolbar>
@@ -55,9 +45,9 @@ export default class Settings extends Component {
           </ToolbarGroup>
           <ToolbarGroup lastChild={true}>
             <IconButton
-              onTouchTap={this.handleClearFilters}
               tooltip='Restore Defaults'
-              tooltipPosition='bottom-left'>
+              tooltipPosition='bottom-left'
+              onTouchTap={this.props.handleRestoreDefaults}>
               <FontIcon className='material-icons'>settings_backup_restore</FontIcon>
             </IconButton>
           </ToolbarGroup>
@@ -76,35 +66,8 @@ export default class Settings extends Component {
           }}
           autoScrollBodyContent={true}>
           <div className='row'>
-            <div className='col-md-offset-2 col-md-8'>
-              <div style={{
-                'margin': '20px 10px 50px'
-              }}>
-                <p className='text-center'>Trip Optimization</p>
-                <div className='rc-slider-marks-container'>
-                  <Slider
-                    className='optimization-slider'
-                    dots
-                    min={0}
-                    max={3}
-                    marks={optMarks}
-                    minimumTrackStyle={{
-                      backgroundColor: sliderColor
-                    }}
-                    handleStyle={{
-                      borderColor: sliderColor
-                    }}
-                    step={1}
-                    defaultValue={this.props.optimization}
-                    onAfterChange={this.props.handleOptimizationChange.bind(this)}/>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='row'>
             <div className='col-md-6 col-md-offset-3'>
               <Filters
-                dataSource={testData.airportSizes}
                 name='Airport Size'
                 filterType='airportSize'
                 filters={this.props.filters.airportSize}/>
@@ -113,14 +76,12 @@ export default class Settings extends Component {
           <div className='row'>
             <div className='col-md-6'>
               <Filters
-                dataSource={testData.municipalities}
                 name='Municipality'
                 filterType='municipality'
                 filters={this.props.filters.municipality}/>
             </div>
             <div className='col-md-6'>
               <Filters
-                dataSource={testData.regions}
                 name='Region'
                 filterType='region'
                 filters={this.props.filters.municipality}/>
@@ -129,14 +90,12 @@ export default class Settings extends Component {
           <div className='row'>
             <div className='col-md-6'>
               <Filters
-                dataSource={testData.countries}
                 name='Country'
                 filterType='country'
                 filters={this.props.filters.country}/>
             </div>
             <div className='col-md-6'>
               <Filters
-                dataSource={testData.continents}
                 name='Continent'
                 filterType='continent'
                 filters={this.props.filters.continent}/>
@@ -148,17 +107,18 @@ export default class Settings extends Component {
   }
 }
 
-export class UseKm extends Component {
+export class useMetric extends Component {
   render() {
     return (
-      <Toggle
-        label="Use Kilometers"
-        labelPosition='left'
+      <RaisedButton
+        label={this.props.useMetric ? 'Metric' : 'Imperial'}
+        onTouchTap={this.props.handleToggleUnits.bind(this)}
+        primary={this.props.useMetric}
+        fullWidth={true}
         style={{
-          'textAlign': 'right'
+          margin: '5px 0',
         }}
-        onToggle={this.props.handleToggleUnits.bind(this)}
-        toggled={this.props.useKm} />
+        icon={<FontIcon className='material-icons'>gps_fixed</FontIcon>}/>
     );
   }
 }

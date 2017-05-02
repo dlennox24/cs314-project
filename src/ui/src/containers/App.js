@@ -2,28 +2,20 @@ import {
   connect
 } from 'react-redux';
 import {
-  createWebsocket,
-  setWebsocket,
-  setWebsocketError
-} from '../actions/app';
+  updateConnectStatus
+} from '../actions/connected';
 import * as AppComponent from '../components/App';
 
 const mapStateToProps = (state) => {
   return {
-    websocket: state.websocket
+    connected: state.connected
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleCreateWebsocket: (handleSetWebsocketError) => {
-      dispatch(createWebsocket(handleSetWebsocketError));
-    },
-    handleSetWebsocket: (websocket) => {
-      dispatch(setWebsocket(websocket));
-    },
-    handleSetWebsocketError: (error) => {
-      dispatch(setWebsocketError(error));
+    handleUpdateConnectStatus: (status) => {
+      dispatch(updateConnectStatus(status));
     }
   }
 };

@@ -35,7 +35,9 @@ export default class Filters extends Component {
       snackBarIsOpen: false,
       snackBarMessage: 'Filter added to ' + this.props.name + ' Filters',
       snackBarBg: config.statusTheme.success,
-      searchText: ''
+      searchText: '',
+      delayInput: null,
+      filters: []
     };
   }
 
@@ -63,9 +65,17 @@ export default class Filters extends Component {
   }
 
   handleUpdateInput = (searchText) => {
-    this.setState({
-      searchText: searchText
-    });
+    /* global websocket */
+    websocket.send(JSON.stringify({
+      endpoint: this.props.filterType,
+      data: searchText
+    }));
+    websocket.onmessage = (message) => {
+      this.setState({
+        filters: message.data === 'null' ? [] : JSON.parse(message.data),
+        searchText: searchText
+      });
+    }
   }
 
   handleSnackbarClose = () => {
@@ -78,8 +88,8 @@ export default class Filters extends Component {
       if (this.props.filters.length === 0) {
         return (
           <Subheader style={{textAlign:'center'}}>
-          No Filters Applied
-        </Subheader>
+            No Filters Applied
+          </Subheader>
         );
       }
       return this.props.filters.sort().map((text, i) => (
@@ -128,11 +138,11 @@ export default class Filters extends Component {
       <div>
         <AutoComplete
           searchText={this.state.searchText}
-          dataSource={this.props.dataSource}
+          listStyle={{maxHeight:'200px',overflow:'auto'}}
+          dataSource={this.state.filters}
           floatingLabelText={'Filter by '+this.props.name}
           fullWidth={true}
           filter={AutoComplete.caseInsensitiveFilter}
-          maxSearchResults={5}
           onNewRequest={this.handleNewRequest}
           onUpdateInput={this.handleUpdateInput}
           />

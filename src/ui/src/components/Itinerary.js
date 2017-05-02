@@ -1,6 +1,7 @@
 import React, {
   Component
 } from 'react';
+import $ from 'jquery';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
@@ -25,7 +26,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 
 import Settings from '../containers/Settings';
 import {
-  UseKm
+  UseMetric
 } from '../containers/Settings';
 import {
   ItineraryObj as ItineraryObjContainer
@@ -35,8 +36,8 @@ import {
 } from './Utils';
 import Snackbar from 'material-ui/Snackbar';
 
+import './Itinerary.css';
 import config from '../json/config.json';
-import testData from '../json/testData.json'; //TODO: remove
 
 export default class Itinerary extends Component {
   constructor(props) {
@@ -46,7 +47,8 @@ export default class Itinerary extends Component {
       snackBarIsOpen: false,
       snackBarMessage: 'default',
       snackBarBg: config.statusTheme.success,
-      searchText: ''
+      searchText: '',
+      destinations: []
     };
   }
   handleOpenToggle = () => this.setState({
@@ -71,9 +73,99 @@ export default class Itinerary extends Component {
     }
   }
   handleUpdateInput = (searchText) => {
-    this.setState({
-      searchText: searchText
-    });
+    /* global websocket */
+    websocket.send(JSON.stringify({
+      endpoint: 'destination',
+      data: searchText,
+      filter_airportSize: this.props.filters.airportSize.toString(),
+      filter_municipality: this.props.filters.municipality.toString(),
+      filter_region: this.props.filters.region.toString(),
+      filter_country: this.props.filters.country.toString(),
+      filter_continent: this.props.filters.continent.toString()
+    }));
+    websocket.onmessage = (message) => {
+      if (message.data !== 'null') {
+        let data = JSON.parse(message.data);
+        let destinations = [];
+        let i = 0;
+        while (i < data.length) {
+          destinations.push({
+            id: data[i],
+            name: data[i + 1],
+            lat: parseFloat(data[i + 2]),
+            lng: parseFloat(data[i + 3]),
+            municipality: data[i + 4] === '' ? null : data[i + 4],
+            region: data[i + 5] === '' ? null : data[i + 5],
+            country: data[i + 6] === '' ? null : data[i + 6],
+            continent: data[i + 7] === '' ? null : data[i + 7],
+            elevation: data[i + 8] === '' ? null : data[i + 8],
+            airportUrl: data[i + 9] === '' ? null : data[i + 9],
+            countryUrl: data[i + 10] === '' ? null : data[i + 10],
+            regionUrl: data[i + 11] === '' ? null : data[i + 11],
+          });
+          i += 12;
+        }
+        this.setState({
+          destinations: destinations,
+          searchText: searchText
+        });
+      }
+    }
+  }
+  handleUploadFile = (file) => {
+    let fReader = new FileReader();
+    fReader.onload = () => {
+      let idObjs = $($.parseXML(fReader.result)).find('id');
+      let ids = [];
+      for (let i = 0; i < idObjs.length; i++) {
+        ids.push(idObjs[i].innerHTML);
+      }
+      /* global websocket */
+      websocket.send(JSON.stringify({
+        endpoint: 'load',
+        data: ids.toString()
+      }));
+      websocket.onmessage = (message) => {
+        if (message.data !== 'null') {
+          let data = JSON.parse(message.data);
+          let destinations = [];
+          let i = 0;
+          while (i < data.length) {
+            destinations.push({
+              id: data[i],
+              name: data[i + 1],
+              lat: parseFloat(data[i + 2]),
+              lng: parseFloat(data[i + 3]),
+              municipality: data[i + 4] === '' ? null : data[i + 4],
+              region: data[i + 5] === '' ? null : data[i + 5],
+              country: data[i + 6] === '' ? null : data[i + 6],
+              continent: data[i + 7] === '' ? null : data[i + 7],
+              elevation: data[i + 8] === '' ? null : data[i + 8],
+              airportUrl: data[i + 9] === '' ? null : data[i + 9],
+              countryUrl: data[i + 10] === '' ? null : data[i + 10],
+              regionUrl: data[i + 11] === '' ? null : data[i + 11],
+            });
+            i += 12;
+          }
+          this.props.handleImportTrip(destinations);
+        }
+      }
+    }
+    fReader.readAsText(file.target.files[0]);
+  }
+  handleDownloadFile = () => {
+    let xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
+      '\n<selection>' +
+      '\n\t<destinations>';
+    for (let i = 0; i < this.props.destinations.length; i++) {
+      xml += '\n\t\t<id>' + this.props.destinations[i].id + '</id>'
+    }
+    xml += '\n\t</destinations>' +
+      '\n</selection>';
+    /* global saveAs */
+    saveAs(new File([xml], 'trip.xml', {
+      type: 'text/plain;charset=utf-8'
+    }));
   }
   handleSnackbarClose = () => {
     this.setState({
@@ -82,19 +174,30 @@ export default class Itinerary extends Component {
   }
   render() {
     const style = {
-      'navBtn': {
+      navBtn: {
         'margin': '10px 5px'
       },
-      'itinerary': {
+      itinerary: {
         'width': '25%'
       },
-      'addDest': {
+      addDest: {
         'padding': '0 15px'
+      },
+      button: {
+        margin: '5px 0',
+      },
+      fileInput: {
+        cursor: 'pointer',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        width: '100%',
+        opacity: 0,
       }
     };
-    let drawerWidth = window.innerWidth > 992 ?
-      25 :
-      100;
+    let drawerWidth = window.innerWidth > 992 ? 25 : 100;
     if (drawerWidth !== 100 && drawerWidth / 100 * window.innerWidth < 400) {
       while (drawerWidth !== 100 && drawerWidth / 100 * window.innerWidth < 400) {
         drawerWidth++;
@@ -103,9 +206,7 @@ export default class Itinerary extends Component {
     return (
       <div>
         <RaisedButton
-          icon={(
-            <FontIcon className='material-icons'>flight_takeoff</FontIcon>
-          )}
+          icon={<FontIcon className='material-icons'>flight_takeoff</FontIcon>}
           style={style.navBtn}
           secondary={true}
           onTouchTap={this.handleOpenToggle}
@@ -130,12 +231,12 @@ export default class Itinerary extends Component {
             </Toolbar>
             <div style={style.addDest}>
               <AutoComplete
+                listStyle={{maxHeight:window.innerHeight/2,overflow:'auto'}}
                 searchText={this.state.searchText}
-                dataSource={testData.locations}
+                dataSource={this.state.destinations}
                 floatingLabelText='Add a Destination'
                 fullWidth={true}
                 filter={AutoComplete.caseInsensitiveFilter}
-                maxSearchResults={10}
                 style={style.addDest}
                 onNewRequest={this.handleNewRequest}
                 onUpdateInput={this.handleUpdateInput}
@@ -143,30 +244,74 @@ export default class Itinerary extends Component {
                   'text': 'name',
                   'value': 'id'
                 }}/>
-                <UseKm />
+              <div className='row'>
+                <div className='col-md-12'>
+                  <RaisedButton
+                    label='Import Itinerary'
+                    labelPosition='after'
+                    fullWidth={true}
+                    style={style.button}
+                    icon={<FontIcon className='material-icons'>file_upload</FontIcon>}
+                    containerElement='label'>
+                    <input
+                      type='file'
+                      style={style.fileInput}
+                      onChange={this.handleUploadFile} />
+                  </RaisedButton>
+                </div>
               </div>
+              {this.props.destinations.length === 0 ? null : (
+                <div className='row'>
+                  <div className='col-md-12'>
+                    <RaisedButton
+                      label='Download Itinerary'
+                      labelPosition='after'
+                      fullWidth={true}
+                      style={style.button}
+                      icon={<FontIcon className='material-icons'>file_download</FontIcon>}
+                      onTouchTap={this.handleDownloadFile}
+                      download='trip.xml'/>
+                  </div>
+                </div>
+              )}
+              <div className='row'>
+                <div className='col-md-6'>
+                  <UseMetric />
+                </div>
+                <div className='col-md-6'>
+                  <RaisedButton
+                    label='Clear All'
+                    labelPosition='after'
+                    fullWidth={true}
+                    style={style.button}
+                    onTouchTap={this.props.handleClearDestinations}
+                    icon={<FontIcon className='material-icons'>clear_all</FontIcon>}/>
+                </div>
+              </div>
+              <br/>
             </div>
-            <div id='itinerary-body'>
-              {this.props.destinations.map((destination, i) => (
-                <ItineraryObjContainer
-                  destination={destination}
-                  key={i}/>
-              ))}
-            </div>
-            <Snackbar
-              open={this.state.snackBarIsOpen}
-              message={this.state.snackBarMessage}
-              autoHideDuration={config.snackbarAutoHide}
-              onRequestClose={this.handleSnackbarClose}
-              bodyStyle={{
-                backgroundColor: 'rgba(0,0,0,.5)'
-              }}
-              style={{
-                backgroundColor: this.state.snackBarBg
-              }}
-              />
-          </Drawer>
-        </div>
+          </div>
+          <div id='itinerary-body'>
+            {this.props.destinations.map((destination, i) => (
+              <ItineraryObjContainer
+                destination={destination}
+                key={i}/>
+            ))}
+          </div>
+          <Snackbar
+            open={this.state.snackBarIsOpen}
+            message={this.state.snackBarMessage}
+            autoHideDuration={config.snackbarAutoHide}
+            onRequestClose={this.handleSnackbarClose}
+            bodyStyle={{
+              backgroundColor: 'rgba(0,0,0,.5)'
+            }}
+            style={{
+              backgroundColor: this.state.snackBarBg
+            }}
+            />
+        </Drawer>
+      </div>
     );
   }
 }
@@ -192,10 +337,13 @@ export class ItineraryObj extends Component {
         </FontIcon>
       </Paper>
     );
-    const units = this.props.useKm ? 'Kilometers' : 'Miles';
+    const units = this.props.useMetric ? 'Meters' : 'Feet';
     const destinationDetails = (type, data, url = null) => {
       if (data != null) {
         if (type === 'Elevation') {
+          if (this.props.useMetric) {
+            data = Math.round(data * 0.3048);
+          }
           data += ' ' + units;
         }
         if (url != null) {
@@ -216,7 +364,7 @@ export class ItineraryObj extends Component {
       return null;
     }
     const destinationId = this.props.destination.airportUrl != null ?
-      (<a href={this.props.destination.airportUrl}>
+      (<a target='_blank' href={this.props.destination.airportUrl}>
         {this.props.destination.id}
     </a>) :
       this.props.destination.id;
@@ -229,7 +377,11 @@ export class ItineraryObj extends Component {
           actAsExpander={true}
           showExpandableButton={true}
           />
-        <CardText expandable={true}>
+        <CardText
+          expandable={true}
+          style={{
+            padding: '0 16px'
+          }}>
           <List>
             {destinationDetails('Coordinates',this.props.destination.lat+', '+this.props.destination.lng)}
             {destinationDetails('Elevation',this.props.destination.elevation)}
@@ -242,7 +394,7 @@ export class ItineraryObj extends Component {
             <RaisedButton
               fullWidth={true}
               label='Remove Destination'
-              icon={<FontIcon className="material-icons">remove_circle_outline</FontIcon>}
+              icon={<FontIcon className='material-icons'>remove_circle_outline</FontIcon>}
               onTouchTap={this.props.handleRemoveDestination.bind(this, this.props.destination.id)}
               />
           </CardActions>

@@ -2,36 +2,41 @@ import {
   connect
 } from 'react-redux';
 import {
-  setOptimization,
-  toggleUnits
+  toggleUnits,
+  importTrip
 } from '../actions/settings';
+import {
+  restoreDefaults
+} from '../actions/filters';
 import * as SettingsComponent from '../components/Settings';
 
 const mapStateToSettingsProps = (state) => {
   return {
-    filters: state.filters,
-    optimization: state.settings.optimization
+    filters: state.filters
   }
 };
 
 const mapDispatchToSettingsProps = (dispatch) => {
   return {
-    handleOptimizationChange: (optimization) => {
-      dispatch(setOptimization(optimization));
+    handleRestoreDefaults: () => {
+      dispatch(restoreDefaults());
     }
   }
 };
 
-const mapStateToUseKmProps = (state) => {
+const mapStateToUseMetricProps = (state) => {
   return {
-    useKm: state.settings.useKm
+    useMetric: state.settings.useMetric
   }
 };
 
-const mapDispatchToUseKmProps = (dispatch) => {
+const mapDispatchToUseMetricProps = (dispatch) => {
   return {
     handleToggleUnits: () => {
       dispatch(toggleUnits());
+    },
+    handleImportTrip: (currentDestinations, destinations) => {
+      dispatch(importTrip(currentDestinations, destinations));
     }
   }
 };
@@ -41,9 +46,9 @@ const Settings = connect(
   mapDispatchToSettingsProps
 )(SettingsComponent.default);
 
-export const UseKm = connect(
-  mapStateToUseKmProps,
-  mapDispatchToUseKmProps
-)(SettingsComponent.UseKm);
+export const UseMetric = connect(
+  mapStateToUseMetricProps,
+  mapDispatchToUseMetricProps
+)(SettingsComponent.useMetric);
 
 export default Settings;

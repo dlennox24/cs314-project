@@ -17,3 +17,10 @@ export const clearDestinations = () => {
     type: 'CLEAR_DESTINATIONS'
   }
 }
+
+export const importTrip = (destinations) => {
+  return {
+    type: 'IMPORT_TRIP',
+    destinations
+  }
+}

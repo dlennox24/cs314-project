@@ -7,9 +7,7 @@ import Paper from 'material-ui/Paper';
 import GoogleMap from 'google-map-react';
 
 import config from '../json/config.json';
-// import testData from '../json/testData.json'; //TODO: remove
 var flightPath, map;
-
 
 export default class Map extends Component {
   clearPolylines = (polylines) => {
@@ -22,6 +20,11 @@ export default class Map extends Component {
   setMap(mapObj) {
     map = mapObj;
     this.updateMap();
+  }
+  createMapOptions(maps) {
+    return {
+      mapTypeId: google.maps.MapTypeId.HYBRID
+    }
   }
   updateMap() {
     if (map != null) {
@@ -41,7 +44,8 @@ export default class Map extends Component {
         geodesic: config.map.theme.geodesic,
         strokeColor: config.muiTheme.palette.accent1Color,
         strokeOpacity: config.map.theme.strokeOpacity,
-        strokeWeight: config.map.theme.strokeWeight
+        strokeWeight: config.map.theme.strokeWeight,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
       });
 
       flightPath.setMap(map);
@@ -64,6 +68,7 @@ export default class Map extends Component {
           language: 'en'
         }}
         center={[config.map.defaultLocation.lat,config.map.defaultLocation.lng]}
+        options={this.createMapOptions}
         zoom={config.map.defaultZoom}>
         {this.updateMap()}
       </GoogleMap>
@@ -84,7 +89,7 @@ class AirportMapIcon extends Component {
             margin: '-'+paperSize/2+'px 0 0 -'+paperSize/2+'px',
             textAlign: 'center',
             display: 'inline-block',
-            backgroundColor: config.muiTheme.palette.primary1Color
+            backgroundColor: config.muiTheme.palette.accent2Color
           }}
           lat={this.props.lat}
           lng={this.props.lng}
@@ -93,7 +98,7 @@ class AirportMapIcon extends Component {
             className='material-icons'
             style={{
               padding: (paperSize-24)/2+'px',
-              color: config.muiTheme.palette.accent2Color
+              color: config.muiTheme.palette.primary1Color
             }}
             >
             local_airport
