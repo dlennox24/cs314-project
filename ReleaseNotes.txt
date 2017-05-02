@@ -1,34 +1,21 @@
-DTR-27  TripCo v2.0
+DTR-27  TripCo v3.0
 
-Overview:
+Overview:Now a Web Application
 Usage:
       TripCo input_file.csv [options] [map.svg] [select.xml]
 
-      TripCo v2.0 command line takes one mandatory argument "input_file.csv". "input_file.csv" must be a CSV file, with columns Name, ID, Longitude, Latitude.
-      Optional arguments include:
-        -g, which brings up a GUI, allowing user to input following options outisde the command line.
-        -n, which shows the name of the locations on the map.
-        -i, which shows put the ID of the locations on the map.
-        -m, which shows mileage on the map.
-        -2, provides 2-opt trip optimization, on top of nearest neighbor.
-        [map.svg], which adds a background svg, behind the desired trip.
-        [select.xml], a list of ID's, to be used as a subset of every location in the input file.
+      TripCo v3.0 takes TripCo to the Web. TripCo is now a hosted web application for the world to 	 use.TripCo v3.0 is a fully functional web interface that is ready to be loaded onto any 	    	  GlassFish server with npm version 4.0 or higher. You can set filters to narrow your search by 	  clicking on the cog icon and inserting desired filters into respective fields. You can also 	directly search for the name of the airport you are tyring to find. Or a combination of both. 	  TripCo v3.0 also allows you to upload an itinerary xml file with id's of desired locations. You 	    can then add additional locations to the set of destinations as desired. 
 
-      TripCo v2.0 produces two files.
-          -An SVG file, containing a map of the locations, and the legs between them, a map of the trip for the user.
-          -An XML file, containing the itinerary of the trip.
-
-          The resulting SVG and XML will have the same name as the input file.
-          The resulting SVG and XML will be viewable in the GUI.
+      TripCo v3.0 does not produce any output files. You cannot save the map or the itinerary.
 
 
 Purpose:
-      Version 2.0 of TripCo will provide users with a short, circuit trip between a list of locations that the user supplies. Version 2.0 handles a list of locations, containing the Name, ID, Latitude and Longitude of the users desired locations. A selection.xml can be supplied to reduce the list of locations to a subset of the original list. A map.svg can optionlly be supplied, to be used as a background image behind the TripCo tour. TripCo v2.0 will crunch the numbers and give users a map and itinerary, of the nearest neighbor tour and optionally apply 2-opt and 3-opt optimizations to the route. On the map, Locations will marked with either their name or ID. Legs in the trip, between locations, will be optionally marked with the distance. The Itinerary, will contain an overview of the trip, letting users know where to go, and in which order. The map will be an SVG file, and the itinerary will be a XML file, both veiwable in the GUI.
+      Version 3.0 of TripCo will provide users with a circuit trip between a list of locations that the user supplies. Version 3.0 handles a list of locations, containing the Name, ID, Latitude and Longitude of the users desired locations. A selection.xml can be supplied to reduce the list of locations to a subset of the original list. You can also use filters to refine search for airport names. TripCo v3.0 will crunch the numbers and give users a map and itinerary, of locations in the order given to the application. On the map, Locations will marked with an airplane icon. The Itinerary, will contain an overview of the trip, letting users know where to go, and in which order. The map is an interactive google map api powered map that allows you to pan and zoom into the destinations.
 
 Issue Summary:
-      3-opt is not fully functional in v2.0
-      Selecting and saving a subset of selected locations from the GUI, is not a feature in v2.0.
-      Tracking the user, is not a feature in v2.0.
+     There aren't any optimazations.
+     You cannot save any itinerary files. 
+     Destinations are listed in order given.
+     There isn't any distance information printed to map or itinerary.
+     Google maps api does not allow you to zoom out fully to see the entire world.
 
-Notes:
-      Great Circle distance algorithm from - http://introcs.cs.princeton.edu/java/12types/GreatCircle.java.html
