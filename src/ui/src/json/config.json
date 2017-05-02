@@ -1,5 +1,5 @@
 {
-  "websocketUrl": "//129.82.44.168:8080/websocket",
+  "websocketUrl": "//129.82.44.154:3000/websocket",
   "unitTitle": "TripCo",
   "unitUrl": "http://www.cs.colostate.edu/~cs314/yr2017sp/",
   "gMapsApiKey": "AIzaSyCrfUX2ViAOogUHzIsXC2t_ZNDmHrmMD4M",

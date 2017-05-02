@@ -166,6 +166,21 @@ export default class Itinerary extends Component {
     saveAs(new File([xml], 'trip.xml', {
       type: 'text/plain;charset=utf-8'
     }));
+    let kml = '<?xml version="1.0" encoding="UTF-8"?>' +
+      '<kml xmlns="http://earth.google.com/kml/2.1">' +
+      '<Document>' +
+      '<name>TripCo Trip</name>' +
+      '<Style id="csu"><LineStyle><color>'+config.muiTheme.palette.accent1Color+'</color>' +
+      '<width>'+config.map.theme.strokeWeight+'</width></LineStyle></Style>' +
+      '<Placemark><name>Trip</name><styleUrl>#csu</styleUrl><LineString>' +
+      '<altitudeMode>relative</altitudeMode><coordinates>';
+      for (let i = 0; i < this.props.destinations.length; i++) {
+        kml += '\n'+this.props.destinations[i].lng+','+this.props.destinations[i].lat+',0';
+      }
+      kml += '\n</coordinates></LineString></Placemark></Document></kml>';
+      saveAs(new File([kml], 'trip.kml', {
+        type: 'text/plain;charset=utf-8'
+      }));
   }
   handleSnackbarClose = () => {
     this.setState({
@@ -256,6 +271,7 @@ export default class Itinerary extends Component {
                     <input
                       type='file'
                       style={style.fileInput}
+                      accept='.xml'
                       onChange={this.handleUploadFile} />
                   </RaisedButton>
                 </div>
