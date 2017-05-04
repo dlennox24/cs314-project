@@ -63,7 +63,8 @@ export default class ImportExport extends Component {
           optimizeTrip(this.props.optimization, this.props.destinations, {
             handleToggleDisableSettings: this.props.handleToggleDisableSettings,
             handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
-            handleSetDestinations: this.props.handleSetDestinations
+            handleSetDestinations: this.props.handleSetDestinations,
+            handleUpdateTotalDistance: this.props.handleUpdateTotalDistance
           });
         } else {
           console.error('Message data is null');

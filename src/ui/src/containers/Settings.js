@@ -13,6 +13,7 @@ import {
 import {
   setDestinations
 } from '../actions/itinerary';
+import {updateTotalDistance} from '../actions/totalDistance';
 import * as SettingsComponent from '../components/Settings';
 
 const mapStateToSettingsProps = (state) => {
@@ -36,6 +37,9 @@ const mapDispatchToSettingsProps = (dispatch) => {
     handleSetDestinations: (destinations) => {
       dispatch(setDestinations(destinations));
     },
+    handleUpdateTotalDistance: (destinations) => {
+     dispatch(updateTotalDistance(destinations));
+  },
     handleToggleIsOptimizing: () => {
       dispatch(toggleIsOptimizing());
     },

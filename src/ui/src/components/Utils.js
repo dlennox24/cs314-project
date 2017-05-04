@@ -86,6 +86,7 @@ export const optimizeTrip = (optimization, destinations, functions) => {
         functions.handleSetDestinations(JSON.parse(message.data));
         functions.handleToggleIsOptimizing();
         functions.handleToggleDisableSettings();
+        functions.handleUpdateTotalDistance(JSON.parse(message.data));
       }
     }
   }

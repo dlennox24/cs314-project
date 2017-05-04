@@ -51,7 +51,8 @@ export default class Itinerary extends Component {
       snackbarIsOpen: false,
       snackbarSuccess: false,
       searchText: '',
-      autoCompleteDestinations: []
+      autoCompleteDestinations: [],
+      totalDistance: null
     };
   }
   handleOpenToggle = () => this.setState({
@@ -75,7 +76,8 @@ export default class Itinerary extends Component {
       optimizeTrip(this.props.optimization, this.props.destinations, {
         handleToggleDisableSettings: this.props.handleToggleDisableSettings,
         handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
-        handleSetDestinations: this.props.handleSetDestinations
+        handleSetDestinations: this.props.handleSetDestinations,
+        handleUpdateTotalDistance: this.props.handleUpdateTotalDistance
       });
     }
   }
@@ -103,6 +105,22 @@ export default class Itinerary extends Component {
       snackbarIsOpen: false
     });
   }
+  renderTotalDistances = (totalDistance, useMetric) => {
+     if(totalDistance != null){
+      totalDistance = useMetric ?
+          Math.round(totalDistance*1.0693) + ' Kilometers' :
+          totalDistance + ' Miles';
+          console.log(useMetric);
+     return (
+        <ListItem
+         style={totalDistance == null ? {display: 'none'} : {display: 'block'}}
+         disabled={true}
+         disableKeyboardFocus={true}
+         secondaryText={'Total Trip Distance'}
+         primaryText={totalDistance} />
+   );
+}
+ }
   render() {
     const style = {
       navBtn: {
@@ -177,6 +195,9 @@ export default class Itinerary extends Component {
                     icon={<FontIcon className='material-icons'>clear_all</FontIcon>} />
                 </div>
               </div>
+              <List>
+                 {this.renderTotalDistances(this.props.totalDistance, this.props.useMetric)}
+              </List>
               <LinearProgress
                 className='findme'
                 color={config.muiTheme.palette.accent1Color}
@@ -251,7 +272,8 @@ export class ItineraryObj extends Component {
     optimizeTrip(this.props.optimization, newDestinations, {
       handleToggleDisableSettings: this.props.handleToggleDisableSettings,
       handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
-      handleSetDestinations: this.props.handleSetDestinations
+      handleSetDestinations: this.props.handleSetDestinations,
+      handleUpdateTotalDistance: this.props.handleUpdateTotalDistance
     });
   }
   render() {

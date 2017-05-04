@@ -9,6 +9,9 @@ import {
   toggleDisable,
   toggleIsOptimizing
 } from '../actions/settings';
+import {
+  updateTotalDistance
+} from '../actions/totalDistance';
 import * as ImportExportComponent from '../components/ImportExport';
 
 const mapStateToProps = (state) => {
@@ -30,6 +33,9 @@ const mapDispatchToProps = (dispatch) => {
     handleToggleDisableSettings: () => {
       dispatch(toggleDisable());
     },
+    handleUpdateTotalDistance: (destinations) => {
+     dispatch(updateTotalDistance(destinations));
+  },
     handleToggleIsOptimizing: () => {
       dispatch(toggleIsOptimizing());
     }
