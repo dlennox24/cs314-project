@@ -57,11 +57,11 @@ const mapDispatchToItineraryObjProps = (dispatch) => {
     handleRemoveDestination: (destinationId) => {
       dispatch(removeDestination(destinationId));
     },
-    handleSetDestinations: (destinations) => {
-      dispatch(setDestinations(destinations));
-    },
     handleToggleDisableSettings: () => {
       dispatch(toggleDisable());
+    },
+    handleSetDestinations: (destinations) => {
+      dispatch(setDestinations(destinations));
     },
     handleToggleIsOptimizing: () => {
       dispatch(toggleIsOptimizing());
