@@ -30,7 +30,7 @@ public class SQLreader {
         final static String join =   "INNER JOIN countries ON countries.continent = continents.id "+
                         "INNER JOIN regions ON regions.iso_country = countries.code "+
                         "INNER JOIN airports ON airports.iso_region = regions.code ";
-        final static String limit = "LIMIT 30";
+        final static String limit = "LIMIT 100";
 
 	public static void main(String[] args){
 
@@ -123,7 +123,7 @@ public class SQLreader {
 		
 		return null;
 	}
-	public ArrayList<String> getContinents(String name, String pass,String query){
+	public ArrayList<String> getContinents(String name, String pass,String query, boolean isIT){
 		ArrayList<String> idArray = new ArrayList();
 		  try	{ // connect to the database 
 	            Class.forName(myDriver); 
@@ -142,8 +142,12 @@ public class SQLreader {
 						} finally {  }
 
 						// submit a query to list all large airports
-						 ResultSet rs = st.executeQuery(columns+continents+join+query+limit);
-
+                                                ResultSet rs;
+                                                if(isIT){
+						  rs = st.executeQuery(columns+continents+join+query);
+                                                }else{
+                                                     rs = st.executeQuery(columns+continents+join+query+limit);
+                                                }
 						 try { // iterate through query results and print using column numbers
                  			System.out.println("id,name,latitude,longitude,municipality,region,country,continent");
                  			

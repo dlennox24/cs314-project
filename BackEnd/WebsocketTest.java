@@ -1,6 +1,7 @@
 
 import java.io.BufferedWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.json.stream.JsonParser;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.HashMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import javax.servlet.FilterConfig;
 import java.io.IOException;
 
@@ -41,6 +43,7 @@ public class WebsocketTest {
             InterruptedException {
             Map<String, String> myPair = new HashMap<String, String>();
             myPair = parseJson(message);
+            int opt = 0;
             boolean isSelected = false;
             System.out.println("New message recieved");
             String input = "";
@@ -78,8 +81,9 @@ public class WebsocketTest {
                   input = myPair.get("data");
                
                  query = sql.buildQueryAirport(input, query, isSelected);
-                 returnList = sql.getContinents("gtjohnso", "830103947", query);
+                 returnList = sql.getContinents("gtjohnso", "830103947", query,false);
                  Gson json = new GsonBuilder().create();
+                 
                  String tog = json.toJson(returnList);
             
                  System.out.println(tog.toString());
@@ -163,12 +167,46 @@ public class WebsocketTest {
                  tP = myPair.get("data").split(",");
                  query = "where ";
                  query = sql.buildQuerySelections(tP, query);
-                 returnList = sql.getContinents("gtjohnso","830103947", query);
+                 returnList = sql.getContinents("gtjohnso","830103947", query, true);
                  Gson json = new GsonBuilder().create();
                  String tog = json.toJson(returnList);
             
                  System.out.println(tog.toString());
                  session.getBasicRemote().sendText(tog.toString());
+             }else if(myPair.get("endpoint").equals("updateItinerary")){
+                
+                 com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+       
+                 JsonElement element = parser.parse(message);
+                 com.google.gson.JsonObject destinations = element.getAsJsonObject();
+                 JsonElement e = parser.parse(destinations.get("data").getAsString());
+                 com.google.gson.JsonArray d = e.getAsJsonArray();
+                 Gson gson = new Gson();
+                 Location[] locs = gson.fromJson(d, Location[].class);
+                 for(int i = 0; i < locs.length; i++){
+                    System.out.println(locs[i].id + " " + locs[i].name + " " + locs[i].lat+" "+locs[i].lng+" "+locs[i].regionUrl+" "+locs[i].municipality+" "+locs[i].region);
+                    System.out.println(d.get(i));
+                 }
+                 ArrayList<Location> locationList = new ArrayList<Location>(Arrays.asList(locs));
+                
+                 Optimizer op = new Optimizer();
+                 if(myPair.get("optimization").equals("3")){
+                     locationList =  op.threeOpt(locationList);
+                 }else if(myPair.get("optimization").equals("2")){
+                     locationList = op.twoOpt2(locationList);
+                 }else{
+                    for(int i = 0; i < locationList.size()-1; i++){
+                        locationList.get(i).distance = op.greatCircleDistance(locationList.get(i), locationList.get(i+1));
+                    }
+                        locationList.get(locationList.size()-1).distance = op.greatCircleDistance(locationList.get(locationList.size()-1),locationList.get(0));
+                 }
+                 
+                 Gson json = new GsonBuilder().create();
+                 String tog = json.toJson(locationList);
+            
+                 System.out.println(tog.toString());
+                 session.getBasicRemote().sendText(tog.toString());
+                 //System.out.println(myPair);
              }
             
         
