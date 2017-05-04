@@ -18,8 +18,6 @@ const filters = (state = {}, action) => {
         [action.filterType]: []
       };
     case 'RESTORE_DEFAULTS':
-      console.log(config);
-      debugger
       return {
         ...state,
         airportSize: config.tripSettings.defaults.filters.airportSize,

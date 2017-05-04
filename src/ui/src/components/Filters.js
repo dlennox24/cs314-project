@@ -7,6 +7,7 @@ import {
   ListItem
 } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
+import Snackbar from 'material-ui/Snackbar';
 import Chip from 'material-ui/Chip';
 import Subheader from 'material-ui/Subheader';
 import FontIcon from 'material-ui/FontIcon';
@@ -18,7 +19,6 @@ import {
   ToolbarTitle
 } from 'material-ui/Toolbar';
 import Dialog from 'material-ui/Dialog';
-import Snackbar from 'material-ui/Snackbar';
 
 import {
   CloseButton
@@ -32,38 +32,32 @@ export default class Filters extends Component {
     super(props);
     this.state = {
       isOpen: false,
-      snackBarIsOpen: false,
-      snackBarMessage: 'Filter added to ' + this.props.name + ' Filters',
-      snackBarBg: config.statusTheme.success,
+      snackbarIsOpen: false,
+      snackbarSuccess: false,
       searchText: '',
       delayInput: null,
       filters: []
     };
   }
-
   handleOpenToggle = () => this.setState({
     isOpen: !this.state.isOpen
   });
-
   handleNewRequest = (value) => {
     if (this.props.filters.includes(value)) {
       this.setState({
         searchText: '',
-        snackBarIsOpen: true,
-        snackBarBg: config.statusTheme.warning,
-        snackBarMessage: 'Filter already exists in ' + this.props.name + ' Filter'
+        snackbarSuccess: false,
+        snackbarIsOpen: true
       })
     } else {
+      this.props.handleAddFilter(this.props.filterType, value);
       this.setState({
         searchText: '',
-        snackBarIsOpen: true,
-        snackBarBg: config.statusTheme.success,
-        snackBarMessage: 'Filter added to ' + this.props.name + ' Filters'
+        snackbarSuccess: true,
+        snackbarIsOpen: true
       });
-      this.props.handleAddFilter(this.props.filterType, value);
     }
   }
-
   handleUpdateInput = (searchText) => {
     /* global websocket */
     websocket.send(JSON.stringify({
@@ -77,13 +71,6 @@ export default class Filters extends Component {
       });
     }
   }
-
-  handleSnackbarClose = () => {
-    this.setState({
-      snackBarIsOpen: false
-    });
-  }
-
   populateFilterList = () => {
       if (this.props.filters.length === 0) {
         return (
@@ -100,16 +87,18 @@ export default class Filters extends Component {
           <IconButton
             iconClassName='material-icons'
             className='remove-filter-btn'
-            onTouchTap={this.props.handleRemoveFilter.bind(this, this.props.filterType, text)}
-            >
+            onTouchTap={this.props.handleRemoveFilter.bind(this, this.props.filterType, text)} >
               remove_circle_outline
           </IconButton>
         }
-        style={{textTransform:'capitalize'}}
-        />
+        style={{textTransform:'capitalize'}} />
     ))
   }
-
+  handleSnackbarClose = () => {
+    this.setState({
+      snackbarIsOpen: false
+    });
+  }
   render() {
     const dialogTitle = (
       <div>
@@ -117,8 +106,7 @@ export default class Filters extends Component {
           <ToolbarGroup firstChild={true}>
             <CloseButton
               onTouchTap={this.handleOpenToggle}
-              tooltipPosition='bottom-right'
-              />
+              tooltipPosition='bottom-right' />
             <ToolbarSeparator style={{'margin':'0 10px 0 0'}} />
             <ToolbarTitle text={this.props.name+' Filters'} />
           </ToolbarGroup>
@@ -137,6 +125,7 @@ export default class Filters extends Component {
     return (
       <div>
         <AutoComplete
+          disabled={this.props.disabled}
           searchText={this.state.searchText}
           listStyle={{maxHeight:'200px',overflow:'auto'}}
           dataSource={this.state.filters}
@@ -144,8 +133,7 @@ export default class Filters extends Component {
           fullWidth={true}
           filter={AutoComplete.caseInsensitiveFilter}
           onNewRequest={this.handleNewRequest}
-          onUpdateInput={this.handleUpdateInput}
-          />
+          onUpdateInput={this.handleUpdateInput} />
         <Chip
           onTouchTap={this.handleOpenToggle}
           className='pull-right'
@@ -166,17 +154,13 @@ export default class Filters extends Component {
           </List>
         </Dialog>
         <Snackbar
-          open={this.state.snackBarIsOpen}
-          message={this.state.snackBarMessage}
+          open={this.state.snackbarIsOpen}
+          bodyStyle={{backgroundColor: 'rgba(0,0,0,.5)'}}
+          message={this.state.snackbarSuccess ?
+            'Filter added!' : 'Filter already applied!'}
           autoHideDuration={config.snackbarAutoHide}
-          onRequestClose={this.handleSnackbarClose}
-          bodyStyle={{
-            backgroundColor: 'rgba(0,0,0,.5)'
-          }}
-          style={{
-            backgroundColor: this.state.snackBarBg
-          }}
-          />
+          style={{backgroundColor: this.state.snackbarSuccess ?
+            config.statusTheme.success : config.statusTheme.warning}} />
       </div>
     );
   }

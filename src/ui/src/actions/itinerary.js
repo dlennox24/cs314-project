@@ -1,7 +1,7 @@
-export const addDestination = (destination) => {
+export const addDestinations = (destinations) => {
   return {
-    type: 'ADD_DESTINATION',
-    destination
+    type: 'ADD_DESTINATIONS',
+    destinations
   }
 }
 
@@ -12,15 +12,15 @@ export const removeDestination = (destinationId) => {
   }
 }
 
-export const clearDestinations = () => {
+export const setDestinations = (destinations) => {
   return {
-    type: 'CLEAR_DESTINATIONS'
+    type: 'SET_DESTINATIONS',
+    destinations
   }
 }
 
-export const importTrip = (destinations) => {
+export const clearDestinations = () => {
   return {
-    type: 'IMPORT_TRIP',
-    destinations
+    type: 'CLEAR_DESTINATIONS'
   }
 }

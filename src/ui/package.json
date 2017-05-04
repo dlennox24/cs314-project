@@ -8,6 +8,7 @@
     "google-map-react": "^0.24.0",
     "jquery": "^3.2.1",
     "material-ui": "^0.17.4",
+    "rc-slider": "^7.0.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",

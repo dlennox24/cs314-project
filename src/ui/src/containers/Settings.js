@@ -2,24 +2,45 @@ import {
   connect
 } from 'react-redux';
 import {
+  setOptimization,
   toggleUnits,
-  importTrip
+  toggleIsOptimizing,
+  toggleDisable
 } from '../actions/settings';
 import {
   restoreDefaults
 } from '../actions/filters';
+import {
+  setDestinations
+} from '../actions/itinerary';
 import * as SettingsComponent from '../components/Settings';
 
 const mapStateToSettingsProps = (state) => {
   return {
-    filters: state.filters
+    filters: state.filters,
+    optimization: state.settings.optimization,
+    disabled: state.settings.disabled,
+    isOptimizing: state.settings.isOptimizing,
+    destinations: state.destinations
   }
 };
 
 const mapDispatchToSettingsProps = (dispatch) => {
   return {
+    handleSetOptimization: (optimization) => {
+      dispatch(setOptimization(optimization));
+    },
     handleRestoreDefaults: () => {
       dispatch(restoreDefaults());
+    },
+    handleSetDestinations: (destinations) => {
+      dispatch(setDestinations(destinations));
+    },
+    handleToggleIsOptimizing: () => {
+      dispatch(toggleIsOptimizing());
+    },
+    handleToggleDisableSettings: () => {
+      dispatch(toggleDisable());
     }
   }
 };
@@ -34,9 +55,6 @@ const mapDispatchToUseMetricProps = (dispatch) => {
   return {
     handleToggleUnits: () => {
       dispatch(toggleUnits());
-    },
-    handleImportTrip: (currentDestinations, destinations) => {
-      dispatch(importTrip(currentDestinations, destinations));
     }
   }
 };
