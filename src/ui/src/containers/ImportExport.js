@@ -34,8 +34,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(toggleDisable());
     },
     handleUpdateTotalDistance: (destinations) => {
-     dispatch(updateTotalDistance(destinations));
-  },
+      dispatch(updateTotalDistance(destinations));
+    },
     handleToggleIsOptimizing: () => {
       dispatch(toggleIsOptimizing());
     }

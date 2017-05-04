@@ -11,7 +11,9 @@ import {
   toggleDisable,
   toggleIsOptimizing
 } from '../actions/settings';
-import {updateTotalDistance} from '../actions/totalDistance';
+import {
+  updateTotalDistance
+} from '../actions/totalDistance';
 import * as ItineraryComponent from '../components/Itinerary';
 
 const mapStateToItineraryProps = (state) => {
@@ -38,8 +40,8 @@ const mapDispatchToItineraryProps = (dispatch) => {
       dispatch(clearDestinations());
     },
     handleUpdateTotalDistance: (destinations) => {
-     dispatch(updateTotalDistance(destinations));
-  },
+      dispatch(updateTotalDistance(destinations));
+    },
     handleToggleDisableSettings: () => {
       dispatch(toggleDisable());
     },

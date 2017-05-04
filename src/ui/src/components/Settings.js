@@ -40,7 +40,7 @@ export default class Settings extends Component {
   });
   handleSetOptimization = (newOptmization) => {
     this.props.handleSetOptimization(newOptmization);
-    optimizeTrip(newOptmization+1, this.props.destinations, {
+    optimizeTrip(newOptmization + 1, this.props.destinations, {
       handleToggleDisableSettings: this.props.handleToggleDisableSettings,
       handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
       handleSetDestinations: this.props.handleSetDestinations,

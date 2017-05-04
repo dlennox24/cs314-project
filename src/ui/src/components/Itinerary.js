@@ -106,21 +106,21 @@ export default class Itinerary extends Component {
     });
   }
   renderTotalDistances = (totalDistance, useMetric) => {
-     if(totalDistance != null){
+    if (totalDistance != null) {
       totalDistance = useMetric ?
-          Math.round(totalDistance*1.0693) + ' Kilometers' :
-          totalDistance + ' Miles';
-          console.log(useMetric);
-     return (
+        Math.round(totalDistance * 1.0693) + ' Kilometers' :
+        totalDistance + ' Miles';
+      console.log(useMetric);
+      return (
         <ListItem
          style={totalDistance == null ? {display: 'none'} : {display: 'block'}}
          disabled={true}
          disableKeyboardFocus={true}
          secondaryText={'Total Trip Distance'}
          primaryText={totalDistance} />
-   );
-}
- }
+      );
+    }
+  }
   render() {
     const style = {
       navBtn: {
