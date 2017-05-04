@@ -1,11 +1,12 @@
+/* global websocket */
 import React, {
   Component
 } from 'react';
-import $ from 'jquery';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import Paper from 'material-ui/Paper';
 import Drawer from 'material-ui/Drawer';
+import LinearProgress from 'material-ui/LinearProgress';
 import {
   List,
   ListItem
@@ -23,6 +24,7 @@ import {
   ToolbarTitle
 } from 'material-ui/Toolbar';
 import AutoComplete from 'material-ui/AutoComplete';
+import Snackbar from 'material-ui/Snackbar';
 
 import Settings from '../containers/Settings';
 import {
@@ -32,9 +34,11 @@ import {
   ItineraryObj as ItineraryObjContainer
 } from '../containers/Itinerary';
 import {
-  CloseButton
+  CloseButton,
+  parseDestinationJson,
+  optimizeTrip
 } from './Utils';
-import Snackbar from 'material-ui/Snackbar';
+import ImportExport from '../containers/ImportExport';
 
 import './Itinerary.css';
 import config from '../json/config.json';
@@ -44,11 +48,11 @@ export default class Itinerary extends Component {
     super(props);
     this.state = {
       isOpen: true,
-      snackBarIsOpen: false,
-      snackBarMessage: 'default',
-      snackBarBg: config.statusTheme.success,
+      snackbarIsOpen: false,
+      snackbarSuccess: false,
       searchText: '',
-      destinations: []
+      autoCompleteDestinations: [],
+      totalDistance: null
     };
   }
   handleOpenToggle = () => this.setState({
@@ -58,22 +62,26 @@ export default class Itinerary extends Component {
     if (this.props.destinations.filter(obj => obj.id === destination.id).length > 0) {
       this.setState({
         searchText: '',
-        snackBarIsOpen: true,
-        snackBarBg: config.statusTheme.warning,
-        snackBarMessage: 'Destination already exists!'
+        snackbarIsOpen: true,
+        snackbarSuccess: false
       })
     } else {
       this.setState({
         searchText: '',
-        snackBarIsOpen: true,
-        snackBarBg: config.statusTheme.success,
-        snackBarMessage: 'Destination added!'
+        snackbarIsOpen: true,
+        snackbarSuccess: true
       });
+
       this.props.handleAddDestination(destination);
+      optimizeTrip(this.props.optimization, this.props.destinations, {
+        handleToggleDisableSettings: this.props.handleToggleDisableSettings,
+        handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
+        handleSetDestinations: this.props.handleSetDestinations,
+        handleUpdateTotalDistance: this.props.handleUpdateTotalDistance
+      });
     }
   }
   handleUpdateInput = (searchText) => {
-    /* global websocket */
     websocket.send(JSON.stringify({
       endpoint: 'destination',
       data: searchText,
@@ -85,131 +93,47 @@ export default class Itinerary extends Component {
     }));
     websocket.onmessage = (message) => {
       if (message.data !== 'null') {
-        let data = JSON.parse(message.data);
-        let destinations = [];
-        let i = 0;
-        while (i < data.length) {
-          destinations.push({
-            id: data[i],
-            name: data[i + 1],
-            lat: parseFloat(data[i + 2]),
-            lng: parseFloat(data[i + 3]),
-            municipality: data[i + 4] === '' ? null : data[i + 4],
-            region: data[i + 5] === '' ? null : data[i + 5],
-            country: data[i + 6] === '' ? null : data[i + 6],
-            continent: data[i + 7] === '' ? null : data[i + 7],
-            elevation: data[i + 8] === '' ? null : data[i + 8],
-            airportUrl: data[i + 9] === '' ? null : data[i + 9],
-            countryUrl: data[i + 10] === '' ? null : data[i + 10],
-            regionUrl: data[i + 11] === '' ? null : data[i + 11],
-          });
-          i += 12;
-        }
         this.setState({
-          destinations: destinations,
+          autoCompleteDestinations: parseDestinationJson(JSON.parse(message.data)),
           searchText: searchText
         });
       }
     }
   }
-  handleUploadFile = (file) => {
-    let fReader = new FileReader();
-    fReader.onload = () => {
-      let idObjs = $($.parseXML(fReader.result)).find('id');
-      let ids = [];
-      for (let i = 0; i < idObjs.length; i++) {
-        ids.push(idObjs[i].innerHTML);
-      }
-      /* global websocket */
-      websocket.send(JSON.stringify({
-        endpoint: 'load',
-        data: ids.toString()
-      }));
-      websocket.onmessage = (message) => {
-        if (message.data !== 'null') {
-          let data = JSON.parse(message.data);
-          let destinations = [];
-          let i = 0;
-          while (i < data.length) {
-            destinations.push({
-              id: data[i],
-              name: data[i + 1],
-              lat: parseFloat(data[i + 2]),
-              lng: parseFloat(data[i + 3]),
-              municipality: data[i + 4] === '' ? null : data[i + 4],
-              region: data[i + 5] === '' ? null : data[i + 5],
-              country: data[i + 6] === '' ? null : data[i + 6],
-              continent: data[i + 7] === '' ? null : data[i + 7],
-              elevation: data[i + 8] === '' ? null : data[i + 8],
-              airportUrl: data[i + 9] === '' ? null : data[i + 9],
-              countryUrl: data[i + 10] === '' ? null : data[i + 10],
-              regionUrl: data[i + 11] === '' ? null : data[i + 11],
-            });
-            i += 12;
-          }
-          this.props.handleImportTrip(destinations);
-        }
-      }
-    }
-    fReader.readAsText(file.target.files[0]);
-  }
-  handleDownloadFile = () => {
-    let xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
-      '\n<selection>' +
-      '\n\t<destinations>';
-    for (let i = 0; i < this.props.destinations.length; i++) {
-      xml += '\n\t\t<id>' + this.props.destinations[i].id + '</id>'
-    }
-    xml += '\n\t</destinations>' +
-      '\n</selection>';
-    /* global saveAs */
-    saveAs(new File([xml], 'trip.xml', {
-      type: 'text/plain;charset=utf-8'
-    }));
-    let kml = '<?xml version="1.0" encoding="UTF-8"?>' +
-      '<kml xmlns="http://earth.google.com/kml/2.1">' +
-      '<Document>' +
-      '<name>TripCo Trip</name>' +
-      '<Style id="csu"><LineStyle><color>'+config.muiTheme.palette.accent1Color+'</color>' +
-      '<width>'+config.map.theme.strokeWeight+'</width></LineStyle></Style>' +
-      '<Placemark><name>Trip</name><styleUrl>#csu</styleUrl><LineString>' +
-      '<altitudeMode>relative</altitudeMode><coordinates>';
-      for (let i = 0; i < this.props.destinations.length; i++) {
-        kml += '\n'+this.props.destinations[i].lng+','+this.props.destinations[i].lat+',0';
-      }
-      kml += '\n</coordinates></LineString></Placemark></Document></kml>';
-      saveAs(new File([kml], 'trip.kml', {
-        type: 'text/plain;charset=utf-8'
-      }));
-  }
   handleSnackbarClose = () => {
     this.setState({
-      snackBarIsOpen: false
+      snackbarIsOpen: false
     });
+  }
+  renderTotalDistances = (totalDistance, useMetric) => {
+    if (totalDistance != null) {
+      totalDistance = useMetric ?
+        Math.round(totalDistance * 1.0693) + ' Kilometers' :
+        totalDistance + ' Miles';
+      console.log(useMetric);
+      return (
+        <ListItem
+         style={totalDistance == null ? {display: 'none'} : {display: 'block'}}
+         disabled={true}
+         disableKeyboardFocus={true}
+         secondaryText={'Total Trip Distance'}
+         primaryText={totalDistance} />
+      );
+    }
   }
   render() {
     const style = {
       navBtn: {
         'margin': '10px 5px'
       },
+      button: {
+        margin: '5px 0'
+      },
       itinerary: {
         'width': '25%'
       },
       addDest: {
         'padding': '0 15px'
-      },
-      button: {
-        margin: '5px 0',
-      },
-      fileInput: {
-        cursor: 'pointer',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        width: '100%',
-        opacity: 0,
       }
     };
     let drawerWidth = window.innerWidth > 992 ? 25 : 100;
@@ -224,8 +148,7 @@ export default class Itinerary extends Component {
           icon={<FontIcon className='material-icons'>flight_takeoff</FontIcon>}
           style={style.navBtn}
           secondary={true}
-          onTouchTap={this.handleOpenToggle}
-          />
+          onTouchTap={this.handleOpenToggle} />
         <Drawer
           width={drawerWidth + '%'}
           open={this.state.isOpen}
@@ -233,77 +156,57 @@ export default class Itinerary extends Component {
           <div id='itinerary-header'>
             <Toolbar>
               <ToolbarGroup>
-                <ToolbarTitle text='Itinerary'/>
+                <ToolbarTitle text='Itinerary' />
               </ToolbarGroup>
               <ToolbarGroup lastChild={true}>
                 <Settings/>
-                <ToolbarSeparator style={{'marginLeft': '0'}}/>
+                <ToolbarSeparator style={{'marginLeft': '0'}} />
                 <CloseButton
                   onTouchTap={this.handleOpenToggle}
-                  tooltipPosition='bottom-left'
-                  />
+                  tooltipPosition='bottom-left' />
               </ToolbarGroup>
             </Toolbar>
             <div style={style.addDest}>
               <AutoComplete
+                disabled={this.props.disabled}
                 listStyle={{maxHeight:window.innerHeight/2,overflow:'auto'}}
                 searchText={this.state.searchText}
-                dataSource={this.state.destinations}
+                dataSource={this.state.autoCompleteDestinations}
                 floatingLabelText='Add a Destination'
                 fullWidth={true}
                 filter={AutoComplete.caseInsensitiveFilter}
                 style={style.addDest}
                 onNewRequest={this.handleNewRequest}
                 onUpdateInput={this.handleUpdateInput}
-                dataSourceConfig={{
-                  'text': 'name',
-                  'value': 'id'
-                }}/>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <RaisedButton
-                    label='Import Itinerary'
-                    labelPosition='after'
-                    fullWidth={true}
-                    style={style.button}
-                    icon={<FontIcon className='material-icons'>file_upload</FontIcon>}
-                    containerElement='label'>
-                    <input
-                      type='file'
-                      style={style.fileInput}
-                      accept='.xml'
-                      onChange={this.handleUploadFile} />
-                  </RaisedButton>
-                </div>
-              </div>
-              {this.props.destinations.length === 0 ? null : (
-                <div className='row'>
-                  <div className='col-md-12'>
-                    <RaisedButton
-                      label='Download Itinerary'
-                      labelPosition='after'
-                      fullWidth={true}
-                      style={style.button}
-                      icon={<FontIcon className='material-icons'>file_download</FontIcon>}
-                      onTouchTap={this.handleDownloadFile}
-                      download='trip.xml'/>
-                  </div>
-                </div>
-              )}
+                dataSourceConfig={{'text': 'name','value': 'id'}} />
+              <ImportExport/>
               <div className='row'>
                 <div className='col-md-6'>
-                  <UseMetric />
+                  <UseMetric style={style.button} />
                 </div>
                 <div className='col-md-6'>
                   <RaisedButton
                     label='Clear All'
                     labelPosition='after'
                     fullWidth={true}
+                    disabled={this.props.disabled}
                     style={style.button}
                     onTouchTap={this.props.handleClearDestinations}
-                    icon={<FontIcon className='material-icons'>clear_all</FontIcon>}/>
+                    icon={<FontIcon className='material-icons'>clear_all</FontIcon>} />
                 </div>
               </div>
+              <List>
+                 {this.renderTotalDistances(this.props.totalDistance, this.props.useMetric)}
+              </List>
+              <LinearProgress
+                className='findme'
+                color={config.muiTheme.palette.accent1Color}
+                style={{
+                  marginLeft: '-10%',
+                  width: '120%',
+                  backgroundColor: config.muiTheme.palette.accent2Color,
+                  display: this.props.isOptimizing ? 'block' : 'none'
+                }} />
               <br/>
             </div>
           </div>
@@ -311,29 +214,68 @@ export default class Itinerary extends Component {
             {this.props.destinations.map((destination, i) => (
               <ItineraryObjContainer
                 destination={destination}
-                key={i}/>
+                key={i} />
             ))}
           </div>
           <Snackbar
-            open={this.state.snackBarIsOpen}
-            message={this.state.snackBarMessage}
-            autoHideDuration={config.snackbarAutoHide}
+            open={this.state.snackbarIsOpen}
+            message={this.state.snackbarSuccess ?
+              'Destination added!' : 'Destination already exists!'}
             onRequestClose={this.handleSnackbarClose}
-            bodyStyle={{
-              backgroundColor: 'rgba(0,0,0,.5)'
-            }}
-            style={{
-              backgroundColor: this.state.snackBarBg
-            }}
-            />
+            autoHideDuration={config.snackbarAutoHide}
+            bodyStyle={{backgroundColor: 'rgba(0,0,0,.5)'}}
+            style={{backgroundColor: this.state.snackbarSuccess ?
+              config.statusTheme.success : config.statusTheme.warning}} />
         </Drawer>
       </div>
     );
   }
 }
 
-
 export class ItineraryObj extends Component {
+  destinationDetails = (type, data, url = null) => {
+    let units;
+    if (data != null) {
+      if (type === 'Elevation' || type === 'Distance to next destination') {
+        if (type === 'Elevation') {
+          units = this.props.useMetric ? 'Meters' : 'Feet';
+          if (this.props.useMetric) {
+            data = Math.round(data * 0.3048);
+          }
+        }
+        if (type === 'Distance to next destination') {
+          units = this.props.useMetric ? 'Kilometers' : 'Miles';
+          if (this.props.useMetric) {
+            data = Math.round(data * 1.6093);
+          }
+        }
+        data += ' ' + units;
+      }
+      if (url != null) {
+        data = (<a target='_blank' href={url}>{data}</a>);
+      }
+      return (
+        <ListItem
+          disabled={true}
+          disableKeyboardFocus={true}
+          secondaryText={type}
+          primaryText={data} />
+      )
+    }
+    return null;
+  }
+  handleRemoveDestination = (destinationId) => {
+    this.props.handleRemoveDestination(destinationId);
+    let newDestinations = this.props.destinations.filter(function(obj) {
+      return obj.id !== destinationId;
+    });
+    optimizeTrip(this.props.optimization, newDestinations, {
+      handleToggleDisableSettings: this.props.handleToggleDisableSettings,
+      handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
+      handleSetDestinations: this.props.handleSetDestinations,
+      handleUpdateTotalDistance: this.props.handleUpdateTotalDistance
+    });
+  }
   render() {
     const icon = (
       <Paper
@@ -353,36 +295,8 @@ export class ItineraryObj extends Component {
         </FontIcon>
       </Paper>
     );
-    const units = this.props.useMetric ? 'Meters' : 'Feet';
-    const destinationDetails = (type, data, url = null) => {
-      if (data != null) {
-        if (type === 'Elevation') {
-          if (this.props.useMetric) {
-            data = Math.round(data * 0.3048);
-          }
-          data += ' ' + units;
-        }
-        if (url != null) {
-          data = (
-            <a target='_blank' href={url}>
-            {data}
-          </a>
-          );
-        }
-        return (
-          <ListItem
-          disabled={true}
-          disableKeyboardFocus={true}
-          secondaryText={type}
-          primaryText={data}/>
-        )
-      }
-      return null;
-    }
     const destinationId = this.props.destination.airportUrl != null ?
-      (<a target='_blank' href={this.props.destination.airportUrl}>
-        {this.props.destination.id}
-    </a>) :
+      <a target='_blank' href={this.props.destination.airportUrl}>{this.props.destination.id}</a> :
       this.props.destination.id;
     return (
       <Card className='itinerary-obj'>
@@ -391,28 +305,25 @@ export class ItineraryObj extends Component {
           subtitle={destinationId}
           avatar={icon}
           actAsExpander={true}
-          showExpandableButton={true}
-          />
+          showExpandableButton={true} />
         <CardText
           expandable={true}
-          style={{
-            padding: '0 16px'
-          }}>
+          style={{padding: '0 16px'}}>
           <List>
-            {destinationDetails('Coordinates',this.props.destination.lat+', '+this.props.destination.lng)}
-            {destinationDetails('Elevation',this.props.destination.elevation)}
-            {destinationDetails('Municipality',this.props.destination.municipality)}
-            {destinationDetails('Region',this.props.destination.municipality,this.props.destination.regionUrl)}
-            {destinationDetails('Country',this.props.destination.country,this.props.destination.countryUrl)}
-            {destinationDetails('Continent',this.props.destination.continent)}
+            {this.destinationDetails('Coordinates',this.props.destination.lat+', '+this.props.destination.lng)}
+            {this.destinationDetails('Elevation',this.props.destination.elevation)}
+            {this.destinationDetails('Municipality',this.props.destination.municipality)}
+            {this.destinationDetails('Region',this.props.destination.municipality,this.props.destination.regionUrl)}
+            {this.destinationDetails('Country',this.props.destination.country,this.props.destination.countryUrl)}
+            {this.destinationDetails('Continent',this.props.destination.continent)}
+            {this.destinationDetails('Distance to next destination',this.props.destination.distance)}
           </List>
           <CardActions>
             <RaisedButton
               fullWidth={true}
               label='Remove Destination'
               icon={<FontIcon className='material-icons'>remove_circle_outline</FontIcon>}
-              onTouchTap={this.props.handleRemoveDestination.bind(this, this.props.destination.id)}
-              />
+              onTouchTap={this.handleRemoveDestination.bind(this, this.props.destination.id)} />
           </CardActions>
         </CardText>
       </Card>

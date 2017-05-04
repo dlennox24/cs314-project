@@ -54,8 +54,7 @@ export default class Map extends Component {
       <AirportMapIcon
           key={i}
           lat={loc.lat}
-          lng={loc.lng}
-          />
+          lng={loc.lng} />
     ));
   }
   render() {

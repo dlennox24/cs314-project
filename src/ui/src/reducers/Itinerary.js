@@ -2,17 +2,11 @@ import _ from 'lodash';
 
 const destinations = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_DESTINATION':
-      var a = [...state, action.destination];
-      for (let i = 0; i < a.length; i++) {
-        /*global google*/
-        a[i] = new google.maps.LatLng(a[i]);
+    case 'ADD_DESTINATIONS':
+      if (Array.isArray(action.destinations)) {
+        return _.uniqBy([...state, ...action.destinations], 'id');
       }
-      console.log(google.maps.geometry.spherical.computeLength(a));
-      return [
-        ...state,
-        action.destination
-      ];
+      return _.uniqBy([...state, action.destinations], 'id');
     case 'REMOVE_DESTINATION':
       let destinations = state.filter(function(obj) {
         return obj.id !== action.destinationId;
@@ -20,8 +14,8 @@ const destinations = (state = [], action) => {
       return destinations;
     case 'CLEAR_DESTINATIONS':
       return [];
-    case 'IMPORT_TRIP':
-      return _.uniqBy([...state, ...action.destinations], 'id');
+    case 'SET_DESTINATIONS':
+      return action.destinations;
     default:
       return state;
   }

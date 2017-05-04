@@ -12,12 +12,12 @@ import {
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-import App from './containers/App';
+import App from './components/App';
 import reducer from './reducers';
 
 import config from './json/config.json';
 /* global websocketInit */
-websocketInit(config.websocketUrl);
+websocketInit();
 
 const store = createStore(
   reducer,

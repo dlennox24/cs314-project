@@ -4,7 +4,7 @@ import {
 import {
   updateConnectStatus
 } from '../actions/connected';
-import * as AppComponent from '../components/App';
+import * as ConnectingDialogComponent from '../components/ConnectingDialog';
 
 const mapStateToProps = (state) => {
   return {
@@ -20,9 +20,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-const App = connect(
+const ConnectingDialog = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppComponent.default);
+)(ConnectingDialogComponent.default);
 
-export default App;
+export default ConnectingDialog;

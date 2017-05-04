@@ -1,9 +1,9 @@
 let websocket;
 
-function websocketInit(url) { // eslint-disable-line
+function websocketInit() { // eslint-disable-line
   websocket = new WebSocket(
     (window.location.protocol === 'https:' ? 'wss:' : 'ws:') +
-    url
+    '//129.82.44.137:3000/websocket'
   );
   websocket.onerror = (error) => {
     console.error(error);

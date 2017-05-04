@@ -1,6 +1,9 @@
+/* global websocket */
 import React, {
   Component
 } from 'react';
+import Slider from 'rc-slider';
+import '../../node_modules/rc-slider/dist/rc-slider.min.css';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FontIcon from 'material-ui/FontIcon';
@@ -14,16 +17,19 @@ import {
 
 import Filters from '../containers/Filters';
 import {
-  CloseButton
+  CloseButton,
+  optimizeTrip
 } from './Utils';
 
+import config from '../json/config.json';
 import './Settings.css';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      downloadPopoverIsOpen: false
     };
   }
   handleClose = () => this.setState({
@@ -32,7 +38,21 @@ export default class Settings extends Component {
   handleOpen = () => this.setState({
     isOpen: true
   });
+  handleSetOptimization = (newOptmization) => {
+    this.props.handleSetOptimization(newOptmization);
+    optimizeTrip(newOptmization + 1, this.props.destinations, {
+      handleToggleDisableSettings: this.props.handleToggleDisableSettings,
+      handleToggleIsOptimizing: this.props.handleToggleIsOptimizing,
+      handleSetDestinations: this.props.handleSetDestinations,
+      handleUpdateTotalDistance: this.props.handleUpdateTotalDistance
+    });
+  }
   render() {
+    const optMarks = {
+      0: 'None',
+      1: '2-opt',
+      2: '3-opt'
+    };
     const dialogTitle = (
       <div>
         <Toolbar>
@@ -40,7 +60,7 @@ export default class Settings extends Component {
             <CloseButton onTouchTap={this.handleClose} tooltipPosition='bottom-right'/>
             <ToolbarSeparator style={{
               'margin': '0 10px 0 0'
-            }}/>
+            }} />
             <ToolbarTitle text='Settings'/>
           </ToolbarGroup>
           <ToolbarGroup lastChild={true}>
@@ -56,21 +76,42 @@ export default class Settings extends Component {
     );
     return (
       <div>
-        <IconButton onTouchTap={this.handleOpen} tooltip='Settings'>
+        <IconButton
+          onTouchTap={this.handleOpen}
+          tooltipPosition='bottom-left'
+          tooltip={this.props.disabled ? 'Settings disabled during upload' : 'Settings'}
+          disabled={this.props.disabled}>
           <FontIcon className='material-icons'>settings</FontIcon>
         </IconButton>
         <Dialog title={dialogTitle}
           open={this.state.isOpen}
-          titleStyle={{
-            padding: 0
-          }}
+          titleStyle={{padding: 0}}
           autoScrollBodyContent={true}>
           <div className='row'>
-            <div className='col-md-6 col-md-offset-3'>
+            <div className='col-md-6'>
+              <div style={{'margin': '20px 10px 50px'}}>
+                <p className='text-center'>Trip Optimization</p>
+                  <div className='rc-slider-marks-container'>
+                    <Slider
+                      disabled={this.props.disabled}
+                      className='optimization-slider'
+                      dots
+                      min={0}
+                      max={2}
+                      marks={optMarks}
+                      minimumTrackStyle={{backgroundColor: config.muiTheme.palette.accent1Color}}
+                      handleStyle={{borderColor: config.muiTheme.palette.accent1Color}}
+                      step={1}
+                      defaultValue={this.props.optimization-1}
+                      onAfterChange={this.handleSetOptimization.bind(this)} />
+                  </div>
+              </div>
+            </div>
+            <div className='col-md-6'>
               <Filters
                 name='Airport Size'
                 filterType='airportSize'
-                filters={this.props.filters.airportSize}/>
+                filters={this.props.filters.airportSize} />
             </div>
           </div>
           <div className='row'>
@@ -78,13 +119,13 @@ export default class Settings extends Component {
               <Filters
                 name='Municipality'
                 filterType='municipality'
-                filters={this.props.filters.municipality}/>
+                filters={this.props.filters.municipality} />
             </div>
             <div className='col-md-6'>
               <Filters
                 name='Region'
                 filterType='region'
-                filters={this.props.filters.municipality}/>
+                filters={this.props.filters.municipality} />
             </div>
           </div>
           <div className='row'>
@@ -92,13 +133,13 @@ export default class Settings extends Component {
               <Filters
                 name='Country'
                 filterType='country'
-                filters={this.props.filters.country}/>
+                filters={this.props.filters.country} />
             </div>
             <div className='col-md-6'>
               <Filters
                 name='Continent'
                 filterType='continent'
-                filters={this.props.filters.continent}/>
+                filters={this.props.filters.continent} />
             </div>
           </div>
         </Dialog>
@@ -116,9 +157,9 @@ export class useMetric extends Component {
         primary={this.props.useMetric}
         fullWidth={true}
         style={{
-          margin: '5px 0',
+          ...this.props.style
         }}
-        icon={<FontIcon className='material-icons'>gps_fixed</FontIcon>}/>
+        icon={<FontIcon className='material-icons'>gps_fixed</FontIcon>} />
     );
   }
 }

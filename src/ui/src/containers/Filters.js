@@ -11,7 +11,8 @@ import * as FiltersComp from '../components/Filters';
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    filters: state.filters[ownProps.filterType]
+    filters: state.filters[ownProps.filterType],
+    disabled: state.settings.disabled
   }
 };
 
